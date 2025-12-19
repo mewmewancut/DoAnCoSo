@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<body style="font-family: Arial, sans-serif;">
+
+    <h2>Chào {{ user.username }},</h2>
+
+    <p>Cảm ơn bạn đã đăng ký tài khoản tại <strong>ToDo App</strong>.</p>
+
+    <p>Để kích hoạt tài khoản, vui lòng nhấn vào nút bên dưới:</p>
+
+    <p>
+        <a href="{{ activation_link }}"
+           style="background:#007bff;color:white;padding:10px 20px;border-radius:5px;text-decoration:none;">
+            Kích hoạt tài khoản
+        </a>
+    </p>
+
+    <p>Nếu nút không hoạt động, hãy sao chép đường link sau:</p>
+
+    <p style="word-break: break-all;">
+        {{ activation_link }}
+    </p>
+
+    <br>
+    <p>Trân trọng,<br>Đội ngũ hỗ trợ ToDo App</p>
+
+</body>
+</html>
