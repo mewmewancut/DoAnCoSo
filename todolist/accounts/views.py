@@ -30,6 +30,10 @@ def register(request):
             user.is_active = False
             user.save()
 
+            # Tạo UserProfile cho user
+            from .models import UserProfile
+            UserProfile.objects.create(user=user, email_unique=user.email.lower())
+
             # Tạo token kích hoạt CHUẨN Django
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
@@ -69,7 +73,7 @@ def activate(request, uidb64, token):
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
         user = User.objects.get(pk=uid)
-    except:
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
 
     if user is not None and default_token_generator.check_token(user, token):
