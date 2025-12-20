@@ -119,6 +119,12 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# Default primary key field type
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Login URL
+LOGIN_URL = '/accounts/login/'
+
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
