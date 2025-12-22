@@ -8,7 +8,7 @@ from django.core.mail import send_mail
 from django.contrib.auth import views as auth_views
 
 from .forms import RegisterForm
-from .models import Activation
+#from .models import Activation
 
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
@@ -18,6 +18,8 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 
+def trang_chu_minh(request):
+    return render(request, 'home.html')
 # ============================
 #  ĐĂNG KÝ + GỬI MAIL KÍCH HOẠT
 # ============================
@@ -137,3 +139,4 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def user_dashboard(request):
     return render(request, "accounts/user_dashboard.html")
+    

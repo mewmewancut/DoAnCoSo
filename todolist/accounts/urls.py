@@ -5,6 +5,7 @@ urlpatterns = [
     path("register/", register, name="register"),
     path("login/", login_view, name="login"),
     path("activate/<uidb64>/<token>/", views.activate, name="activate"),
+    path('home/', views.trang_chu_minh, name='home'),
 
     # Forgot password
     path("password-reset/", ResetPasswordView.as_view(), name="password_reset"),

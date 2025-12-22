@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load static %}
+
+{% block content %}
+<section class="hero-section py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-5">
+                <h1 style="font-size: 4rem; font-weight: 800; line-height: 1.1;">Cuối cùng<br>rõ ràng hơn.</h1>
+                <p class="fs-5 text-secondary mt-3">50+ triệu người dùng tổ chức cuộc sống nghề nghiệp và cá nhân của họ với ứng dụng việc cần làm số 1.</p>
+                <div class="my-4 py-2 px-3 bg-light rounded-pill d-inline-flex align-items-center gap-2">
+                    <span>
+                        <img src="{% static 'images/people.jpg' %}" class="rounded-circle shadow-sm" style="width: 40px; height: 40px; object-fit: cover;" alt="người dùng">
+                    </span>
+                    <small><strong>374,000+ ★★★★★</strong> đánh giá</small>
+                </div>
+                <div class="d-block">
+                    <a href="{% url 'register' %}" class="btn btn-todoist btn-lg px-5 py-3 shadow">Dùng thử miễn phí</a>
+                </div>
+            </div>
+            <div class="col-lg-7 mt-5 mt-lg-0 text-center">
+                <img src="{% static 'images/home.jpg'%}" 
+                     class="img-fluid rounded-4 shadow-lg" alt="Todoist Mockup">
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

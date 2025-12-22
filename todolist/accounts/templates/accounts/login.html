@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% comment %} 
+{% extends 'base.html' %}
 
 {% block title %}Đăng nhập{% endblock %}
 
@@ -28,5 +30,41 @@
     <p class="mt-2">
         Chưa có tài khoản? <a href="{% url 'register' %}">Đăng ký</a>
     </p>
+</div>
+{% endblock %} {% endcomment %}
+
+{% block title %}Đăng nhập{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card p-4 shadow-lg border-0" style="max-width: 400px; width: 100%; border-radius: 16px;">
+        <h2 class="fw-bold mb-4 text-center">Đăng nhập</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Username</label>
+                <input name="username" class="form-control py-2" placeholder="Tên đăng nhập" required style="border-radius: 8px;">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Password</label>
+                <input name="password" type="password" class="form-control py-2" placeholder="Mật khẩu" required style="border-radius: 8px;">
+            </div>
+
+            <button class="btn btn-todoist w-100 py-2 fw-bold mt-2" type="submit" style="background-color: #e44332; color: white; border-radius: 8px; border: none;">
+                Đăng nhập
+            </button>
+        </form>
+
+        <div class="mt-4 text-center">
+            <p class="mb-1">
+                <a href="{% url 'password_reset' %}" class="text-decoration-none text-muted small">Quên mật khẩu?</a>
+            </p>
+            <p class="mb-0">
+                Chưa có tài khoản? <a href="{% url 'register' %}" class="text-decoration-none fw-bold" style="color: #e44332;">Đăng ký</a>
+            </p>
+        </div>
+    </div>
 </div>
 {% endblock %}
