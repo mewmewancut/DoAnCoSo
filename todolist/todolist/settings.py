@@ -135,3 +135,4 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "ntson10052005@gmail.com"
 EMAIL_HOST_PASSWORD = "ttve cvzg dmwf dfrx"
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+AUTH_USER_MODEL = "accounts.User"
