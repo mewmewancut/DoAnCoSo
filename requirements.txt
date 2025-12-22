@@ -1,0 +1,4 @@
+Django>=5.0
+python-dotenv
+langchain
+openai
