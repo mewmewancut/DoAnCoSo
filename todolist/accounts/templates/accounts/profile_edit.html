@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+
+{% block title %}Chỉnh sửa hồ sơ - {{ user.username }}{% endblock %}
+
+{% block content %}
+<style>
+    .edit-container {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 85vh;
+        padding: 40px 0;
+    }
+    
+    .edit-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        padding: 40px;
+    }
+    
+    .form-control {
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        padding: 12px 16px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+        border-color: #c3392b;
+        box-shadow: 0 0 0 4px rgba(195, 57, 43, 0.1);
+        transform: translateY(-2px);
+    }
+    
+    .form-label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+    }
+    
+    #id_avatar {
+        border: 2px dashed #c3392b;
+        padding: 20px;
+        border-radius: 12px;
+        background: #fff;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    #id_avatar:hover {
+        border-color: #8b2820;
+        background: #fff5f5;
+    }
+    
+    .avatar-preview {
+        transition: all 0.3s ease;
+    }
+    
+    .avatar-preview:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
+</style>
+
+<div class="edit-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="edit-card">
+                    <div class="d-flex align-items-center mb-4">
+                        <a href="{% url 'accounts:profile' %}" class="btn btn-outline-secondary me-3">
+                            <i class="bi bi-arrow-left"></i>
+                        </a>
+                        <div>
+                            <h3 class="fw-bold mb-0">Chỉnh sửa hồ sơ</h3>
+                            <p class="text-muted mb-0">Cập nhật thông tin cá nhân của bạn</p>
+                        </div>
+                    </div>
+                    
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <!-- Avatar Upload -->
+                        <div class="mb-4 text-center">
+                            <label class="form-label d-block mb-3">
+                                <i class="bi bi-image me-2"></i>Ảnh đại diện
+                            </label>
+                            <div class="d-flex flex-column align-items-center">
+                                <div class="mb-3" style="position: relative; display: flex; justify-content: center;">
+                                    <div style="position: relative; width: 150px; height: 150px;">
+                                        <img id="avatarPreview" 
+                                             src="{% if user.avatar %}{{ user.avatar.url }}{% else %}data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Crect fill='%23f8f9fa' width='150' height='150'/%3E%3C/svg%3E{% endif %}" 
+                                             alt="Avatar Preview" 
+                                             class="avatar-preview rounded-circle border border-3 {% if user.avatar %}border-primary{% else %}border-secondary{% endif %}" 
+                                             style="width: 150px; height: 150px; object-fit: cover; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: block;">
+                                        {% if not user.avatar %}
+                                        <i class="bi bi-person-fill text-muted" style="font-size: 4rem; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none;"></i>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="w-100" style="max-width: 400px;">
+                                    {{ form.avatar }}
+                                    {% if form.avatar.errors %}
+                                        <div class="text-danger mt-2" style="font-size: 0.85rem;">
+                                            {{ form.avatar.errors }}
+                                        </div>
+                                    {% endif %}
+                                    {% if form.avatar.help_text %}
+                                        <small class="text-muted mt-2 d-block">
+                                            <i class="bi bi-info-circle me-1"></i>{{ form.avatar.help_text }}
+                                        </small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <hr class="my-4">
+                        
+                        <div class="mb-4">
+                            <label class="form-label">
+                                <i class="bi bi-envelope me-2"></i>Email
+                            </label>
+                            <input type="email" class="form-control" value="{{ user.email }}" disabled style="background-color: #f8f9fa; cursor: not-allowed;">
+                            <small class="text-muted mt-2 d-block">
+                                <i class="bi bi-info-circle me-1"></i>Email không thể thay đổi. Nếu cần đổi email, vui lòng liên hệ quản trị viên.
+                            </small>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label">
+                                <i class="bi bi-person me-2"></i>Tên đăng nhập
+                            </label>
+                            {{ form.username }}
+                            {% if form.username.errors %}
+                                <div class="text-danger mt-2" style="font-size: 0.85rem;">
+                                    {{ form.username.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label">
+                                    <i class="bi bi-person-badge me-2"></i>Họ
+                                </label>
+                                {{ form.first_name }}
+                                {% if form.first_name.errors %}
+                                    <div class="text-danger mt-2" style="font-size: 0.85rem;">
+                                        {{ form.first_name.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label">
+                                    <i class="bi bi-person-badge me-2"></i>Tên
+                                </label>
+                                {{ form.last_name }}
+                                {% if form.last_name.errors %}
+                                    <div class="text-danger mt-2" style="font-size: 0.85rem;">
+                                        {{ form.last_name.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex gap-3 mt-4">
+                            <button type="submit" class="btn btn-lg px-5 fw-bold text-white" style="background: linear-gradient(135deg, #c3392b 0%, #8b2820 100%); border-radius: 12px; border: none; box-shadow: 0 4px 15px rgba(195, 57, 43, 0.3);">
+                                <i class="bi bi-check-circle me-2"></i>Lưu thay đổi
+                            </button>
+                            <a href="{% url 'accounts:profile' %}" class="btn btn-lg btn-outline-secondary px-5" style="border-radius: 12px;">
+                                Hủy
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Avatar preview khi chọn file
+    document.getElementById('id_avatar').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('avatarPreview').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+{% endblock %}
+

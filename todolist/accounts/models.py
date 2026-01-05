@@ -2,6 +2,7 @@ import uuid
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from cloudinary_storage.storage import MediaCloudinaryStorage
 
 
 class User(AbstractUser):
@@ -14,8 +15,15 @@ class User(AbstractUser):
         verbose_name=_("Email"),
         help_text=_("Email address used for account activation and password reset"),
     )
+    avatar = models.ImageField(
+        upload_to='avatars/',
+        blank=True,
+        null=True,
+        verbose_name=_("Avatar"),
+        help_text=_("Profile picture (recommended size: 200x200px)"),
+        storage=MediaCloudinaryStorage(),
+    )
     
-    # Minh
     USERNAME_FIELD = "username"
     REQUIRED_FIELDS = ["email"]
     
@@ -50,3 +58,11 @@ class User(AbstractUser):
         """
         full_name = self.get_full_name()
         return full_name if full_name else self.username
+    
+    def get_avatar_url(self):
+        """
+        Get avatar URL or return default avatar
+        """
+        if self.avatar:
+            return self.avatar.url
+        return None

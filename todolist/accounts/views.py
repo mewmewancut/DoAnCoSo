@@ -9,7 +9,7 @@ from django.views.decorators.http import require_http_methods
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.tokens import default_token_generator
 
-from .forms import RegisterForm
+from .forms import RegisterForm, ProfileEditForm, CustomPasswordChangeForm
 from .utils import send_activation_email, get_user_from_uidb64
 
 logger = logging.getLogger(__name__)
@@ -229,3 +229,118 @@ def user_dashboard(request):
         "user": user,
     }
     return render(request, "accounts/user_dashboard.html", context)
+
+
+# ============================
+#  PROFILE
+# ============================
+@login_required
+def profile_view(request):
+    """
+    User profile view with statistics
+    """
+    user = request.user
+    
+    # Get task statistics
+    try:
+        from tasks.models import Task
+        user_tasks = Task.objects.filter(user=user)
+        total_tasks = user_tasks.count()
+        completed_tasks = user_tasks.filter(status='completed').count()
+        pending_tasks = user_tasks.filter(status='pending').count()
+        in_progress_tasks = user_tasks.filter(status='in_progress').count()
+        overdue_tasks = [task for task in user_tasks if task.is_overdue]
+        overdue_count = len(overdue_tasks)
+    except ImportError:
+        total_tasks = completed_tasks = pending_tasks = in_progress_tasks = overdue_count = 0
+    
+    context = {
+        "user": user,
+        "total_tasks": total_tasks,
+        "completed_tasks": completed_tasks,
+        "pending_tasks": pending_tasks,
+        "in_progress_tasks": in_progress_tasks,
+        "overdue_count": overdue_count,
+    }
+    return render(request, "accounts/profile.html", context)
+
+
+@login_required
+def profile_edit(request):
+    """
+    Edit user profile information (email cannot be changed)
+    """
+    user = request.user
+    
+    if request.method == "POST":
+        form = ProfileEditForm(request.POST, request.FILES, instance=user, user=user)
+        if form.is_valid():
+            form.save()
+            logger.info(f"Profile updated for user: {user.username} ({user.email})")
+            messages.success(request, "Cập nhật thông tin thành công!")
+            return redirect("accounts:profile")
+    else:
+        form = ProfileEditForm(instance=user, user=user)
+    
+    return render(request, "accounts/profile_edit.html", {"form": form, "user": user})
+
+
+@login_required
+def password_change_view(request):
+    """
+    Change user password
+    """
+    if request.method == "POST":
+        form = CustomPasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            # Update session to prevent logout
+            from django.contrib.auth import update_session_auth_hash
+            update_session_auth_hash(request, form.user)
+            logger.info(f"Password changed for user: {request.user.username}")
+            messages.success(request, "Đổi mật khẩu thành công!")
+            return redirect("accounts:profile")
+    else:
+        form = CustomPasswordChangeForm(user=request.user)
+    
+    return render(request, "accounts/password_change.html", {"form": form})
+
+
+# ============================
+#  ACCOUNT DELETION
+# ============================
+@login_required
+def account_delete(request):
+    """
+    Delete user account with confirmation
+    """
+    user = request.user
+    
+    if request.method == "POST":
+        # Double confirmation - check if user typed their username
+        confirm_username = request.POST.get('confirm_username', '').strip()
+        
+        if confirm_username != user.username:
+            messages.error(request, "Tên đăng nhập không khớp. Vui lòng nhập đúng tên đăng nhập để xác nhận.")
+            return render(request, "accounts/account_delete.html", {"user": user})
+        
+        # Delete all related tasks
+        try:
+            from tasks.models import Task
+            Task.objects.filter(user=user).delete()
+            logger.info(f"Deleted all tasks for user: {user.username}")
+        except ImportError:
+            pass
+        
+        # Store user info for logging before deletion
+        username = user.username
+        email = user.email
+        
+        # Delete user account
+        user.delete()
+        
+        logger.warning(f"User account deleted: {username} ({email})")
+        messages.success(request, "Tài khoản của bạn đã được xóa thành công.")
+        return redirect("home")
+    
+    return render(request, "accounts/account_delete.html", {"user": user})

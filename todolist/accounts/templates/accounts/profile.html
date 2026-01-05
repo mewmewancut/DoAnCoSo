@@ -1,0 +1,270 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Hồ sơ - {{ user.username }}{% endblock %}
+
+{% block content %}
+<style>
+    .profile-container {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 85vh;
+        padding: 40px 0;
+    }
+    
+    .profile-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    
+    .profile-header {
+        background: linear-gradient(135deg, #c3392b 0%, #8b2820 100%);
+        padding: 40px;
+        color: white;
+        text-align: center;
+    }
+    
+    .avatar-container {
+        width: 120px;
+        height: 120px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        border: 4px solid rgba(255,255,255,0.3);
+        overflow: hidden;
+    }
+    
+    .avatar-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .avatar-container i {
+        font-size: 4rem;
+        color: white;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 16px;
+        padding: 25px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        border-color: #c3392b;
+    }
+    
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #c3392b 0%, #8b2820 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+    }
+    
+    .info-item {
+        padding: 15px 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .info-item:last-child {
+        border-bottom: none;
+    }
+    
+    .info-label {
+        color: #666;
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+    }
+    
+    .info-value {
+        color: #333;
+        font-size: 1.05rem;
+    }
+    
+    .action-btn {
+        border-radius: 12px;
+        padding: 12px 24px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+</style>
+
+<div class="profile-container">
+    <div class="container">
+        <div class="row">
+            <!-- Profile Card -->
+            <div class="col-lg-4 mb-4">
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="avatar-container">
+                            {% if user.avatar %}
+                                <img src="{{ user.avatar.url }}" alt="Avatar" 
+                                     class="rounded-circle" 
+                                     style="width: 100%; height: 100%; object-fit: cover;">
+                            {% else %}
+                                <i class="bi bi-person-fill"></i>
+                            {% endif %}
+                        </div>
+                        <h3 class="fw-bold mb-2">{{ user.get_display_name }}</h3>
+                        <p class="mb-0 opacity-75">@{{ user.username }}</p>
+                    </div>
+                    
+                    <div class="p-4">
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="bi bi-envelope me-2"></i>Email
+                            </div>
+                            <div class="info-value">{{ user.email }}</div>
+                        </div>
+                        
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="bi bi-person me-2"></i>Tên đăng nhập
+                            </div>
+                            <div class="info-value">{{ user.username }}</div>
+                        </div>
+                        
+                        {% if user.first_name or user.last_name %}
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="bi bi-person-badge me-2"></i>Họ và tên
+                            </div>
+                            <div class="info-value">{{ user.get_full_name|default:"Chưa cập nhật" }}</div>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="bi bi-calendar-check me-2"></i>Ngày tham gia
+                            </div>
+                            <div class="info-value">{{ user.date_joined|date:"d/m/Y" }}</div>
+                        </div>
+                        
+                        {% if user.last_login %}
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="bi bi-clock-history me-2"></i>Đăng nhập lần cuối
+                            </div>
+                            <div class="info-value">{{ user.last_login|date:"d/m/Y H:i" }}</div>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="bi bi-shield-check me-2"></i>Trạng thái
+                            </div>
+                            <div class="info-value">
+                                {% if user.is_active %}
+                                    <span class="badge bg-success">Đã kích hoạt</span>
+                                {% else %}
+                                    <span class="badge bg-warning">Chưa kích hoạt</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 mt-4">
+                            <a href="{% url 'accounts:profile_edit' %}" class="btn action-btn" style="background: linear-gradient(135deg, #c3392b 0%, #8b2820 100%); color: white;">
+                                <i class="bi bi-pencil-square me-2"></i>Chỉnh sửa hồ sơ
+                            </a>
+                            <a href="{% url 'accounts:password_change' %}" class="btn action-btn btn-outline-primary">
+                                <i class="bi bi-key me-2"></i>Đổi mật khẩu
+                            </a>
+                            <hr class="my-2">
+                            <a href="{% url 'accounts:account_delete' %}" class="btn action-btn btn-outline-danger">
+                                <i class="bi bi-trash me-2"></i>Xóa tài khoản
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Statistics -->
+            <div class="col-lg-8">
+                <div class="profile-card p-4">
+                    <h4 class="fw-bold mb-4">
+                        <i class="bi bi-graph-up me-2" style="color: #c3392b;"></i>Thống kê công việc
+                    </h4>
+                    
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-6">
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="bi bi-list-task text-white" style="font-size: 1.8rem;"></i>
+                                </div>
+                                <h3 class="fw-bold mb-1" style="color: #c3392b;">{{ total_tasks }}</h3>
+                                <p class="text-muted mb-0">Tổng công việc</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="bi bi-check-circle text-white" style="font-size: 1.8rem;"></i>
+                                </div>
+                                <h3 class="fw-bold mb-1" style="color: #28a745;">{{ completed_tasks }}</h3>
+                                <p class="text-muted mb-0">Đã hoàn thành</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="bi bi-hourglass-split text-white" style="font-size: 1.8rem;"></i>
+                                </div>
+                                <h3 class="fw-bold mb-1" style="color: #ffc107;">{{ pending_tasks }}</h3>
+                                <p class="text-muted mb-0">Đang chờ</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="bi bi-arrow-repeat text-white" style="font-size: 1.8rem;"></i>
+                                </div>
+                                <h3 class="fw-bold mb-1" style="color: #17a2b8;">{{ in_progress_tasks }}</h3>
+                                <p class="text-muted mb-0">Đang thực hiện</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% if overdue_count > 0 %}
+                    <div class="alert alert-danger d-flex align-items-center" style="border-radius: 12px;">
+                        <i class="bi bi-exclamation-triangle-fill me-2" style="font-size: 1.5rem;"></i>
+                        <div>
+                            <strong>Bạn có {{ overdue_count }} công việc quá hạn!</strong>
+                            <p class="mb-0">Hãy kiểm tra và hoàn thành chúng sớm nhất có thể.</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mt-4">
+                        <a href="{% url 'task_list' %}" class="btn btn-outline-primary action-btn">
+                            <i class="bi bi-arrow-right me-2"></i>Xem tất cả công việc
+                        </a>
+                        <a href="{% url 'accounts:user_dashboard' %}" class="btn btn-outline-secondary action-btn ms-2">
+                            <i class="bi bi-house-door me-2"></i>Về Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
