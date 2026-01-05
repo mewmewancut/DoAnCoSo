@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Task
 
 
@@ -11,13 +12,14 @@ from .models import Task
 @login_required
 def task_list(request):
     """
-    Display all tasks for the current user
+    Display all tasks for the current user with filter, sort, and pagination
     """
     tasks = Task.objects.filter(user=request.user)
     
     # Get filter parameters
     status_filter = request.GET.get('status')
     priority_filter = request.GET.get('priority')
+    deadline_filter = request.GET.get('deadline')  # 'overdue', 'today', 'week', 'month'
     
     # Apply filters
     if status_filter:
@@ -25,10 +27,75 @@ def task_list(request):
     if priority_filter:
         tasks = tasks.filter(priority=priority_filter)
     
+    # Deadline filters
+    if deadline_filter:
+        now = timezone.now()
+        if deadline_filter == 'overdue':
+            # Tasks with deadline in the past and not completed
+            tasks = tasks.filter(deadline__lt=now).exclude(status='completed')
+        elif deadline_filter == 'today':
+            # Tasks due today
+            tasks = tasks.filter(
+                deadline__date=now.date()
+            )
+        elif deadline_filter == 'week':
+            # Tasks due this week
+            week_end = now + timezone.timedelta(days=7)
+            tasks = tasks.filter(
+                deadline__gte=now,
+                deadline__lte=week_end
+            )
+        elif deadline_filter == 'month':
+            # Tasks due this month
+            month_end = now + timezone.timedelta(days=30)
+            tasks = tasks.filter(
+                deadline__gte=now,
+                deadline__lte=month_end
+            )
+    
+    # Get sort parameter
+    sort_by = request.GET.get('sort', '-created_at')  # Default: newest first
+    
+    # Validate sort parameter
+    valid_sorts = [
+        'created_at', '-created_at',  # By creation date
+        'deadline', '-deadline',  # By deadline
+        'priority', '-priority',  # By priority
+        'status', '-status',  # By status
+        'title', '-title',  # By title
+    ]
+    
+    if sort_by in valid_sorts:
+        # Handle sorting with nulls for deadline
+        if sort_by in ['deadline', '-deadline']:
+            # Put tasks without deadline at the end
+            if sort_by == 'deadline':
+                tasks = tasks.order_by('deadline', 'created_at')
+            else:
+                tasks = tasks.order_by('-deadline', 'created_at')
+        else:
+            tasks = tasks.order_by(sort_by)
+    else:
+        tasks = tasks.order_by('-created_at')
+    
+    # Pagination
+    page = request.GET.get('page', 1)
+    paginator = Paginator(tasks, 10)  # 10 tasks per page
+    
+    try:
+        tasks_page = paginator.page(page)
+    except PageNotAnInteger:
+        tasks_page = paginator.page(1)
+    except EmptyPage:
+        tasks_page = paginator.page(paginator.num_pages)
+    
     context = {
-        'tasks': tasks,
+        'tasks': tasks_page,
         'status_filter': status_filter,
         'priority_filter': priority_filter,
+        'deadline_filter': deadline_filter,
+        'sort_by': sort_by,
+        'paginator': paginator,
     }
     return render(request, 'tasks/task_list.html', context)
 
