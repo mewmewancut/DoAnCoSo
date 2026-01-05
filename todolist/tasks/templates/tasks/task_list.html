@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}Danh sách công việc{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- HEADER -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+
+       <a href="javascript:history.back()" 
+       class="btn btn-outline-secondary btn-sm mb-3"
+       style="border-radius: 8px;">
+        ← Quay lại
+    </a>
+    
+    <h3 class="fw-bold">📋 Công việc của tôi</h3>
+    <a href="{% url 'task_create' %}" class="btn btn-todoist text-white">
+      + Thêm task
+    </a>
+  </div>
+
+  <!-- FILTER -->
+  <form method="get" class="row g-2 mb-4">
+    <div class="col-md-3">
+      <select name="status" class="form-select">
+        <option value="">-- Trạng thái --</option>
+        <option value="pending">Chưa làm</option>
+        <option value="in_progress">Đang làm</option>
+        <option value="completed">Hoàn thành</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <select name="priority" class="form-select">
+        <option value="">-- Ưu tiên --</option>
+        <option value="low">Thấp</option>
+        <option value="medium">Trung bình</option>
+        <option value="high">Cao</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <select name="deadline" class="form-select">
+        <option value="">-- Hạn --</option>
+        <option value="today">Hôm nay</option>
+        <option value="week">Tuần này</option>
+        <option value="month">Tháng này</option>
+        <option value="overdue">Quá hạn</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <button class="btn btn-outline-secondary w-100">Lọc</button>
+    </div>
+  </form>
+
+  <!-- TASK LIST -->
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="list-group list-group-flush">
+
+      {% for task in tasks %}
+      <div class="list-group-item">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <strong>{{ task.title }}</strong><br>
+            <small class="text-muted">
+              {{ task.get_priority_display }} · {{ task.get_status_display }}
+            </small>
+          </div>
+          <div>
+            <a href="{% url 'task_detail' task.id %}" class="btn btn-sm btn-light">
+              Chi tiết
+            </a>
+            <a href="{% url 'task_update' task.id %}" class="btn btn-sm btn-outline-secondary">
+              Sửa
+            </a>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="text-center py-4 text-muted">
+        Không có task phù hợp
+      </div>
+      {% endfor %}
+
+    </div>
+  </div>
+
+  <!-- PAGINATION -->
+  {% if tasks.has_other_pages %}
+  <nav class="mt-4">
+    <ul class="pagination justify-content-center">
+      {% if tasks.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ tasks.previous_page_number }}">‹</a>
+      </li>
+      {% endif %}
+      <li class="page-item disabled">
+        <span class="page-link">
+          {{ tasks.number }} / {{ tasks.paginator.num_pages }}
+        </span>
+      </li>
+      {% if tasks.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ tasks.next_page_number }}">›</a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+</div>
+{% endblock %}

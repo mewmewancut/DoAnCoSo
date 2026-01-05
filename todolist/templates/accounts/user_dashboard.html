@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - {{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row min-vh-100">
+
+    <!-- SIDEBAR -->
+    <aside class="col-lg-2 col-md-3 d-none d-md-block bg-white border-end px-0">
+      <div class="p-4">
+        <h5 class="fw-bold text-danger mb-4">📋 Todoist AI</h5>
+
+        <ul class="nav flex-column gap-2">
+          <li class="nav-item">
+            <a class="nav-link active-nav" href="{% url 'user_dashboard' %}">
+              <i class="bi bi-house-door me-2"></i> Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link nav-soft" href="{% url 'task_list' %}">
+              <i class="bi bi-check2-square me-2"></i> Công việc
+            </a>
+          </li>
+        </ul>
+
+        <hr class="my-4">
+
+        <small class="text-muted fw-semibold">DỰ ÁN</small>
+        <a class="nav-link nav-soft small mt-2" href="#">
+          <span class="dot bg-warning me-2"></span> Đồ án cơ sở
+        </a>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="col-lg-10 col-md-9 px-4 py-4 bg-light">
+
+      <!-- HEADER -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h3 class="fw-bold mb-1">Xin chào, {{ user.username }} 👋</h3>
+          <p class="text-muted mb-0">Hôm nay là {% now "l, d/m/Y" %}</p>
+        </div>
+        <button class="btn btn-todoist" data-bs-toggle="modal" data-bs-target="#addTaskModal">
+          <i class="bi bi-plus-lg"></i> Thêm task
+        </button>
+      </div>
+
+      <!-- TASK LIST -->
+      <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body p-0">
+
+          {% for task in tasks %}
+          <div class="task-item d-flex align-items-center px-4 py-3 border-bottom">
+            <input class="form-check-input me-3" type="checkbox"
+              {% if task.status == 'completed' %}checked{% endif %}>
+
+            <div class="flex-grow-1">
+              <div class="fw-medium {% if task.status == 'completed' %}text-decoration-line-through text-muted{% endif %}">
+                {{ task.title }}
+              </div>
+              <small class="text-muted">
+                ⏰ {{ task.deadline|date:"d/m" }} · {{ task.get_priority_display }}
+              </small>
+            </div>
+
+            <a href="{% url 'task_update' task.id %}" class="btn btn-sm btn-light ms-2">
+              <i class="bi bi-pencil"></i>
+            </a>
+          </div>
+          {% empty %}
+          <div class="text-center py-5">
+            <img src="https://todoist.com/_next/static/images/empty-state_6c556b6.png"
+                 width="140" class="mb-3 opacity-75">
+            <p class="text-muted">Bạn chưa có task nào. Bắt đầu ngay thôi 🚀</p>
+          </div>
+          {% endfor %}
+
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal fade" id="addTaskModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <form method="POST" action="{% url 'task_create' %}"
+          class="modal-content border-0 rounded-4 shadow">
+      {% csrf_token %}
+      <div class="modal-body p-4">
+        <h5 class="fw-bold mb-3">➕ Thêm công việc</h5>
+
+        <input type="text" name="title"
+          class="form-control mb-3" placeholder="Tên công việc" required>
+
+        <textarea name="description" rows="3"
+          class="form-control mb-4" placeholder="Mô tả (không bắt buộc)"></textarea>
+
+        <div class="text-end">
+          <button class="btn btn-light me-2" data-bs-dismiss="modal">Hủy</button>
+          <button class="btn btn-todoist text-white">Thêm</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+  .nav-soft {
+    color: #333;
+    border-radius: 10px;
+    padding: 10px 12px;
+  }
+  .nav-soft:hover {
+    background: #f5f5f5;
+  }
+  .active-nav {
+    background: #ffefed;
+    color: #e44332 !important;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 10px 12px;
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .task-item:hover {
+    background: #fafafa;
+  }
+</style>
+{% endblock %}
