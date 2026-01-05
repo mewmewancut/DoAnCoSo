@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        :root { --todoist-red: #e44332; --text-dark: #202020; --gray-icon: #666666; }
+        :root { --todoist-red: #c3392b; --text-dark: #202020; --gray-icon: #666666; }
         body { font-family: 'Inter', sans-serif; color: var(--text-dark); }
         .navbar { background: #fff; padding: 15px 0; }
         .custom-dropdown .dropdown-menu { border: none; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); padding: 8px; min-width: 280px; margin-top: 15px !important; }
@@ -19,7 +19,7 @@
         .dropdown-item:hover { background-color: #f3f3f3; }
         .dropdown-item i { font-size: 1.3rem; margin-right: 15px; color: var(--gray-icon); }
         .btn-todoist { background-color: var(--todoist-red); color: white; font-weight: 700; border-radius: 8px; padding: 10px 24px; border: none; }
-        .btn-todoist:hover { background-color: #c3392b; color: white; }
+        .btn-todoist:hover { background-color: #a32d22; color: white; }
     </style>
 </head>
 <body>
@@ -52,11 +52,11 @@
                     </li>
                     <li class="nav-item"><a class="nav-link" href="#">Giá cả</a></li>
                     {% if user.is_authenticated %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Đăng xuất</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'accounts:logout' %}">Đăng xuất</a></li>
                     {% else %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Đăng nhập</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'accounts:login' %}">Đăng nhập</a></li>
                         <li class="nav-item ms-3">
-                            <a class="btn btn-todoist" href="{% url 'register' %}">Dùng thử miễn phí</a>
+                            <a class="btn btn-todoist" href="{% url 'accounts:register' %}">Dùng thử miễn phí</a>
                         </li>
                     {% endif %}
                 </ul>
@@ -64,9 +64,51 @@
         </div>
     </nav>
 
+    <!-- Messages Display -->
+    {% if messages %}
+    <div class="container mt-3" id="messages-container">
+        {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags|default:'info' }}{% endif %} alert-dismissible fade show" role="alert" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 0.75rem;">
+            <div class="d-flex align-items-center">
+                {% if message.tags == 'error' or message.tags == 'danger' %}
+                    <i class="bi bi-exclamation-triangle-fill me-2" style="font-size: 1.2rem;"></i>
+                {% elif message.tags == 'success' %}
+                    <i class="bi bi-check-circle-fill me-2" style="font-size: 1.2rem;"></i>
+                {% elif message.tags == 'warning' %}
+                    <i class="bi bi-exclamation-circle-fill me-2" style="font-size: 1.2rem;"></i>
+                {% elif message.tags == 'info' or message.tags == 'debug' %}
+                    <i class="bi bi-info-circle-fill me-2" style="font-size: 1.2rem;"></i>
+                {% else %}
+                    <i class="bi bi-bell-fill me-2" style="font-size: 1.2rem;"></i>
+                {% endif %}
+                <div class="flex-grow-1">{{ message }}</div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     {% block content %}
     {% endblock %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Auto-dismiss messages after 5 seconds -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                // Auto-dismiss after 5 seconds (except for error messages which stay longer)
+                const isError = alert.classList.contains('alert-danger');
+                const delay = isError ? 8000 : 5000;
+                
+                setTimeout(function() {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                }, delay);
+            });
+        });
+    </script>
 </body>
 </html>

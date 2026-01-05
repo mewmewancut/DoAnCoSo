@@ -137,6 +137,16 @@ EMAIL_HOST_PASSWORD = "ttve cvzg dmwf dfrx"
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 AUTH_USER_MODEL = "accounts.User"
 
-#Minh
-LOGIN_REDIRECT_URL = 'user_dashboard' 
-LOGOUT_REDIRECT_URL = 'login'
+# Authentication URLs
+LOGIN_REDIRECT_URL = 'accounts:user_dashboard' 
+LOGOUT_REDIRECT_URL = 'accounts:login'
+
+# Messages Framework Configuration
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.DEBUG: 'debug',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'danger',  # Map Django's 'error' to Bootstrap's 'danger'
+}
