@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if task %}Chỉnh sửa: {{ task.title }}{% else %}Thêm công việc mới{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm p-4" style="border-radius: 16px;">
+                <h2 class="fw-bold mb-4">
+                    {% if task %}Chỉnh sửa công việc{% else %}Thêm công việc mới{% endif %}
+                </h2>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Tiêu đề</label>
+                        <input type="text" name="title" class="form-control" value="{{ task.title|default:'' }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Mô tả</label>
+                        <textarea name="description" class="form-control" rows="3">{{ task.description|default:'' }}</textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Độ ưu tiên</label>
+                            <select name="priority" class="form-select">
+                                {% for value, label in priority_choices %}
+                                    <option value="{{ value }}" {% if task.priority == value %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Trạng thái</label>
+                            <select name="status" class="form-select">
+                                {% for value, label in status_choices %}
+                                    <option value="{{ value }}" {% if task.status == value %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Hạn chót</label>
+                        <input type="datetime-local" name="deadline" class="form-control" value="{{ task.deadline|date:'Y-m-d\TH:i' }}">
+                    </div>
+
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary px-4">Lưu thay đổi</button>
+                        <a href="{% url 'task_list' %}" class="btn btn-light border">Hủy</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

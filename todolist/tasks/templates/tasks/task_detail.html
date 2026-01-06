@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Chi tiết công việc{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="card border-0 shadow-sm p-4" style="border-radius: 16px;">
+        <h2 class="fw-bold">{{ task.title }}</h2>
+        <hr>
+        <p class="text-muted">{{ task.description|default:"Không có mô tả." }}</p>
+        
+        <ul class="list-unstyled mt-4">
+            <li><strong>Trạng thái:</strong> {{ task.get_status_display }}</li>
+            <li><strong>Độ ưu tiên:</strong> {{ task.get_priority_display }}</li>
+            <li><strong>Hạn chót:</strong> {{ task.deadline|date:"d/m/Y H:i"|default:"Chưa thiết lập" }}</li>
+        </ul>
+
+        <div class="mt-4">
+            <a href="{% url 'task_update' task.id %}" class="btn btn-primary">Chỉnh sửa</a>
+            <a href="{% url 'task_list' %}" class="btn btn-light border">Quay lại danh sách</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
