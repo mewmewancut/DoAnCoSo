@@ -1,109 +1,131 @@
-{% extends "base.html" %}
-{% block title %}Danh sách công việc{% endblock %}
+{% extends 'base.html' %}
+{% block title %}Danh sách Task{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-
-  <!-- HEADER -->
-  <div class="d-flex justify-content-between align-items-center mb-4">
-
-       <a href="javascript:history.back()" 
-       class="btn btn-outline-secondary btn-sm mb-3"
-       style="border-radius: 8px;">
-        ← Quay lại
-    </a>
-    
-    <h3 class="fw-bold">📋 Công việc của tôi</h3>
-    <a href="{% url 'task_create' %}" class="btn btn-todoist text-white">
-      + Thêm task
-    </a>
-  </div>
-
-  <!-- FILTER -->
-  <form method="get" class="row g-2 mb-4">
-    <div class="col-md-3">
-      <select name="status" class="form-select">
-        <option value="">-- Trạng thái --</option>
-        <option value="pending">Chưa làm</option>
-        <option value="in_progress">Đang làm</option>
-        <option value="completed">Hoàn thành</option>
-      </select>
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-2 align-items-center">
+            <div class="col-md-2">
+                <select name="status" class="form-select form-select-sm">
+                    <option value="">-- Trạng thái --</option>
+                    <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Chờ xử lý</option>
+                    <option value="in_progress" {% if status_filter == 'in_progress' %}selected{% endif %}>Đang làm</option>
+                    <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Hoàn thành</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select name="priority" class="form-select form-select-sm">
+                    <option value="">-- Ưu tiên --</option>
+                    <option value="low" {% if priority_filter == 'low' %}selected{% endif %}>Thấp</option>
+                    <option value="medium" {% if priority_filter == 'medium' %}selected{% endif %}>Trung bình</option>
+                    <option value="high" {% if priority_filter == 'high' %}selected{% endif %}>Cao</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select name="deadline" class="form-select form-select-sm">
+                    <option value="">-- Hạn chót --</option>
+                    <option value="overdue" {% if deadline_filter == 'overdue' %}selected{% endif %}>Quá hạn</option>
+                    <option value="today" {% if deadline_filter == 'today' %}selected{% endif %}>Hôm nay</option>
+                    <option value="week" {% if deadline_filter == 'week' %}selected{% endif %}>Tuần này</option>
+                    <option value="month" {% if deadline_filter == 'month' %}selected{% endif %}>Tháng này</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select name="sort" class="form-select form-select-sm">
+                    <option value="-created_at" {% if sort_by == '-created_at' %}selected{% endif %}>Mới nhất</option>
+                    <option value="deadline" {% if sort_by == 'deadline' %}selected{% endif %}>Hạn chót tăng dần</option>
+                    <option value="priority" {% if sort_by == 'priority' %}selected{% endif %}>Theo ưu tiên</option>
+                    <option value="title" {% if sort_by == 'title' %}selected{% endif %}>Theo tên (A-Z)</option>
+                </select>
+            </div>
+            <div class="col-md-4 text-end">
+                <button type="submit" class="btn btn-sm btn-dark px-3">Lọc</button>
+                <a href="{% url 'task_list' %}" class="btn btn-sm btn-outline-secondary">Xóa lọc</a>
+                <a href="{% url 'task_create' %}" class="btn btn-sm btn-primary px-3"><i class="fas fa-plus"></i> Thêm mới</a>
+            </div>
+        </form>
     </div>
-    <div class="col-md-3">
-      <select name="priority" class="form-select">
-        <option value="">-- Ưu tiên --</option>
-        <option value="low">Thấp</option>
-        <option value="medium">Trung bình</option>
-        <option value="high">Cao</option>
-      </select>
-    </div>
-    <div class="col-md-3">
-      <select name="deadline" class="form-select">
-        <option value="">-- Hạn --</option>
-        <option value="today">Hôm nay</option>
-        <option value="week">Tuần này</option>
-        <option value="month">Tháng này</option>
-        <option value="overdue">Quá hạn</option>
-      </select>
-    </div>
-    <div class="col-md-3">
-      <button class="btn btn-outline-secondary w-100">Lọc</button>
-    </div>
-  </form>
-
-  <!-- TASK LIST -->
-  <div class="card shadow-sm border-0 rounded-4">
-    <div class="list-group list-group-flush">
-
-      {% for task in tasks %}
-      <div class="list-group-item">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <strong>{{ task.title }}</strong><br>
-            <small class="text-muted">
-              {{ task.get_priority_display }} · {{ task.get_status_display }}
-            </small>
-          </div>
-          <div>
-            <a href="{% url 'task_detail' task.id %}" class="btn btn-sm btn-light">
-              Chi tiết
-            </a>
-            <a href="{% url 'task_update' task.id %}" class="btn btn-sm btn-outline-secondary">
-              Sửa
-            </a>
-          </div>
-        </div>
-      </div>
-      {% empty %}
-      <div class="text-center py-4 text-muted">
-        Không có task phù hợp
-      </div>
-      {% endfor %}
-
-    </div>
-  </div>
-
-  <!-- PAGINATION -->
-  {% if tasks.has_other_pages %}
-  <nav class="mt-4">
-    <ul class="pagination justify-content-center">
-      {% if tasks.has_previous %}
-      <li class="page-item">
-        <a class="page-link" href="?page={{ tasks.previous_page_number }}">‹</a>
-      </li>
-      {% endif %}
-      <li class="page-item disabled">
-        <span class="page-link">
-          {{ tasks.number }} / {{ tasks.paginator.num_pages }}
-        </span>
-      </li>
-      {% if tasks.has_next %}
-      <li class="page-item">
-        <a class="page-link" href="?page={{ tasks.next_page_number }}">›</a>
-      </li>
-      {% endif %}
-    </ul>
-  </nav>
-  {% endif %}
 </div>
+
+<div class="card shadow-sm overflow-hidden">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th class="ps-3">Tiêu đề</th>
+                    <th>Mức độ</th>
+                    <th>Trạng thái</th>
+                    <th>Hạn chót</th>
+                    <th class="text-center">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                <tr class="{% if task.is_overdue %}table-danger-subtle{% endif %}">
+                    <td class="ps-3">
+                        <a href="{% url 'task_detail' task.id %}" class="text-decoration-none text-dark fw-bold">
+                            {{ task.title }}
+                        </a>
+                        {% if task.is_overdue %}
+                        <span class="badge bg-danger ms-1" style="font-size: 0.6rem;">TRỄ</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if task.priority == 'high' %}
+                            <span class="badge bg-danger">Cao</span>
+                        {% elif task.priority == 'medium' %}
+                            <span class="badge bg-warning text-dark">Trung bình</span>
+                        {% else %}
+                            <span class="badge bg-info">Thấp</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="badge rounded-pill border text-dark bg-light">
+                            {{ task.get_status_display }}
+                        </span>
+                    </td>
+                    <td>
+                        <small class="{% if task.is_overdue %}text-danger fw-bold{% endif %}">
+                            {{ task.deadline|date:"d/m/Y H:i"|default:"---" }}
+                        </small>
+                    </td>
+                    <td class="text-center">
+                        <div class="btn-group">
+                            <a href="{% url 'task_detail' task.id %}" class="btn btn-sm btn-outline-primary" title="Xem"><i class="fas fa-eye"></i></a>
+                            <a href="{% url 'task_update' task.id %}" class="btn btn-sm btn-outline-warning" title="Sửa"><i class="fas fa-edit"></i></a>
+                            <a href="{% url 'task_delete' task.id %}" class="btn btn-sm btn-outline-danger" title="Xóa"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="text-center py-5 text-muted">Không tìm thấy task nào phù hợp.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% if tasks.has_other_pages %}
+<nav class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if tasks.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ tasks.previous_page_number }}&status={{ status_filter }}&priority={{ priority_filter }}&deadline={{ deadline_filter }}&sort={{ sort_by }}">Trước</a>
+        </li>
+        {% endif %}
+
+        {% for i in tasks.paginator.page_range %}
+            <li class="page-item {% if tasks.number == i %}active{% endif %}">
+                <a class="page-link" href="?page={{ i }}&status={{ status_filter }}&priority={{ priority_filter }}&deadline={{ deadline_filter }}&sort={{ sort_by }}">{{ i }}</a>
+            </li>
+        {% endfor %}
+
+        {% if tasks.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ tasks.next_page_number }}&status={{ status_filter }}&priority={{ priority_filter }}&deadline={{ deadline_filter }}&sort={{ sort_by }}">Sau</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
 {% endblock %}

@@ -32,4 +32,10 @@ urlpatterns = [
     
     # Dashboard
     path("user-dashboard/", views.user_dashboard, name="user_dashboard"),
+    
+    # Profile
+    path("profile/", views.profile_view, name="profile"),
+    path("profile/edit/", views.profile_edit, name="profile_edit"),
+    path("profile/change-password/", views.password_change_view, name="password_change"),
+    path("profile/delete/", views.account_delete, name="account_delete"),
 ]
