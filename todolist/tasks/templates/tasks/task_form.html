@@ -2,38 +2,114 @@
 {% block title %}{% if task %}Sửa Task{% else %}Tạo Task mới{% endif %}{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card shadow">
-            <div class="card-header bg-white py-3">
-                <h5 class="mb-0 fw-bold text-primary">
-                    {% if task %}Cập nhật: {{ task.title }}{% else %}Thêm Task mới{% endif %}
-                </h5>
+<style>
+    /* 1. Nâng cấp Card theo phong cách Glassmorphism nhẹ */
+    .task-card-premium {
+        background: #ffffff;
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(139, 40, 32, 0.08);
+        overflow: hidden;
+        transition: transform 0.3s ease;
+    }
+
+    /* 2. Header với dải màu thương hiệu */
+    .card-header-brand {
+        background: linear-gradient(135deg, #c3392b 0%, #8b2820 100%);
+        padding: 25px !important;
+        border: none;
+    }
+
+    /* 3. Hiệu ứng cho Form Input */
+    .form-control-custom {
+        border: 2px solid #f0f0f0;
+        border-radius: 12px;
+        padding: 12px 15px;
+        transition: all 0.3s ease;
+    }
+    .form-control-custom:focus {
+        border-color: #c3392b;
+        box-shadow: 0 0 0 4px rgba(195, 57, 43, 0.1);
+        background-color: #fff;
+    }
+
+    /* 4. Button lưu với hiệu ứng Gradient và Shine */
+    .btn-save-task {
+        background: linear-gradient(135deg, #c3392b 0%, #8b2820 100%);
+        border: none;
+        border-radius: 12px;
+        color: white;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        padding: 14px;
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    .btn-save-task:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(139, 40, 32, 0.3);
+        opacity: 0.95;
+    }
+
+    /* 5. Label tinh tế */
+    .label-premium {
+        font-size: 0.9rem;
+        color: #555;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    /* Animation cho form khi load */
+    .fade-up-form {
+        animation: fadeUp 0.6s ease-out;
+    }
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<div class="row justify-content-center py-5 fade-up-form">
+    <div class="col-md-7 col-lg-6">
+        <div class="card task-card-premium">
+            <div class="card-header card-header-brand">
+                <h4 class="mb-0 fw-bold text-white text-center">
+                    {% if task %}
+                        <i class="fas fa-edit me-2"></i>Chỉnh sửa công việc
+                    {% else %}
+                        <i class="fas fa-plus-circle me-2"></i>Tạo công việc mới
+                    {% endif %}
+                </h4>
             </div>
-            <div class="card-body">
-                <form method="post">
+            
+            <div class="card-body p-4 p-lg-5">
+                <form method="post" class="needs-validation">
                     {% csrf_token %}
                     
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Tiêu đề <span class="text-danger">*</span></label>
-                        <input type="text" name="title" class="form-control" value="{{ task.title }}" required>
+                    <div class="mb-4">
+                        <label class="label-premium fw-bold">Tiêu đề công việc <span class="text-danger">*</span></label>
+                        <input type="text" name="title" class="form-control form-control-custom" 
+                               placeholder="Ví dụ: Hoàn thành báo cáo quý..." 
+                               value="{{ task.title }}" required>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Mô tả</label>
-                        <textarea name="description" class="form-control" rows="4">{{ task.description }}</textarea>
+                    <div class="mb-4">
+                        <label class="label-premium fw-bold">Mô tả chi tiết</label>
+                        <textarea name="description" class="form-control form-control-custom" 
+                                  rows="4" placeholder="Nhập ghi chú thêm cho công việc này...">{{ task.description }}</textarea>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Hạn chót</label>
-                        <input type="datetime-local" name="deadline" class="form-control" 
+                    <div class="mb-4">
+                        <label class="label-premium fw-bold"><i class="far fa-calendar-alt me-2 text-brand"></i>Hạn chót</label>
+                        <input type="datetime-local" name="deadline" class="form-control form-control-custom" 
                                value="{{ task.deadline|date:'Y-m-d\TH:i' }}">
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Mức độ ưu tiên</label>
-                            <select name="priority" class="form-select">
+                        <div class="col-md-6 mb-4">
+                            <label class="label-premium fw-bold"><i class="fas fa-flag me-2 text-brand"></i>Mức ưu tiên</label>
+                            <select name="priority" class="form-select form-control-custom">
                                 {% for val, label in priority_choices %}
                                 <option value="{{ val }}" {% if task.priority == val %}selected{% elif not task and val == 'medium' %}selected{% endif %}>
                                     {{ label }}
@@ -41,9 +117,10 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Trạng thái</label>
-                            <select name="status" class="form-select">
+                        
+                        <div class="col-md-6 mb-4">
+                            <label class="label-premium fw-bold"><i class="fas fa-tasks me-2 text-brand"></i>Trạng thái</label>
+                            <select name="status" class="form-select form-control-custom">
                                 {% for val, label in status_choices %}
                                 <option value="{{ val }}" {% if task.status == val %}selected{% elif not task and val == 'pending' %}selected{% endif %}>
                                     {{ label }}
@@ -53,9 +130,14 @@
                         </div>
                     </div>
 
-                    <div class="mt-4 d-grid gap-2">
-                        <button type="submit" class="btn btn-primary btn-lg">Lưu Task</button>
-                        <a href="{% if task %}{% url 'task_detail' task.id %}{% else %}{% url 'task_list' %}{% endif %}" class="btn btn-light border">Hủy bỏ</a>
+                    <div class="mt-4 d-grid gap-3">
+                        <button type="submit" class="btn btn-save-task btn-lg">
+                            Lưu thông tin công việc
+                        </button>
+                        <a href="{% if task %}{% url 'task_detail' task.id %}{% else %}{% url 'task_list' %}{% endif %}" 
+                           class="btn btn-light border-0 py-3 fw-bold text-muted">
+                            Hủy và quay lại
+                        </a>
                     </div>
                 </form>
             </div>
