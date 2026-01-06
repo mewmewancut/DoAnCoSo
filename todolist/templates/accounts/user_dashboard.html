@@ -1,137 +1,277 @@
 {% extends 'base.html' %}
-{% load static %}
-
-{% block title %}Dashboard - {{ user.username }}{% endblock %}
+{% block title %}Today - TaskMaster{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-  <div class="row min-vh-100">
+<style>
+    /* 1. HỆ THỐNG MÀU & LAYOUT CHUẨN TODOIST */
+    :root {
+        --brand-red: #c3392b;
+        --brand-dark: #8b2820;
+        --sidebar-bg: #faf9f8;
+        --text-main: #202020;
+        --text-muted: #808080;
+        --divider: #f0f0f0;
+    }
 
-    <!-- SIDEBAR -->
-    <aside class="col-lg-2 col-md-3 d-none d-md-block bg-white border-end px-0">
-      <div class="p-4">
-        <h5 class="fw-bold text-danger mb-4">📋 Todoist AI</h5>
+    body { background-color: #ffffff; color: var(--text-main); font-family: 'Inter', -apple-system, sans-serif; }
 
-        <ul class="nav flex-column gap-2">
-          <li class="nav-item">
-            <a class="nav-link active-nav" href="{% url 'accounts:user_dashboard' %}">
-              <i class="bi bi-house-door me-2"></i> Dashboard
+    .dashboard-wrapper { display: flex; min-height: 100vh; margin-top: -24px; }
+
+    /* 2. SIDEBAR (280px) */
+    .sidebar {
+        width: 280px;
+        background-color: var(--sidebar-bg);
+        border-right: 1px solid var(--divider);
+        padding: 20px 15px;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+    }
+
+    .user-pill {
+        display: flex;
+        align-items: center;
+        padding: 8px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .avatar-circle {
+        width: 28px; height: 28px;
+        background: var(--brand-red);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: bold;
+        margin-right: 10px;
+    }
+
+    .nav-link-todoist {
+        display: flex;
+        align-items: center;
+        padding: 10px 12px;
+        color: var(--text-main);
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.2s ease;
+        margin-bottom: 2px;
+    }
+
+    .nav-link-todoist:hover { background: #eee; color: #000; }
+    .nav-link-todoist.active { background: #ffefe5; color: var(--brand-red); font-weight: 600; }
+    .nav-link-todoist i { width: 24px; font-size: 16px; margin-right: 10px; }
+
+    .btn-add-sidebar {
+        color: var(--brand-red);
+        font-weight: 700;
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        padding-left: 12px;
+    }
+
+    /* 3. MAIN CONTENT (TASK STREAM) */
+    .main-stream {
+        flex: 1;
+        padding: 40px 15% 80px 10%; /* Spacing rộng tập trung vào giữa */
+        max-width: 1000px;
+    }
+
+    .view-header { margin-bottom: 30px; }
+    .view-header h1 { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+    .view-header p { font-size: 12px; color: var(--text-muted); }
+
+    /* 4. TASK ITEM DESIGN (NO TABLE) */
+    .section-title {
+        font-size: 14px;
+        font-weight: 700;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--divider);
+        margin-top: 25px;
+        margin-bottom: 0;
+    }
+
+    .task-item {
+        display: flex;
+        align-items: flex-start;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--divider);
+        position: relative;
+        transition: all 0.2s ease;
+    }
+
+    .task-item:hover { background-color: #fcfcfc; }
+
+    /* Checkbox tròn UI */
+    .task-check-circle {
+        min-width: 18px; height: 18px;
+        border: 2px solid #ccc;
+        border-radius: 50%;
+        margin-top: 3px;
+        margin-right: 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .task-item:hover .task-check-circle { border-color: var(--brand-red); }
+
+    .task-body { flex: 1; }
+    .task-title {
+        font-size: 14px;
+        color: var(--text-main);
+        text-decoration: none;
+        display: block;
+        margin-bottom: 4px;
+        line-height: 1.4;
+    }
+
+    .task-meta {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 12px;
+    }
+
+    .deadline-overdue { color: var(--brand-red); font-weight: 600; }
+    
+    /* Nút hành động nhỏ gọn hiện khi hover */
+    .task-actions-mini {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 12px;
+        background: white;
+        padding-left: 10px;
+    }
+    .task-item:hover .task-actions-mini { display: flex; gap: 8px; }
+
+    .btn-action-sm {
+        width: 26px; height: 26px;
+        display: flex; align-items: center; justify-content: center;
+        border-radius: 4px;
+        color: var(--text-muted);
+        text-decoration: none;
+        font-size: 12px;
+    }
+    .btn-action-sm:hover { background: #eee; color: var(--brand-red); }
+
+    /* Inline Add Task */
+    .add-task-inline {
+        display: flex;
+        align-items: center;
+        padding: 12px 0;
+        color: var(--text-muted);
+        text-decoration: none;
+        font-size: 14px;
+        transition: color 0.2s;
+    }
+    .add-task-inline:hover { color: var(--brand-red); }
+    .add-task-inline i { color: var(--brand-red); font-size: 16px; margin-right: 10px; }
+
+</style>
+
+<div class="dashboard-wrapper">
+    <aside class="sidebar d-none d-md-block">
+        <div class="user-pill">
+            <div class="avatar-circle">{{ request.user.username|slice:":1"|upper }}</div>
+            <span class="small fw-bold">{{ request.user.username }}</span>
+        </div>
+
+        <nav>
+            <a href="{% url 'dashboard' %}" class="nav-link-todoist active">
+                <i class="fas fa-calendar-day"></i> Today
             </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link nav-soft" href="{% url 'task_list' %}">
-              <i class="bi bi-check2-square me-2"></i> Công việc
+            <a href="{% url 'task_list' %}" class="nav-link-todoist">
+                <i class="fas fa-tasks text-primary"></i> All Tasks
             </a>
-          </li>
-        </ul>
+            <a href="{% url 'task_list' %}?status=completed" class="nav-link-todoist">
+                <i class="fas fa-check-double text-success"></i> Completed
+            </a>
+        </nav>
 
-        <hr class="my-4">
-
-        <small class="text-muted fw-semibold">DỰ ÁN</small>
-        <a class="nav-link nav-soft small mt-2" href="#">
-          <span class="dot bg-warning me-2"></span> Đồ án cơ sở
+        <a href="{% url 'task_create' %}" class="btn-add-sidebar small">
+            <i class="fas fa-plus-circle me-2"></i> Add task
         </a>
-      </div>
+
+        <div class="mt-5 px-2">
+            <p class="text-uppercase fw-bold text-muted" style="font-size: 10px; letter-spacing: 1px;">Projects</p>
+            <p class="small text-muted ps-2"># My Project</p>
+        </div>
     </aside>
 
-    <!-- MAIN -->
-    <main class="col-lg-10 col-md-9 px-4 py-4 bg-light">
+    <main class="main-stream">
+        <header class="view-header">
+            <h1>Today</h1>
+            <p>{{ overdue_count }} overdue · {{ recent_tasks|length }} tasks</p>
+        </header>
 
-      <!-- HEADER -->
-      <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-          <h3 class="fw-bold mb-1">Xin chào, {{ user.username }} 👋</h3>
-          <p class="text-muted mb-0">Hôm nay là {% now "l, d/m/Y" %}</p>
-        </div>
-        <button class="btn btn-todoist" data-bs-toggle="modal" data-bs-target="#addTaskModal">
-          <i class="bi bi-plus-lg"></i> Thêm task
-        </button>
-      </div>
-
-      <!-- TASK LIST -->
-      <div class="card shadow-sm border-0 rounded-4">
-        <div class="card-body p-0">
-
-          {% for task in tasks %}
-          <div class="task-item d-flex align-items-center px-4 py-3 border-bottom">
-            <input class="form-check-input me-3" type="checkbox"
-              {% if task.status == 'completed' %}checked{% endif %}>
-
-            <div class="flex-grow-1">
-              <div class="fw-medium {% if task.status == 'completed' %}text-decoration-line-through text-muted{% endif %}">
-                {{ task.title }}
-              </div>
-              <small class="text-muted">
-                ⏰ {{ task.deadline|date:"d/m" }} · {{ task.get_priority_display }}
-              </small>
+        {% if overdue_count > 0 %}
+        <div class="mb-5">
+            <h2 class="section-title text-danger">Overdue</h2>
+            <div class="task-stream">
+                {% for task in overdue_tasks %}
+                <div class="task-item">
+                    <div class="task-check-circle"></div>
+                    <div class="task-body">
+                        <a href="{% url 'task_detail' task_id=task.id %}" class="task-title fw-bold text-danger">{{ task.title }}</a>
+                        <div class="task-meta">
+                            <span class="deadline-overdue small">
+                                <i class="fas fa-calendar-times me-1"></i> Yesterday
+                            </span>
+                            <span class="text-muted small"># Inbox</span>
+                        </div>
+                    </div>
+                    <div class="task-actions-mini">
+                        <a href="{% url 'task_update' task_id=task.id %}" class="btn-action-sm" title="Edit"><i class="fas fa-pencil-alt"></i></a>
+                        <a href="{% url 'task_delete' task_id=task.id %}" class="btn-action-sm" title="Delete"><i class="fas fa-trash-alt"></i></a>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
-
-            <a href="{% url 'task_update' task.id %}" class="btn btn-sm btn-light ms-2">
-              <i class="bi bi-pencil"></i>
-            </a>
-          </div>
-          {% empty %}
-          <div class="text-center py-5">
-            <img src="https://todoist.com/_next/static/images/empty-state_6c556b6.png"
-                 width="140" class="mb-3 opacity-75">
-            <p class="text-muted">Bạn chưa có task nào. Bắt đầu ngay thôi 🚀</p>
-          </div>
-          {% endfor %}
-
         </div>
-      </div>
+        {% endif %}
+
+        <div class="mb-4">
+            <h2 class="section-title">Tasks</h2>
+            <div class="task-stream">
+                {% for task in recent_tasks %}
+                <div class="task-item">
+                    <div class="task-check-circle"></div>
+                    <div class="task-body">
+                        <a href="{% url 'task_detail' task_id=task.id %}" class="task-title">{{ task.title }}</a>
+                        <div class="task-meta">
+                            {% if task.priority == 'high' %}
+                                <span class="text-danger fw-bold" style="font-size: 10px;"><i class="fas fa-flag"></i> High</span>
+                            {% endif %}
+                            
+                            {% if task.deadline %}
+                                <span class="text-muted small"><i class="far fa-calendar"></i> {{ task.deadline|date:"H:i" }}</span>
+                            {% endif %}
+                            
+                            <span class="badge bg-light text-dark border fw-normal" style="font-size: 10px;">{{ task.get_status_display }}</span>
+                        </div>
+                    </div>
+                    <div class="task-actions-mini">
+                        <a href="{% url 'task_update' task_id=task.id %}" class="btn-action-sm" title="Edit"><i class="fas fa-pencil-alt"></i></a>
+                        <a href="{% url 'task_delete' task_id=task.id %}" class="btn-action-sm" title="Delete"><i class="fas fa-trash-alt"></i></a>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center py-5">
+                    <p class="text-muted small">🎉 All clear! No tasks for today.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <a href="{% url 'task_create' %}" class="add-task-inline">
+            <i class="fas fa-plus"></i> Add task
+        </a>
     </main>
-  </div>
 </div>
-
-<!-- MODAL -->
-<div class="modal fade" id="addTaskModal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <form method="POST" action="{% url 'task_create' %}"
-          class="modal-content border-0 rounded-4 shadow">
-      {% csrf_token %}
-      <div class="modal-body p-4">
-        <h5 class="fw-bold mb-3">➕ Thêm công việc</h5>
-
-        <input type="text" name="title"
-          class="form-control mb-3" placeholder="Tên công việc" required>
-
-        <textarea name="description" rows="3"
-          class="form-control mb-4" placeholder="Mô tả (không bắt buộc)"></textarea>
-
-        <div class="text-end">
-          <button class="btn btn-light me-2" data-bs-dismiss="modal">Hủy</button>
-          <button class="btn btn-todoist text-white">Thêm</button>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
-
-<style>
-  .nav-soft {
-    color: #333;
-    border-radius: 10px;
-    padding: 10px 12px;
-  }
-  .nav-soft:hover {
-    background: #f5f5f5;
-  }
-  .active-nav {
-    background: #ffefed;
-    color: #e44332 !important;
-    font-weight: 600;
-    border-radius: 10px;
-    padding: 10px 12px;
-  }
-  .dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    display: inline-block;
-  }
-  .task-item:hover {
-    background: #fafafa;
-  }
-</style>
 {% endblock %}

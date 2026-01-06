@@ -2,152 +2,57 @@
 {% block title %}Chi tiết: {{ task.title }}{% endblock %}
 
 {% block content %}
-<style>
-    /* 1. Breadcrumb tinh tế hơn */
-    .breadcrumb-item a { color: var(--brand-red); text-decoration: none; transition: 0.3s; }
-    .breadcrumb-item a:hover { color: var(--brand-dark); }
-
-    /* 2. Detail Card với hiệu ứng tràn viền (Full height border left) */
-    .detail-card {
-        background: #ffffff;
-        border: none;
-        border-radius: 20px;
-        box-shadow: 0 15px 40px rgba(0,0,0,0.05);
-        overflow: hidden;
-        border-left: 6px solid var(--brand-primary); /* Sử dụng biến brand-primary từ base.html */
-        animation: slideInRight 0.5s ease-out;
-    }
-
-    /* 3. Badge ưu tiên cao cấp */
-    .badge-priority {
-        padding: 8px 16px;
-        border-radius: 8px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-size: 0.75rem;
-    }
-    .badge-priority-high { background: var(--brand-gradient); color: white; box-shadow: 0 4px 10px rgba(195, 57, 43, 0.3); }
-
-    /* 4. Khối thông tin Status/Deadline */
-    .info-box {
-        background: #fdfdfd;
-        border: 1px solid #f0f0f0;
-        border-radius: 15px;
-        padding: 20px;
-        transition: all 0.3s ease;
-    }
-    .info-box:hover {
-        background: #fff;
-        border-color: var(--brand-red);
-        transform: translateY(-3px);
-    }
-    .info-label {
-        font-size: 0.75rem;
-        font-weight: 700;
-        color: #999;
-        text-transform: uppercase;
-        margin-bottom: 5px;
-        display: block;
-    }
-
-    /* 5. Mô tả với hiệu ứng typo sạch sẽ */
-    .description-text {
-        font-size: 1.1rem;
-        line-height: 1.8;
-        color: #444;
-        background: rgba(195, 57, 43, 0.02);
-        border-radius: 12px;
-        padding: 20px;
-    }
-
-    /* 6. Buttons */
-    .btn-edit-custom {
-        background-color: #ffc107;
-        color: #000;
-        border: none;
-        border-radius: 10px;
-        font-weight: 600;
-        transition: 0.3s;
-    }
-    .btn-edit-custom:hover { background-color: #e0a800; transform: scale(1.05); }
-
-    .btn-delete-outline {
-        border: 2px solid #dc3545;
-        color: #dc3545;
-        border-radius: 10px;
-        font-weight: 600;
-        transition: 0.3s;
-    }
-    .btn-delete-outline:hover { background-color: #dc3545; color: white; }
-
-    @keyframes slideInRight {
-        from { opacity: 0; transform: translateX(30px); }
-        to { opacity: 1; transform: translateX(0); }
-    }
-</style>
-
-<div class="row justify-content-center py-4">
-    <div class="col-md-9 col-lg-8">
+<div class="row justify-content-center">
+    <div class="col-md-8">
         <nav aria-label="breadcrumb" class="mb-4">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'task_list' %}"><i class="fas fa-arrow-left me-1"></i> Danh sách</a></li>
-                <li class="breadcrumb-item active fw-bold text-dark">{{ task.title|truncatechars:30 }}</li>
+                <li class="breadcrumb-item"><a href="{% url 'task_list' %}">Danh sách Task</a></li>
+                <li class="breadcrumb-item active">{{ task.title }}</li>
             </ol>
         </nav>
 
-        <div class="card detail-card">
-            <div class="card-body p-4 p-lg-5">
-                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
-                    <h1 class="display-6 fw-bold text-dark mb-0">{{ task.title }}</h1>
-                    <span class="badge-priority {% if task.priority == 'high' %}badge-priority-high{% else %}bg-light text-dark border{% endif %}">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="mb-0 fw-bold">{{ task.title }}</h2>
+                    <span class="badge p-2 px-3 {% if task.priority == 'high' %}bg-danger{% else %}bg-primary{% endif %}">
                         {{ task.get_priority_display }}
                     </span>
                 </div>
 
-                <div class="mb-5">
-                    <h6 class="info-label"><i class="fas fa-align-left me-2"></i>Chi tiết công việc</h6>
-                    <div class="description-text">
-                        {{ task.description|default:"<i>Không có mô tả chi tiết cho công việc này.</i>"|safe }}
-                    </div>
+                <div class="mb-4">
+                    <h6 class="text-uppercase text-muted fw-bold small">Mô tả</h6>
+                    <p class="fs-5 text-dark bg-light p-3 rounded" style="white-space: pre-wrap;">{{ task.description|default:"Không có mô tả chi tiết." }}</p>
                 </div>
 
-                <div class="row g-4 mb-5">
+                <div class="row g-3 mb-4">
                     <div class="col-md-6">
-                        <div class="info-box">
-                            <span class="info-label">Trạng thái hiện tại</span>
-                            <div class="d-flex align-items-center">
-                                <div class="rounded-circle me-2" style="width: 10px; height: 10px; background-color: var(--brand-red);"></div>
-                                <span class="fw-bold fs-5 text-dark">{{ task.get_status_display }}</span>
-                            </div>
+                        <div class="border rounded p-3">
+                            <small class="text-muted d-block text-uppercase">Trạng thái</small>
+                            <span class="fw-bold text-primary">{{ task.get_status_display }}</span>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="info-box {% if task.is_overdue %}border-danger bg-danger-subtle{% endif %}">
-                            <span class="info-label text-{% if task.is_overdue %}danger{% endif %}">
-                                {% if task.is_overdue %}Hết hạn{% else %}Hạn chót hoàn thành{% endif %}
-                            </span>
-                            <span class="fw-bold fs-5 {% if task.is_overdue %}text-danger{% endif %}">
-                                <i class="far fa-clock me-1"></i> {{ task.deadline|date:"d/m/Y H:i"|default:"Vô thời hạn" }}
+                        <div class="border rounded p-3 {% if task.is_overdue %}border-danger bg-danger-subtle{% endif %}">
+                            <small class="text-muted d-block text-uppercase">Hạn chót</small>
+                            <span class="fw-bold {% if task.is_overdue %}text-danger{% endif %}">
+                                <i class="far fa-calendar-alt me-1"></i> {{ task.deadline|date:"d/m/Y H:i"|default:"Không có" }}
                             </span>
                         </div>
                     </div>
                 </div>
 
-                <hr class="my-4 opacity-50">
-
-                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3">
-                    <div class="d-flex gap-2 w-100 w-sm-auto">
-                        <a href="{% url 'task_update' task.id %}" class="btn btn-edit-custom px-4 py-2 flex-grow-1">
-                            <i class="fas fa-pencil-alt me-1"></i> Chỉnh sửa
+                <hr>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'task_update' task.id %}" class="btn btn-warning px-4">
+                            <i class="fas fa-edit me-1"></i> Chỉnh sửa
                         </a>
-                        <a href="{% url 'task_delete' task.id %}" class="btn btn-delete-outline px-4 py-2 flex-grow-1">
-                            <i class="fas fa-trash-alt me-1"></i> Xóa
+                        <a href="{% url 'task_delete' task.id %}" class="btn btn-outline-danger px-4">
+                            <i class="fas fa-trash me-1"></i> Xóa
                         </a>
                     </div>
-                    <a href="{% url 'task_list' %}" class="text-brand fw-bold text-decoration-none hover-underline">
-                        Quay lại danh sách <i class="fas fa-chevron-right ms-1"></i>
-                    </a>
+                    <a href="{% url 'task_list' %}" class="text-muted text-decoration-none"> Quay lại danh sách</a>
                 </div>
             </div>
         </div>
