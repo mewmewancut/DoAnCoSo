@@ -1,62 +1,141 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    {% if task %}Chỉnh sửa: {{ task.title }}{% else %}Thêm công việc mới{% endif %}
+    {% if task %}Sửa: {{ task.title }}{% else %}Công việc mới{% endif %}
 {% endblock %}
 
 {% block content %}
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card border-0 shadow-sm p-4" style="border-radius: 16px;">
-                <h2 class="fw-bold mb-4">
-                    {% if task %}Chỉnh sửa công việc{% else %}Thêm công việc mới{% endif %}
-                </h2>
+        <div class="col-md-8 col-lg-6">
+            <div class="task-form-animate">
+                <a href="{% url 'task_list' %}" class="btn btn-link text-decoration-none text-muted p-0 mb-3 back-btn">
+                    <i class="bi bi-arrow-left"></i> Quay lại danh sách
+                </a>
 
-                <form method="POST">
-                    {% csrf_token %}
-                    
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Tiêu đề</label>
-                        <input type="text" name="title" class="form-control" value="{{ task.title|default:'' }}" required>
+                <div class="card border-0 shadow-lg p-4 p-md-5 main-card">
+                    <div class="mb-4">
+                        <h2 class="fw-bold text-dark mb-1">
+                            {% if task %}Cập nhật công việc{% else %}Tạo công việc mới{% endif %}
+                        </h2>
+                        <p class="text-muted small">Sắp xếp công việc của bạn một cách khoa học.</p>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Mô tả</label>
-                        <textarea name="description" class="form-control" rows="3">{{ task.description|default:'' }}</textarea>
-                    </div>
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold small text-uppercase text-secondary">Tiêu đề công việc</label>
+                            <input type="text" name="title" class="form-control custom-input" 
+                                   placeholder="Bạn cần làm gì?" value="{{ task.title|default:'' }}" required>
+                        </div>
 
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Độ ưu tiên</label>
-                            <select name="priority" class="form-select">
+                        <div class="mb-4">
+                            <label class="form-label fw-bold small text-uppercase text-secondary">Mức độ ưu tiên</label>
+                            <div class="d-flex gap-2">
                                 {% for value, label in priority_choices %}
-                                    <option value="{{ value }}" {% if task.priority == value %}selected{% endif %}>{{ label }}</option>
+                                <input type="radio" class="btn-check" name="priority" id="prio_{{ value }}" value="{{ value }}" 
+                                       {% if task.priority == value or not task and value == 'medium' %}checked{% endif %}>
+                                <label class="btn btn-outline-prio flex-grow-1" for="prio_{{ value }}">
+                                    {% if value == 'high' %} {% elif value == 'medium' %} {% else %} {% endif %} {{ label }}
+                                </label>
                                 {% endfor %}
-                            </select>
+                            </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Trạng thái</label>
-                            <select name="status" class="form-select">
-                                {% for value, label in status_choices %}
-                                    <option value="{{ value }}" {% if task.status == value %}selected{% endif %}>{{ label }}</option>
-                                {% endfor %}
-                            </select>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold small text-uppercase text-secondary">Thời hạn hoàn thành</label>
+                            <input type="datetime-local" name="deadline" class="form-control custom-input" 
+                                   value="{{ task.deadline|date:'Y-m-d\TH:i' }}">
                         </div>
-                    </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Hạn chót</label>
-                        <input type="datetime-local" name="deadline" class="form-control" value="{{ task.deadline|date:'Y-m-d\TH:i' }}">
-                    </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold small text-uppercase text-secondary">Mô tả chi tiết</label>
+                            <textarea name="description" class="form-control custom-input" rows="3" 
+                                      placeholder="Thêm các thông tin chi tiết khác...">{{ task.description|default:'' }}</textarea>
+                        </div>
 
-                    <div class="d-flex gap-2 mt-4">
-                        <button type="submit" class="btn btn-primary px-4">Lưu thay đổi</button>
-                        <a href="{% url 'task_list' %}" class="btn btn-light border">Hủy</a>
-                    </div>
-                </form>
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-todoist-submit py-3 fw-bold shadow-sm">
+                                <i class="bi bi-check2-circle me-2"></i>
+                                {% if task %}Lưu thay đổi{% else %}Thêm vào danh sách{% endif %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    /* 1. Hiệu ứng xuất hiện mượt mà */
+    .task-form-animate {
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 2. Thiết kế Card và Ô nhập liệu */
+    .main-card { border-radius: 24px; }
+    
+    .custom-input {
+        border-radius: 12px;
+        border: 2px solid #f8f9fa;
+        background-color: #f8f9fa;
+        padding: 12px 16px;
+        transition: all 0.3s ease;
+    }
+
+    .custom-input:focus {
+        border-color: #e44332;
+        background-color: #fff;
+        box-shadow: 0 0 0 4px rgba(228, 67, 50, 0.1);
+        transform: translateY(-2px); /* Nhô lên nhẹ khi gõ */
+    }
+
+    /* 3. Thẻ ưu tiên (Priority Chips) */
+    .btn-outline-prio {
+        border: 2px solid #f0f0f0;
+        border-radius: 12px;
+        color: #666;
+        font-weight: 500;
+        transition: all 0.2s;
+        padding: 10px;
+        background-color: #fff;
+    }
+
+    .btn-check:checked + .btn-outline-prio {
+        background-color: #fff1f0;
+        border-color: #e44332;
+        color: #e44332;
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(228, 67, 50, 0.15);
+    }
+
+    /* 4. Nút bấm Todoist */
+    .btn-todoist-submit {
+        background-color: #e44332;
+        color: white;
+        border-radius: 14px;
+        border: none;
+        transition: all 0.3s;
+    }
+
+    .btn-todoist-submit:hover {
+        background-color: #c3392b;
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(228, 67, 50, 0.3);
+    }
+
+    .back-btn:hover {
+        transform: translateX(-5px);
+        transition: 0.3s;
+        color: #e44332 !important;
+    }
+</style>
 {% endblock %}
