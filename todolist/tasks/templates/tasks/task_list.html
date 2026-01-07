@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
-{% block title %}Danh sách công việc | TaskMaster{% endblock %}
+{% block title %}Task List | TaskMaster{% endblock %}
 
 {% block content %}
 <style>
-    /* --- HỆ THỐNG MÀU CHỦ ĐẠO --- */
+    /* --- BRAND COLOR SYSTEM --- */
     :root {
         --brand-red: #c3392b;
         --brand-dark: #8b2820;
@@ -25,7 +25,7 @@
         font-size: 0.85rem;
     }
 
-    /* --- NÚT TẠO MỚI NỔI BẬT (CHỮ TRẮNG HIỆN RÕ) --- */
+    /* --- PROMINENT CREATE BUTTON (CLEAR WHITE TEXT) --- */
     .btn-create-brand {
         background: var(--brand-gradient) !important;
         color: #ffffff !important;
@@ -63,9 +63,9 @@
         border-bottom: 1px solid #f0f0f0;
     }
 
-    /* --- NÚT HÀNH ĐỘNG NHỎ GỌN (MICRO-ACTIONS) --- */
+    /* --- MICRO-ACTION BUTTONS --- */
     .btn-action-small {
-        width: 28px; /* Kích thước nhỏ gọn */
+        width: 28px;
         height: 28px;
         display: inline-flex;
         align-items: center;
@@ -78,7 +78,6 @@
         margin: 0 2px;
     }
 
-    /* Màu sắc tinh tế cho nút nhỏ */
     .btn-view-sm { color: #0d6efd; background-color: rgba(13, 110, 253, 0.08); }
     .btn-view-sm:hover { background-color: #0d6efd; color: white !important; }
 
@@ -99,34 +98,35 @@
             <form method="get" class="row g-2 align-items-center">
                 <div class="col-md-2">
                     <select name="status" class="form-select form-select-brand">
-                        <option value="">-- Trạng thái --</option>
-                        <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Chờ xử lý</option>
-                        <option value="in_progress" {% if status_filter == 'in_progress' %}selected{% endif %}>Đang làm</option>
-                        <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Hoàn thành</option>
+                        <option value="">-- Status --</option>
+                        <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+                        <option value="in_progress" {% if status_filter == 'in_progress' %}selected{% endif %}>In Progress</option>
+                        <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Completed</option>
+                        <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>Cancelled</option>
                     </select>
                 </div>
                 <div class="col-md-2">
                     <select name="priority" class="form-select form-select-brand">
-                        <option value="">-- Ưu tiên --</option>
-                        <option value="low" {% if priority_filter == 'low' %}selected{% endif %}>Thấp</option>
-                        <option value="medium" {% if priority_filter == 'medium' %}selected{% endif %}>Trung bình</option>
-                        <option value="high" {% if priority_filter == 'high' %}selected{% endif %}>Cao</option>
+                        <option value="">-- Priority --</option>
+                        <option value="low" {% if priority_filter == 'low' %}selected{% endif %}>Low</option>
+                        <option value="medium" {% if priority_filter == 'medium' %}selected{% endif %}>Medium</option>
+                        <option value="high" {% if priority_filter == 'high' %}selected{% endif %}>High</option>
                     </select>
                 </div>
                 <div class="col-md-2">
                     <select name="deadline" class="form-select form-select-brand">
-                        <option value="">-- Hạn chót --</option>
-                        <option value="overdue" {% if deadline_filter == 'overdue' %}selected{% endif %}>Quá hạn</option>
-                        <option value="today" {% if deadline_filter == 'today' %}selected{% endif %}>Hôm nay</option>
+                        <option value="">-- Deadline --</option>
+                        <option value="overdue" {% if deadline_filter == 'overdue' %}selected{% endif %}>Overdue</option>
+                        <option value="today" {% if deadline_filter == 'today' %}selected{% endif %}>Today</option>
                     </select>
                 </div>
                 <div class="col-md-2 text-center">
-                    <button type="submit" class="btn btn-dark btn-sm px-4 rounded-3">Lọc</button>
-                    <a href="{% url 'task_list' %}" class="text-muted small ms-2">Xóa</a>
+                    <button type="submit" class="btn btn-dark btn-sm px-4 rounded-3">Filter</button>
+                    <a href="{% url 'task_list' %}" class="text-muted small ms-2">Clear</a>
                 </div>
                 <div class="col-md-4 text-end">
                     <a href="{% url 'task_create' %}" class="btn-create-brand">
-                        <i class="fas fa-plus me-2"></i> TẠO MỚI
+                        <i class="fas fa-plus me-2"></i> CREATE
                     </a>
                 </div>
             </form>
@@ -138,10 +138,10 @@
             <table class="table table-hover align-middle mb-0">
                 <thead>
                     <tr>
-                        <th class="ps-4">Công việc</th>
-                        <th>Ưu tiên</th>
-                        <th>Trạng thái</th>
-                        <th class="text-center">Hành động</th>
+                        <th class="ps-4">Task</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th class="text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -152,7 +152,7 @@
                                 {{ task.title }}
                             </a>
                             {% if task.is_overdue %}
-                                <span class="badge badge-overdue ms-1">TRỄ</span>
+                                <span class="badge badge-overdue ms-1">OVERDUE</span>
                             {% endif %}
                         </td>
                         <td>
@@ -161,24 +161,30 @@
                             </span>
                         </td>
                         <td>
-                            <small class="text-muted fw-bold" style="font-size: 0.7rem;">{{ task.get_status_display }}</small>
+                            <small class="text-muted fw-bold" style="font-size: 0.7rem;">
+                                {{ task.get_status_display }}
+                            </small>
                         </td>
                         <td class="text-center">
                             <div class="d-inline-flex">
-                                <a href="{% url 'task_detail' task.id %}" class="btn-action-small btn-view-sm" title="Xem">
+                                <a href="{% url 'task_detail' task.id %}" class="btn-action-small btn-view-sm" title="View">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                <a href="{% url 'task_update' task.id %}" class="btn-action-small btn-edit-sm" title="Sửa">
+                                <a href="{% url 'task_update' task.id %}" class="btn-action-small btn-edit-sm" title="Edit">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <a href="{% url 'task_delete' task.id %}" class="btn-action-small btn-delete-sm" title="Xóa">
+                                <a href="{% url 'task_delete' task.id %}" class="btn-action-small btn-delete-sm" title="Delete">
                                     <i class="fas fa-trash"></i>
                                 </a>
                             </div>
                         </td>
                     </tr>
                     {% empty %}
-                    <tr><td colspan="4" class="text-center py-5 text-muted">Trống.</td></tr>
+                    <tr>
+                        <td colspan="4" class="text-center py-5 text-muted">
+                            No tasks available.
+                        </td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>

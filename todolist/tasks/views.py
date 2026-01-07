@@ -249,3 +249,49 @@ def dashboard(request):
         'recent_tasks': recent_tasks,
     }
     return render(request, 'tasks/dashboard.html', context)
+
+#Minh
+@login_required
+def task_calendar(request):
+    return render(request, 'tasks/task_calendar.html')
+
+from django.http import JsonResponse
+
+@login_required
+def task_calendar_events(request):
+    tasks = Task.objects.filter(
+        user=request.user,
+        deadline__isnull=False
+    )
+
+    events = []
+
+    for task in tasks:
+        if task.is_overdue:
+            status = 'overdue'
+            color = '#dc3545'
+        elif task.status == 'completed':
+            status = 'completed'
+            color = '#198754'
+        elif task.status == 'in_progress':
+            status = 'in_progress'
+            color = '#ffc107'
+        else:
+            status = 'pending'
+            color = '#0d6efd'
+
+        events.append({
+            'id': str(task.id),
+            'title': task.title,
+            'start': task.deadline.isoformat(),
+            'url': f'/tasks/{task.id}/',
+            'color': color,  
+            'extendedProps': {
+                'status': status,
+                'status_label': status.replace('_', ' ').title(),
+                'status_color': color
+            }
+        })
+
+    return JsonResponse(events, safe=False)
+
