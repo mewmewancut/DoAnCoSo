@@ -3,6 +3,7 @@ URL configuration for tasks app
 """
 from django.urls import path
 from . import views
+from . import ai_views
 
 urlpatterns = [
     # Dashboard
@@ -15,9 +16,12 @@ urlpatterns = [
     path('<uuid:task_id>/edit/', views.task_update, name='task_update'),
     path('<uuid:task_id>/delete/', views.task_delete, name='task_delete'),
    
-   #Minh
-   path('calendar/', views.task_calendar, name='task_calendar'),
-   path('calendar/events/', views.task_calendar_events, name='task_calendar_events'),
+    # Minh - Calendar
+    path('calendar/', views.task_calendar, name='task_calendar'),
+    path('calendar/events/', views.task_calendar_events, name='task_calendar_events'),
+    
+    # Dũng - AI API endpoints
+    path('api/improve-description/', ai_views.improve_description_api, name='ai_improve_description'),
 
 
 ]
