@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base_private.html' %}
 {% block title %}{% if task %}Edit Task{% else %}Create New Task{% endif %}{% endblock %}
 
 {% block content %}
@@ -142,7 +142,7 @@
                         <button type="submit" class="btn btn-save-task btn-lg">
                             Save Task
                         </button>
-                        <a href="{% if task %}{% url 'task_detail' task.id %}{% else %}{% url 'task_list' %}{% endif %}" 
+                        <a href="{% if task %}{% url 'tasks:task_detail' task.id %}{% else %}{% url 'tasks:task_list' %}{% endif %}" 
                            class="btn btn-light border-0 py-3 fw-bold text-muted">
                             Cancel and go back
                         </a>

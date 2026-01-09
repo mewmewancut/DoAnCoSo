@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base_private.html' %}
 {% block title %}Delete Task{% endblock %}
 
 {% block content %}
@@ -21,7 +21,7 @@
                         <button type="submit" class="btn btn-danger">
                             🗑 Yes, delete it
                         </button>
-                        <a href="{% url 'task_detail' task.id %}" class="btn btn-light border">
+                        <a href="{% url 'tasks:task_detail' task.id %}" class="btn btn-light border">
                             Go back
                         </a>
                     </div>

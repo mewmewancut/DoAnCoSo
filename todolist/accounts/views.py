@@ -111,7 +111,7 @@ def login_view(request):
     User login view with redirect to next parameter support
     """
     if request.user.is_authenticated:
-        return redirect("accounts:user_dashboard")
+        return redirect("tasks:dashboard")
     
     if request.method == "POST":
         identifier = request.POST.get("username", "").strip()
@@ -134,7 +134,7 @@ def login_view(request):
                 logger.info(f"User logged in: {user.username} ({user.email})")
                 
                 # Redirect to next URL if provided, otherwise to dashboard
-                redirect_url = next_url if next_url else "accounts:user_dashboard"
+                redirect_url = next_url if next_url else "tasks:dashboard"
                 return redirect(redirect_url)
             else:
                 messages.error(

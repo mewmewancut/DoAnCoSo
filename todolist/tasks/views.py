@@ -147,7 +147,7 @@ def task_create(request):
         )
         
         messages.success(request, f'Tạo task "{task.title}" thành công!')
-        return redirect('task_detail', task_id=task.id)
+        return redirect('tasks:task_detail', task_id=task.id)
     
     context = {
         'priority_choices': Task.PRIORITY_CHOICES,
@@ -176,7 +176,7 @@ def task_update(request, task_id):
         # Validate required fields
         if not task.title:
             messages.error(request, 'Vui lòng nhập tiêu đề task!')
-            return redirect('task_update', task_id=task.id)
+            return redirect('tasks:task_update', task_id=task.id)
         
         # Handle empty deadline
         if not task.deadline:
@@ -185,7 +185,7 @@ def task_update(request, task_id):
         task.save()
         
         messages.success(request, f'Cập nhật task "{task.title}" thành công!')
-        return redirect('task_detail', task_id=task.id)
+        return redirect('tasks:task_detail', task_id=task.id)
     
     context = {
         'task': task,
@@ -209,7 +209,7 @@ def task_delete(request, task_id):
         task_title = task.title
         task.delete()
         messages.success(request, f'Đã xóa task "{task_title}"!')
-        return redirect('task_list')
+        return redirect('tasks:task_list')
     
     context = {
         'task': task,

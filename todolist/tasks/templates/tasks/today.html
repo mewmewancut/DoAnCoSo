@@ -1,0 +1,13 @@
+{% extends 'tasks/dashboard.html' %}
+{% block title %}Today{% endblock %}
+
+{% block page_content %}
+<h1>Today</h1>
+<p>{{ overdue_count }} overdue · {{ recent_tasks|length }} tasks</p>
+
+{% for task in recent_tasks %}
+    <p>• {{ task.title }}</p>
+{% empty %}
+    <p>No tasks today 🎉</p>
+{% endfor %}
+{% endblock %}

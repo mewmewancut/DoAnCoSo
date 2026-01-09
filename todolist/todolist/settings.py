@@ -143,7 +143,7 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 AUTH_USER_MODEL = "accounts.User"
 
 # Authentication URLs
-LOGIN_REDIRECT_URL = 'accounts:user_dashboard' 
+LOGIN_REDIRECT_URL = 'tasks:dashboard' 
 LOGOUT_REDIRECT_URL = 'accounts:login'
 
 # Messages Framework Configuration
