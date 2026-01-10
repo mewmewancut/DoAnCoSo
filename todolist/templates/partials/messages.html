@@ -1,0 +1,24 @@
+<!-- Messages Display -->
+    {% if messages %}
+    <div class="container mt-3" id="messages-container">
+        {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags|default:'info' }}{% endif %} alert-dismissible fade show" role="alert" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 0.75rem;">
+            <div class="d-flex align-items-center">
+                {% if message.tags == 'error' or message.tags == 'danger' %}
+                    <i class="bi bi-exclamation-triangle-fill me-2" style="font-size: 1.2rem;"></i>
+                {% elif message.tags == 'success' %}
+                    <i class="bi bi-check-circle-fill me-2" style="font-size: 1.2rem;"></i>
+                {% elif message.tags == 'warning' %}
+                    <i class="bi bi-exclamation-circle-fill me-2" style="font-size: 1.2rem;"></i>
+                {% elif message.tags == 'info' or message.tags == 'debug' %}
+                    <i class="bi bi-info-circle-fill me-2" style="font-size: 1.2rem;"></i>
+                {% else %}
+                    <i class="bi bi-bell-fill me-2" style="font-size: 1.2rem;"></i>
+                {% endif %}
+                <div class="flex-grow-1">{{ message }}</div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
