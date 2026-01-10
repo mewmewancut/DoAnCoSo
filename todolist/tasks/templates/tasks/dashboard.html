@@ -163,7 +163,7 @@
                                     </span>
                                 </td>
                                 <td class="text-end pe-4">
-                                    <a href="{% url 'task_detail' task.id %}" class="btn btn-sm btn-light border rounded-pill px-3">Details</a>
+                                    <a href="{% url 'tasks:task_detail' task.id %}" class="btn btn-sm btn-light border rounded-pill px-3">Details</a>
                                 </td>
                             </tr>
                             {% empty %}
@@ -185,7 +185,7 @@
             </div>
             <div class="list-group list-group-flush">
                 {% for task in recent_tasks %}
-                <a href="{% url 'task_detail' task.id %}" class="list-group-item list-group-item-action border-bottom">
+                <a href="{% url 'tasks:task_detail' task.id %}" class="list-group-item list-group-item-action border-bottom">
                     <div class="d-flex w-100 justify-content-between align-items-center">
                         <div>
                             <p class="mb-1 fw-bold text-dark">{{ task.title|truncatechars:30 }}</p>

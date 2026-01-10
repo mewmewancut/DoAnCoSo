@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base_public.html' %}
 {% load static %}
 
 {% block title %}Hồ sơ - {{ user.username }}{% endblock %}
@@ -254,7 +254,7 @@
                     {% endif %}
                     
                     <div class="mt-4">
-                        <a href="{% url 'task_list' %}" class="btn btn-outline-primary action-btn">
+                        <a href="{% url 'tasks:task_list' %}" class="btn btn-outline-primary action-btn">
                             <i class="bi bi-arrow-right me-2"></i>Xem tất cả công việc
                         </a>
                         <a href="{% url 'accounts:user_dashboard' %}" class="btn btn-outline-secondary action-btn ms-2">
