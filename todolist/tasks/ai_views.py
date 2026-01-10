@@ -5,16 +5,19 @@ These endpoints provide AI-powered features for task management
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
 from django.utils.dateparse import parse_datetime
 import json
+import sys
+from pathlib import Path
+
+# Add parent directory to path to import ai_utils
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from ai_utils import improve_task_description, suggest_task_priority, generate_task_subtasks
 
 
 @login_required
 @require_http_methods(["POST"])
-@csrf_exempt  # TODO: Add proper CSRF handling for production
 def improve_description_api(request):
     """
     API endpoint to improve task description using AI
@@ -71,7 +74,6 @@ def improve_description_api(request):
 
 @login_required
 @require_http_methods(["POST"])
-@csrf_exempt  # TODO: Add proper CSRF handling for production
 def suggest_priority_api(request):
     """
     API endpoint to suggest task priority using AI
@@ -123,6 +125,62 @@ def suggest_priority_api(request):
             'success': True,
             'priority': result['priority'],
             'reason': result['reason'],
+            'original_title': title
+        })
+        
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'success': False,
+            'error': 'Invalid JSON format'
+        }, status=400)
+        
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=500)
+
+
+@login_required
+@require_http_methods(["POST"])
+def generate_subtasks_api(request):
+    """
+    API endpoint to generate subtasks from a complex task using AI
+    
+    POST /api/task/generate-subtasks
+    Body: {
+        "title": "Task title",
+        "description": "Task description (optional)"
+    }
+    
+    Response: {
+        "success": true,
+        "subtasks": ["Subtask 1", "Subtask 2", ...],
+        "count": 5,
+        "original_title": "Task title"
+    }
+    """
+    try:
+        # Parse request body
+        data = json.loads(request.body)
+        title = data.get('title', '').strip()
+        description = data.get('description', '').strip()
+        
+        # Validate input
+        if not title:
+            return JsonResponse({
+                'success': False,
+                'error': 'Title is required'
+            }, status=400)
+        
+        # Call AI function
+        subtasks = generate_task_subtasks(title, description)
+        
+        # Return success response
+        return JsonResponse({
+            'success': True,
+            'subtasks': subtasks,
+            'count': len(subtasks),
             'original_title': title
         })
         

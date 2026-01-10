@@ -1,4 +1,7 @@
 Django>=5.0
 python-dotenv
 langchain
+langchain-openai
 openai
+cloudinary
+django-cloudinary-storage
