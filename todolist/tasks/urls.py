@@ -26,6 +26,6 @@ urlpatterns = [
     
     # Dũng - AI API endpoints
     path('api/improve-description/', ai_views.improve_description_api, name='ai_improve_description'),
-
-
+    path('api/suggest-priority/', ai_views.suggest_priority_api, name='ai_suggest_priority'),
+    path('api/generate-subtasks/', ai_views.generate_subtasks_api, name='ai_generate_subtasks'),
 ]
