@@ -137,3 +137,60 @@ def suggest_priority_api(request):
             'success': False,
             'error': str(e)
         }, status=500)
+
+
+@login_required
+@require_http_methods(["POST"])
+@csrf_exempt  # TODO: Add proper CSRF handling for production
+def generate_subtasks_api(request):
+    """
+    API endpoint to generate subtasks from a complex task using AI
+    
+    POST /api/task/generate-subtasks
+    Body: {
+        "title": "Task title",
+        "description": "Task description (optional)"
+    }
+    
+    Response: {
+        "success": true,
+        "subtasks": ["Subtask 1", "Subtask 2", ...],
+        "count": 5,
+        "original_title": "Task title"
+    }
+    """
+    try:
+        # Parse request body
+        data = json.loads(request.body)
+        title = data.get('title', '').strip()
+        description = data.get('description', '').strip()
+        
+        # Validate input
+        if not title:
+            return JsonResponse({
+                'success': False,
+                'error': 'Title is required'
+            }, status=400)
+        
+        # Call AI function
+        subtasks = generate_task_subtasks(title, description)
+        
+        # Return success response
+        return JsonResponse({
+            'success': True,
+            'subtasks': subtasks,
+            'count': len(subtasks),
+            'original_title': title
+        })
+        
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'success': False,
+            'error': 'Invalid JSON format'
+        }, status=400)
+        
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=500)
