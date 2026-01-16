@@ -1,0 +1,87 @@
+{% extends 'base_private.html' %}
+{% block title %}Monthly View | TaskMaster{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2 class="fw-bold text-dark">📆 Month {{ month_name }}</h2>
+            <p class="text-muted">{{ month_start }} to {{ month_end }}</p>
+        </div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-success">📊 Monthly Overview</h5>
+                    <p class="mb-1"><strong>Total Tasks:</strong> {{ total_tasks }}</p>
+                    <p class="mb-1"><strong>Completed:</strong> {{ completed_tasks }}</p>
+                    <div class="progress mt-2" style="height: 20px;">
+                        {% if total_tasks > 0 %}
+                        <div class="progress-bar bg-success" role="progressbar" 
+                             style="width: {{ completed_tasks }}{% widthratio completed_tasks total_tasks 100 %}%">
+                            {% widthratio completed_tasks total_tasks 100 %}%
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Weeks -->
+    <div class="row">
+        {% for week_name, week_data in weeks_tasks.items %}
+        <div class="col-md-12 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        {{ week_name }} ({{ week_data.start }} - {{ week_data.end }})
+                        <span class="badge bg-success">{{ week_data.tasks|length }} task(s)</span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if week_data.tasks %}
+                        <div class="row">
+                            {% for task in week_data.tasks %}
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100 border-start border-3 
+                                    {% if task.priority == 'high' %}border-danger
+                                    {% elif task.priority == 'medium' %}border-warning
+                                    {% else %}border-info
+                                    {% endif %}">
+                                    <div class="card-body">
+                                        <h6 class="card-title">{{ task.title }}</h6>
+                                        <p class="card-text text-muted small">{{ task.description|truncatewords:10 }}</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="badge 
+                                                {% if task.status == 'completed' %}bg-success
+                                                {% elif task.status == 'in_progress' %}bg-primary
+                                                {% else %}bg-secondary
+                                                {% endif %}">
+                                                {{ task.get_status_display }}
+                                            </span>
+                                            <small class="text-muted">
+                                                {% if task.deadline %}
+                                                    {{ task.deadline|date:"d/m H:i" }}
+                                                {% endif %}
+                                            </small>
+                                        </div>
+                                        <a href="{% url 'tasks:task_detail' task.id %}" class="stretched-link"></a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted mb-0">No tasks this week</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
