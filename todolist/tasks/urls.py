@@ -22,6 +22,15 @@ urlpatterns = [
     # Minh - Calendar
     path('calendar/', views.task_calendar, name='task_calendar'),
     path('calendar/events/', views.task_calendar_events, name='task_calendar_events'),
+    
+    # Sơn - Week 4: Time-based views
+    path('today/', views.today_view, name='today'),
+    path('weekly/', views.weekly_view, name='weekly'),
+    path('monthly/', views.monthly_view, name='monthly'),
+    path('api/statistics/', views.progress_statistics_api, name='progress_statistics'),
+    
+    # AI Assistant Page
+    path('ai-assistant/', views.ai_assistant, name='ai_assistant'),
   
     
     # Dũng - AI API endpoints
