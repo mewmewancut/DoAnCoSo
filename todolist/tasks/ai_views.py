@@ -14,6 +14,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from ai_utils import improve_task_description, suggest_task_priority, generate_task_subtasks
+from .models import AISuggestion, Task
 
 
 @login_required
@@ -50,6 +51,14 @@ def improve_description_api(request):
         
         # Call AI function
         improved_description = improve_task_description(title, description)
+        
+        # Save AI suggestion to history
+        AISuggestion.objects.create(
+            user=request.user,
+            suggestion_type='description',
+            input_data={'title': title, 'description': description},
+            output_data={'improved_description': improved_description}
+        )
         
         # Return success response
         return JsonResponse({
@@ -120,6 +129,21 @@ def suggest_priority_api(request):
         # Call AI function
         result = suggest_task_priority(title, description, deadline)
         
+        # Save AI suggestion to history
+        AISuggestion.objects.create(
+            user=request.user,
+            suggestion_type='priority',
+            input_data={
+                'title': title,
+                'description': description,
+                'deadline': deadline_str
+            },
+            output_data={
+                'priority': result['priority'],
+                'reason': result['reason']
+            }
+        )
+        
         # Return success response
         return JsonResponse({
             'success': True,
@@ -175,6 +199,14 @@ def generate_subtasks_api(request):
         
         # Call AI function
         subtasks = generate_task_subtasks(title, description)
+        
+        # Save AI suggestion to history
+        AISuggestion.objects.create(
+            user=request.user,
+            suggestion_type='subtasks',
+            input_data={'title': title, 'description': description},
+            output_data={'subtasks': subtasks}
+        )
         
         # Return success response
         return JsonResponse({
