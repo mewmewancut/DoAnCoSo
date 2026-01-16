@@ -1,0 +1,353 @@
+{% extends 'base_private.html' %}
+{% block title %}AI Assistant | TaskMaster{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2 class="fw-bold text-dark">🤖 AI Assistant</h2>
+            <p class="text-muted">Use AI to improve your tasks</p>
+        </div>
+    </div>
+
+    <!-- AI Feature Cards -->
+    <div class="row">
+        <!-- 1. Improve Description -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3">
+                            <i class="bi bi-pencil-square text-primary" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <h5 class="card-title mb-0">Improve Description</h5>
+                    </div>
+                    <p class="card-text text-muted">AI will rewrite your task description to be clearer and more detailed</p>
+                    <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#improveModal">
+                        <i class="bi bi-magic"></i> Try Now
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Suggest Priority -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-warning bg-opacity-10 p-3 rounded-circle me-3">
+                            <i class="bi bi-flag-fill text-warning" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <h5 class="card-title mb-0">Suggest Priority</h5>
+                    </div>
+                    <p class="card-text text-muted">AI will analyze and suggest the appropriate priority level</p>
+                    <button class="btn btn-warning w-100" data-bs-toggle="modal" data-bs-target="#priorityModal">
+                        <i class="bi bi-lightning-fill"></i> Try Now
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Generate Subtasks -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-success bg-opacity-10 p-3 rounded-circle me-3">
+                            <i class="bi bi-list-check text-success" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <h5 class="card-title mb-0">Generate Subtasks</h5>
+                    </div>
+                    <p class="card-text text-muted">AI will break down complex tasks into specific steps</p>
+                    <button class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#subtasksModal">
+                        <i class="bi bi-diagram-3-fill"></i> Try Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI History -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="bi bi-clock-history"></i> AI Suggestions History</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">This feature will display your AI suggestion history (in development)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 1: Improve Description -->
+<div class="modal fade" id="improveModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title"><i class="bi bi-magic"></i> Cải thiện mô tả Task</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="improveForm">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Tiêu đề Task</label>
+                        <input type="text" class="form-control" id="improveTitle" required 
+                               placeholder="VD: Hoàn thành báo cáo">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Mô tả hiện tại (tùy chọn)</label>
+                        <textarea class="form-control" id="improveDesc" rows="3" 
+                                  placeholder="VD: Viết báo cáo về dự án"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="spinner-border spinner-border-sm d-none" id="improveSpinner"></span>
+                        <i class="bi bi-stars" id="improveIcon"></i> Cải thiện với AI
+                    </button>
+                </form>
+                <div id="improveResult" class="mt-4 d-none">
+                    <hr>
+                    <h6 class="text-success"><i class="bi bi-check-circle-fill"></i> Kết quả từ AI:</h6>
+                    <div class="alert alert-success" id="improveOutput"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 2: Suggest Priority -->
+<div class="modal fade" id="priorityModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title"><i class="bi bi-lightning-fill"></i> Gợi ý độ ưu tiên</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="priorityForm">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Tiêu đề Task</label>
+                        <input type="text" class="form-control" id="priorityTitle" required 
+                               placeholder="VD: Sửa bug critical trong production">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Mô tả (tùy chọn)</label>
+                        <textarea class="form-control" id="priorityDesc" rows="3" 
+                                  placeholder="VD: Người dùng không thể đăng nhập"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Deadline (tùy chọn)</label>
+                        <input type="datetime-local" class="form-control" id="priorityDeadline">
+                    </div>
+                    <button type="submit" class="btn btn-warning">
+                        <span class="spinner-border spinner-border-sm d-none" id="prioritySpinner"></span>
+                        <i class="bi bi-flag-fill" id="priorityIcon"></i> Gợi ý Priority
+                    </button>
+                </form>
+                <div id="priorityResult" class="mt-4 d-none">
+                    <hr>
+                    <h6 class="text-success"><i class="bi bi-check-circle-fill"></i> Gợi ý từ AI:</h6>
+                    <div class="alert alert-warning" id="priorityOutput"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal 3: Generate Subtasks -->
+<div class="modal fade" id="subtasksModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title"><i class="bi bi-diagram-3-fill"></i> Tạo Subtasks</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="subtasksForm">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Tiêu đề Task</label>
+                        <input type="text" class="form-control" id="subtasksTitle" required 
+                               placeholder="VD: Xây dựng trang web e-commerce">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Mô tả (tùy chọn)</label>
+                        <textarea class="form-control" id="subtasksDesc" rows="3" 
+                                  placeholder="VD: Cần có giỏ hàng, thanh toán, quản lý sản phẩm"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success">
+                        <span class="spinner-border spinner-border-sm d-none" id="subtasksSpinner"></span>
+                        <i class="bi bi-list-check" id="subtasksIcon"></i> Tạo Subtasks
+                    </button>
+                </form>
+                <div id="subtasksResult" class="mt-4 d-none">
+                    <hr>
+                    <h6 class="text-success"><i class="bi bi-check-circle-fill"></i> Subtasks từ AI:</h6>
+                    <div class="alert alert-success" id="subtasksOutput"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// CSRF Token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
+
+// 1. Improve Description
+document.getElementById('improveForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const spinner = document.getElementById('improveSpinner');
+    const icon = document.getElementById('improveIcon');
+    const result = document.getElementById('improveResult');
+    const output = document.getElementById('improveOutput');
+    
+    spinner.classList.remove('d-none');
+    icon.classList.add('d-none');
+    result.classList.add('d-none');
+    
+    try {
+        const response = await fetch('/tasks/api/improve-description/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({
+                title: document.getElementById('improveTitle').value,
+                description: document.getElementById('improveDesc').value
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            output.innerHTML = `<strong>Mô tả đã cải thiện:</strong><br><br>${data.improved_description}`;
+            result.classList.remove('d-none');
+        } else {
+            output.innerHTML = `<strong class="text-danger">Lỗi:</strong> ${data.error}`;
+            result.classList.remove('d-none');
+        }
+    } catch (error) {
+        output.innerHTML = `<strong class="text-danger">Lỗi kết nối:</strong> ${error.message}`;
+        result.classList.remove('d-none');
+    } finally {
+        spinner.classList.add('d-none');
+        icon.classList.remove('d-none');
+    }
+});
+
+// 2. Suggest Priority
+document.getElementById('priorityForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const spinner = document.getElementById('prioritySpinner');
+    const icon = document.getElementById('priorityIcon');
+    const result = document.getElementById('priorityResult');
+    const output = document.getElementById('priorityOutput');
+    
+    spinner.classList.remove('d-none');
+    icon.classList.add('d-none');
+    result.classList.add('d-none');
+    
+    try {
+        const response = await fetch('/tasks/api/suggest-priority/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({
+                title: document.getElementById('priorityTitle').value,
+                description: document.getElementById('priorityDesc').value,
+                deadline: document.getElementById('priorityDeadline').value
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            const priorityClass = data.priority === 'HIGH' ? 'danger' : data.priority === 'MEDIUM' ? 'warning' : 'info';
+            output.innerHTML = `
+                <strong>Độ ưu tiên đề xuất:</strong> 
+                <span class="badge bg-${priorityClass} fs-6">${data.priority}</span>
+                <br><br>
+                <strong>Lý do:</strong><br>${data.reason}
+            `;
+            result.classList.remove('d-none');
+        } else {
+            output.innerHTML = `<strong class="text-danger">Lỗi:</strong> ${data.error}`;
+            result.classList.remove('d-none');
+        }
+    } catch (error) {
+        output.innerHTML = `<strong class="text-danger">Lỗi kết nối:</strong> ${error.message}`;
+        result.classList.remove('d-none');
+    } finally {
+        spinner.classList.add('d-none');
+        icon.classList.remove('d-none');
+    }
+});
+
+// 3. Generate Subtasks
+document.getElementById('subtasksForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const spinner = document.getElementById('subtasksSpinner');
+    const icon = document.getElementById('subtasksIcon');
+    const result = document.getElementById('subtasksResult');
+    const output = document.getElementById('subtasksOutput');
+    
+    spinner.classList.remove('d-none');
+    icon.classList.add('d-none');
+    result.classList.add('d-none');
+    
+    try {
+        const response = await fetch('/tasks/api/generate-subtasks/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({
+                title: document.getElementById('subtasksTitle').value,
+                description: document.getElementById('subtasksDesc').value
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            let subtasksList = '<ol class="mb-0">';
+            data.subtasks.forEach(subtask => {
+                subtasksList += `<li class="mb-2">${subtask}</li>`;
+            });
+            subtasksList += '</ol>';
+            output.innerHTML = `<strong>Tìm thấy ${data.count} subtasks:</strong><br><br>${subtasksList}`;
+            result.classList.remove('d-none');
+        } else {
+            output.innerHTML = `<strong class="text-danger">Lỗi:</strong> ${data.error}`;
+            result.classList.remove('d-none');
+        }
+    } catch (error) {
+        output.innerHTML = `<strong class="text-danger">Lỗi kết nối:</strong> ${error.message}`;
+        result.classList.remove('d-none');
+    } finally {
+        spinner.classList.add('d-none');
+        icon.classList.remove('d-none');
+    }
+});
+</script>
+{% endblock %}
