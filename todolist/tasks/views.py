@@ -425,13 +425,18 @@ def monthly_view(request):
         current_date = week_end
         week_num += 1
     
+    total_tasks = tasks_this_month.count()
+    completed_tasks = tasks_this_month.filter(status='completed').count()
+    progress_percentage = round((completed_tasks / total_tasks * 100)) if total_tasks > 0 else 0
+    
     context = {
         'month_name': month_start.strftime('%B %Y'),
         'month_start': month_start.date(),
         'month_end': month_end.date(),
         'weeks_tasks': weeks_tasks,
-        'total_tasks': tasks_this_month.count(),
-        'completed_tasks': tasks_this_month.filter(status='completed').count(),
+        'total_tasks': total_tasks,
+        'completed_tasks': completed_tasks,
+        'progress_percentage': progress_percentage,
     }
     return render(request, 'tasks/monthly_view.html', context)
 

@@ -20,9 +20,8 @@
                     <p class="mb-1"><strong>Completed:</strong> {{ completed_tasks }}</p>
                     <div class="progress mt-2" style="height: 20px;">
                         {% if total_tasks > 0 %}
-                        <div class="progress-bar bg-success" role="progressbar" 
-                             style="width: {{ completed_tasks }}{% widthratio completed_tasks total_tasks 100 %}%">
-                            {% widthratio completed_tasks total_tasks 100 %}%
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ progress_percentage }}%">
+                            {{ progress_percentage }}%
                         </div>
                         {% endif %}
                     </div>
