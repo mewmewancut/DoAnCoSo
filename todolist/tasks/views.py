@@ -309,6 +309,8 @@ def task_calendar_events(request):
     return JsonResponse(events, safe=False)
 
 
+
+
 # ============================
 #  TODAY VIEW - Sơn (Week 4)
 # ============================
@@ -729,4 +731,6 @@ def subtask_reorder(request, task_id):
         })
     
     return JsonResponse({'success': False, 'error': 'Invalid method'}, status=405)
+
+#Minh
 
