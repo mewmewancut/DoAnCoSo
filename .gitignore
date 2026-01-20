@@ -1,5 +1,12 @@
 # Project planning (internal use only)
 PLAN.md
+PROJECT_PROGRESS_REPORT.md
+WEEK*_PROGRESS.md
+WEEK*_SUMMARY.md
+week*_commits.txt
+
+# Documentation (local only)
+docs/AI_Prompts_Documentation.md
 
 # Python
 __pycache__/
