@@ -2,189 +2,264 @@
 {% block title %}AI Assistant | TaskMaster{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="row mb-4">
+<style>
+    /* --- HỆ THỐNG MÀU THƯƠNG HIỆU --- */
+    :root {
+        --brand-red: #c3392b;
+        --brand-dark: #8b2820;
+        --brand-gradient: linear-gradient(135deg, #c3392b 0%, #8b2820 100%);
+        --ai-glow: 0 0 15px rgba(195, 57, 43, 0.2);
+    }
+
+    /* --- CẤU TRÚC CARD AI --- */
+    .ai-feature-card {
+        border: none;
+        border-radius: 20px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        background: #ffffff;
+        overflow: hidden;
+    }
+    .ai-feature-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 35px rgba(139, 40, 32, 0.12) !important;
+    }
+
+    .ai-icon-box {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 16px;
+        background: rgba(195, 57, 43, 0.08);
+        color: var(--brand-red);
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+        transition: 0.3s;
+    }
+    .ai-feature-card:hover .ai-icon-box {
+        background: var(--brand-gradient);
+        color: #ffffff;
+        box-shadow: var(--ai-glow);
+    }
+
+    /* --- NÚT BẤM BRAND --- */
+    .btn-brand-ai {
+        background: var(--brand-gradient) !important;
+        color: #ffffff !important;
+        border: none;
+        border-radius: 12px;
+        padding: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+        transition: 0.3s;
+    }
+    .btn-brand-ai:hover {
+        filter: brightness(1.1);
+        box-shadow: 0 5px 15px rgba(195, 57, 43, 0.3);
+    }
+
+    /* --- MODAL STYLE --- */
+    .modal-content { border: none; border-radius: 25px; overflow: hidden; }
+    .modal-header-brand {
+        background: var(--brand-gradient) !important;
+        color: #ffffff;
+        padding: 20px 30px;
+        border: none;
+    }
+    .modal-body { padding: 30px; }
+    .form-control { border-radius: 12px; padding: 12px; border: 1px solid #eee; }
+    .form-control:focus {
+        border-color: var(--brand-red);
+        box-shadow: 0 0 0 0.25rem rgba(195, 57, 43, 0.1);
+    }
+
+    /* --- VÙNG HIỂN THỊ KẾT QUẢ AI --- */
+    .ai-output-area {
+        background: #fff9f8;
+        border: 1px dashed var(--brand-red);
+        border-radius: 15px;
+        padding: 20px;
+        position: relative;
+    }
+    .ai-badge {
+        position: absolute;
+        top: -10px;
+        right: 20px;
+        background: var(--brand-red);
+        color: white;
+        font-size: 0.65rem;
+        padding: 4px 10px;
+        border-radius: 10px;
+        font-weight: 800;
+    }
+</style>
+
+<div class="container py-4">
+    <div class="row mb-5">
         <div class="col-md-12">
-            <h2 class="fw-bold text-dark">🤖 AI Assistant</h2>
-            <p class="text-muted">Use AI to improve your tasks</p>
+            <h2 class="fw-bold text-dark mb-1">🤖 AI Assistant</h2>
+            <p class="text-muted fw-bold small text-uppercase mb-0">Optimize your workflow with Intelligent Suggestions</p>
         </div>
     </div>
 
-    <!-- AI Feature Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card ai-feature-card shadow-sm h-100">
+                <div class="card-body p-4">
+                    <div class="ai-icon-box"><i class="bi bi-pencil-square"></i></div>
+                    <h5 class="fw-bold text-dark">Improve Description</h5>
+                    <p class="text-muted small mb-4">Let AI rewrite your tasks to be more professional, clear, and actionable.</p>
+                    <button class="btn btn-brand-ai w-100" data-bs-toggle="modal" data-bs-target="#improveModal">
+                        <i class="bi bi-magic me-2"></i> Enhance Content
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card ai-feature-card shadow-sm h-100">
+                <div class="card-body p-4">
+                    <div class="ai-icon-box"><i class="bi bi-flag-fill"></i></div>
+                    <h5 class="fw-bold text-dark">Suggest Priority</h5>
+                    <p class="text-muted small mb-4">AI analyzes your titles and deadlines to recommend the best priority level.</p>
+                    <button class="btn btn-brand-ai w-100" data-bs-toggle="modal" data-bs-target="#priorityModal">
+                        <i class="bi bi-lightning-fill me-2"></i> Get Priority
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card ai-feature-card shadow-sm h-100">
+                <div class="card-body p-4">
+                    <div class="ai-icon-box"><i class="bi bi-diagram-3-fill"></i></div>
+                    <h5 class="fw-bold text-dark">Generate Subtasks</h5>
+                    <p class="text-muted small mb-4">Break down complex projects into small, manageable steps automatically.</p>
+                    <button class="btn btn-brand-ai w-100" data-bs-toggle="modal" data-bs-target="#subtasksModal">
+                        <i class="bi bi-list-check me-2"></i> Breakdown Task
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
-        <!-- 1. Improve Description -->
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 border-0 shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3">
-                            <i class="bi bi-pencil-square text-primary" style="font-size: 1.5rem;"></i>
-                        </div>
-                        <h5 class="card-title mb-0">Improve Description</h5>
-                    </div>
-                    <p class="card-text text-muted">AI will rewrite your task description to be clearer and more detailed</p>
-                    <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#improveModal">
-                        <i class="bi bi-magic"></i> Try Now
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 2. Suggest Priority -->
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 border-0 shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="bg-warning bg-opacity-10 p-3 rounded-circle me-3">
-                            <i class="bi bi-flag-fill text-warning" style="font-size: 1.5rem;"></i>
-                        </div>
-                        <h5 class="card-title mb-0">Suggest Priority</h5>
-                    </div>
-                    <p class="card-text text-muted">AI will analyze and suggest the appropriate priority level</p>
-                    <button class="btn btn-warning w-100" data-bs-toggle="modal" data-bs-target="#priorityModal">
-                        <i class="bi bi-lightning-fill"></i> Try Now
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 3. Generate Subtasks -->
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 border-0 shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="bg-success bg-opacity-10 p-3 rounded-circle me-3">
-                            <i class="bi bi-list-check text-success" style="font-size: 1.5rem;"></i>
-                        </div>
-                        <h5 class="card-title mb-0">Generate Subtasks</h5>
-                    </div>
-                    <p class="card-text text-muted">AI will break down complex tasks into specific steps</p>
-                    <button class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#subtasksModal">
-                        <i class="bi bi-diagram-3-fill"></i> Try Now
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- AI History -->
-    <div class="row mt-4">
         <div class="col-md-12">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0"><i class="bi bi-clock-history"></i> AI Suggestions History</h5>
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h6 class="mb-0 fw-bold text-dark text-uppercase small">
+                        <i class="bi bi-clock-history me-2 text-brand"></i>Recent AI Activities
+                    </h6>
                 </div>
-                <div class="card-body">
-                    <p class="text-muted">This feature will display your AI suggestion history (in development)</p>
+                <div class="card-body py-5 text-center">
+                    <div class="opacity-25 mb-3"><i class="bi bi-robot" style="font-size: 3rem;"></i></div>
+                    <p class="text-muted small mb-0">History is currently being processed. Your suggestions will appear here soon.</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Modal 1: Improve Description -->
 <div class="modal fade" id="improveModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title"><i class="bi bi-magic"></i> Cải thiện mô tả Task</h5>
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content shadow-lg">
+            <div class="modal-header modal-header-brand">
+                <h5 class="modal-title fw-bold"><i class="bi bi-stars me-2"></i>Enhance Task Description</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <form id="improveForm">
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Tiêu đề Task</label>
-                        <input type="text" class="form-control" id="improveTitle" required 
-                               placeholder="VD: Hoàn thành báo cáo">
+                        <label class="form-label fw-bold small text-uppercase">Task Title</label>
+                        <input type="text" class="form-control shadow-none" id="improveTitle" required placeholder="e.g., Finish Monthly Report">
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Mô tả hiện tại (tùy chọn)</label>
-                        <textarea class="form-control" id="improveDesc" rows="3" 
-                                  placeholder="VD: Viết báo cáo về dự án"></textarea>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-uppercase">Draft Description (Optional)</label>
+                        <textarea class="form-control shadow-none" id="improveDesc" rows="3" placeholder="Briefly describe your task..."></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-brand-ai px-4">
                         <span class="spinner-border spinner-border-sm d-none" id="improveSpinner"></span>
-                        <i class="bi bi-stars" id="improveIcon"></i> Cải thiện với AI
+                        <i class="bi bi-magic me-1" id="improveIcon"></i> AI Optimize
                     </button>
                 </form>
                 <div id="improveResult" class="mt-4 d-none">
-                    <hr>
-                    <h6 class="text-success"><i class="bi bi-check-circle-fill"></i> Kết quả từ AI:</h6>
-                    <div class="alert alert-success" id="improveOutput"></div>
+                    <div class="ai-output-area">
+                        <span class="ai-badge">AI SUGGESTION</span>
+                        <div id="improveOutput" class="small text-dark"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Modal 2: Suggest Priority -->
 <div class="modal fade" id="priorityModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header bg-warning">
-                <h5 class="modal-title"><i class="bi bi-lightning-fill"></i> Gợi ý độ ưu tiên</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content shadow-lg">
+            <div class="modal-header modal-header-brand">
+                <h5 class="modal-title fw-bold"><i class="bi bi-lightning-fill me-2"></i>Suggest Priority</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <form id="priorityForm">
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Tiêu đề Task</label>
-                        <input type="text" class="form-control" id="priorityTitle" required 
-                               placeholder="VD: Sửa bug critical trong production">
+                        <label class="form-label fw-bold small text-uppercase">Task Title</label>
+                        <input type="text" class="form-control shadow-none" id="priorityTitle" required placeholder="e.g., Fix Critical Bug">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Mô tả (tùy chọn)</label>
-                        <textarea class="form-control" id="priorityDesc" rows="3" 
-                                  placeholder="VD: Người dùng không thể đăng nhập"></textarea>
+                        <label class="form-label fw-bold small text-uppercase">Description</label>
+                        <textarea class="form-control shadow-none" id="priorityDesc" rows="3"></textarea>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Deadline (tùy chọn)</label>
-                        <input type="datetime-local" class="form-control" id="priorityDeadline">
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-uppercase">Deadline</label>
+                        <input type="datetime-local" class="form-control shadow-none" id="priorityDeadline">
                     </div>
-                    <button type="submit" class="btn btn-warning">
+                    <button type="submit" class="btn btn-brand-ai px-4">
                         <span class="spinner-border spinner-border-sm d-none" id="prioritySpinner"></span>
-                        <i class="bi bi-flag-fill" id="priorityIcon"></i> Gợi ý Priority
+                        <i class="bi bi-lightning-fill me-1" id="priorityIcon"></i> Get Priority
                     </button>
                 </form>
                 <div id="priorityResult" class="mt-4 d-none">
-                    <hr>
-                    <h6 class="text-success"><i class="bi bi-check-circle-fill"></i> Gợi ý từ AI:</h6>
-                    <div class="alert alert-warning" id="priorityOutput"></div>
+                    <div class="ai-output-area">
+                        <span class="ai-badge">AI ANALYSIS</span>
+                        <div id="priorityOutput" class="small text-dark"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Modal 3: Generate Subtasks -->
 <div class="modal fade" id="subtasksModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header bg-success text-white">
-                <h5 class="modal-title"><i class="bi bi-diagram-3-fill"></i> Tạo Subtasks</h5>
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content shadow-lg">
+            <div class="modal-header modal-header-brand">
+                <h5 class="modal-title fw-bold"><i class="bi bi-diagram-3-fill me-2"></i>Generate Subtasks</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <form id="subtasksForm">
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Tiêu đề Task</label>
-                        <input type="text" class="form-control" id="subtasksTitle" required 
-                               placeholder="VD: Xây dựng trang web e-commerce">
+                        <label class="form-label fw-bold small text-uppercase">Task Title</label>
+                        <input type="text" class="form-control shadow-none" id="subtasksTitle" required placeholder="e.g., Rebranding Project">
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Mô tả (tùy chọn)</label>
-                        <textarea class="form-control" id="subtasksDesc" rows="3" 
-                                  placeholder="VD: Cần có giỏ hàng, thanh toán, quản lý sản phẩm"></textarea>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-uppercase">Context/Description</label>
+                        <textarea class="form-control shadow-none" id="subtasksDesc" rows="3"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-success">
+                    <button type="submit" class="btn btn-brand-ai px-4">
                         <span class="spinner-border spinner-border-sm d-none" id="subtasksSpinner"></span>
-                        <i class="bi bi-list-check" id="subtasksIcon"></i> Tạo Subtasks
+                        <i class="bi bi-list-check me-1" id="subtasksIcon"></i> Generate Steps
                     </button>
                 </form>
                 <div id="subtasksResult" class="mt-4 d-none">
-                    <hr>
-                    <h6 class="text-success"><i class="bi bi-check-circle-fill"></i> Subtasks từ AI:</h6>
-                    <div class="alert alert-success" id="subtasksOutput"></div>
+                    <div class="ai-output-area">
+                        <span class="ai-badge">AI SUBTASKS</span>
+                        <div id="subtasksOutput" class="small text-dark"></div>
+                    </div>
                 </div>
             </div>
         </div>

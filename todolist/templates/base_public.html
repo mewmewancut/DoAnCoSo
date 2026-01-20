@@ -12,23 +12,19 @@
 
     <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    {% include "partials/styles.html" %}
+        {% include "partials/styles.html" %}
 </head>
 
 <body>
+    {% include "partials/navbar_public.html" %}
+    {% include "partials/messages.html" %}
 
-{% include "partials/navbar_public.html" %}
+    <main class="public-layout">
+            {% block content %}{% endblock %}
+    </main>
 
-{% include "partials/messages.html" %}
-
-<main class="public-layout">
-    {% block content %}{% endblock %}
-</main>
-
-{% include "partials/footer.html" %}
-
-{% include "partials/scripts.html" %}
+    {% include "partials/footer.html" %}
+    {% include "partials/scripts.html" %}
 
 </body>
 </html>
