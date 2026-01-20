@@ -1,5 +1,5 @@
 <aside class="col-md-3 col-lg-2 sidebar p-3">
-    <h6 class="text-muted mb-3">DANH SÁCH</h6>
+    <h6 class="text-muted mb-3">MENU</h6>
 
     <ul class="nav flex-column gap-2">
 
@@ -12,13 +12,13 @@
             <ul class="dropdown-menu" aria-labelledby="userDropdown">
                 <li>
                     <a class="dropdown-item" href="{% url 'accounts:profile' %}">
-                        <i class="bi bi-person me-2"></i>Hồ sơ
+                        <i class="bi bi-person me-2"></i>Profile
                     </a>
                 </li>
                 <li><hr class="dropdown-divider"></li>
                 <li>
                     <a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}">
-                        <i class="bi bi-box-arrow-right me-2"></i>Đăng xuất
+                        <i class="bi bi-box-arrow-right me-2"></i>Logout
                     </a>
                 </li>
             </ul>
@@ -46,7 +46,7 @@
     </ul>
 
     <!-- TIME VIEWS -->
-    <h6 class="text-muted mb-3 mt-4">THEO THỜI GIAN</h6>
+    <h6 class="text-muted mb-3 mt-4">TIME VIEW</h6>
     <ul class="nav flex-column gap-2">
         <li class="nav-item">
             <a class="nav-link" href="{% url 'tasks:today' %}">

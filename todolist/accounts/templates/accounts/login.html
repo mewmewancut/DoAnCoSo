@@ -1,6 +1,6 @@
 {% extends 'base_public.html' %}
 
-{% block title %}Đăng nhập - Todoist{% endblock %}
+{% block title %}Login - Todoist{% endblock %}
 
 {% block content %}
 <style>
@@ -173,8 +173,8 @@
                         <div class="login-icon">
                             <i class="bi bi-box-arrow-in-right text-white" style="font-size: 2.5rem;"></i>
                         </div>
-                        <h2 class="fw-bold mb-2" style="color: #333; font-size: 2rem;">Chào mừng trở lại</h2>
-                        <p class="text-muted mb-0" style="font-size: 0.95rem;">Đăng nhập để tiếp tục công việc của bạn</p>
+                        <h2 class="fw-bold mb-2" style="color: #333; font-size: 2rem;">Welcome Back</h2>
+                        <p class="text-muted mb-0" style="font-size: 0.95rem;">Sign in to continue your work</p>
                     </div>
 
                     <form method="POST" id="loginForm">
@@ -186,7 +186,7 @@
                         
                         <div class="mb-4">
                             <label class="form-label">
-                                <i class="bi bi-person me-2"></i>Tên đăng nhập hoặc Email
+                                <i class="bi bi-person me-2"></i>Username or Email
                             </label>
                             <div class="input-group-icon">
                                 <i class="bi bi-person-fill"></i>
@@ -194,7 +194,7 @@
                                     type="text" 
                                     name="username" 
                                     class="form-control" 
-                                    placeholder="Nhập tên đăng nhập hoặc email" 
+                                    placeholder="Enter username or email" 
                                     required 
                                     autocomplete="username"
                                 >
@@ -203,7 +203,7 @@
 
                         <div class="mb-4">
                             <label class="form-label">
-                                <i class="bi bi-lock me-2"></i>Mật khẩu
+                                <i class="bi bi-lock me-2"></i>Password
                             </label>
                             <div class="input-group-icon">
                                 <i class="bi bi-lock-fill"></i>
@@ -211,7 +211,7 @@
                                     type="password" 
                                     name="password" 
                                     class="form-control" 
-                                    placeholder="Nhập mật khẩu" 
+                                    placeholder="Enter password" 
                                     required 
                                     autocomplete="current-password"
                                 >
@@ -222,28 +222,28 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="rememberMe" name="remember_me">
                                 <label class="form-check-label" for="rememberMe" style="font-size: 0.9rem; color: #666;">
-                                    Ghi nhớ đăng nhập
+                                    Remember me
                                 </label>
                             </div>
                             <a href="{% url 'accounts:password_reset' %}" class="link-custom" style="font-size: 0.9rem;">
-                                Quên mật khẩu?
+                                Forgot password?
                             </a>
                         </div>
 
                         <button class="btn btn-login w-100 text-white mb-4" type="submit">
-                            <i class="bi bi-box-arrow-in-right me-2"></i>Đăng nhập
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
                         </button>
                     </form>
 
                     <div class="divider">
-                        <span>hoặc</span>
+                        <span>or</span>
                     </div>
 
                     <div class="text-center">
                         <p class="mb-0" style="color: #666; font-size: 0.95rem;">
-                            Chưa có tài khoản? 
+                            Don't have an account? 
                             <a href="{% url 'accounts:register' %}" class="link-custom">
-                                Đăng ký ngay
+                                Sign up now
                             </a>
                         </p>
                     </div>
