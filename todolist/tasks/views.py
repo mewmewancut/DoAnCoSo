@@ -4,9 +4,9 @@ from django.contrib import messages
 from django.utils import timezone
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Max
 from datetime import timedelta
-from .models import Task
+from .models import Task, SubTask
 
 
 # ============================
@@ -109,12 +109,22 @@ def task_list(request):
 @login_required
 def task_detail(request, task_id):
     """
-    Display task detail
+    Display task detail with subtasks
     """
     task = get_object_or_404(Task, id=task_id, user=request.user)
+    subtasks = task.subtasks.all()
+    
+    # Calculate progress
+    total_subtasks = subtasks.count()
+    completed_subtasks = subtasks.filter(status='completed').count()
+    progress_percent = (completed_subtasks / total_subtasks * 100) if total_subtasks > 0 else 0
     
     context = {
         'task': task,
+        'subtasks': subtasks,
+        'total_subtasks': total_subtasks,
+        'completed_subtasks': completed_subtasks,
+        'progress_percent': round(progress_percent, 1),
     }
     return render(request, 'tasks/task_detail.html', context)
 
@@ -557,4 +567,166 @@ def ai_assistant(request):
     AI Assistant page for users to try AI features
     """
     return render(request, 'tasks/ai_assistant.html')
+
+
+# ============================
+#  SUBTASK VIEWS
+# ============================
+@login_required
+def subtask_create(request, task_id):
+    """
+    Create a new subtask for a task (AJAX endpoint)
+    """
+    if request.method == 'POST':
+        task = get_object_or_404(Task, id=task_id, user=request.user)
+        
+        import json
+        data = json.loads(request.body)
+        title = data.get('title', '').strip()
+        description = data.get('description', '').strip()
+        
+        if not title:
+            return JsonResponse({
+                'success': False,
+                'error': 'Title is required'
+            }, status=400)
+        
+        # Get max order for this task
+        max_order = task.subtasks.aggregate(Max('order'))['order__max'] or 0
+        
+        subtask = SubTask.objects.create(
+            task=task,
+            title=title,
+            description=description,
+            order=max_order + 1
+        )
+        
+        return JsonResponse({
+            'success': True,
+            'subtask': {
+                'id': str(subtask.id),
+                'title': subtask.title,
+                'description': subtask.description,
+                'status': subtask.status,
+                'order': subtask.order,
+                'created_at': subtask.created_at.strftime('%Y-%m-%d %H:%M:%S')
+            }
+        })
+    
+    return JsonResponse({'success': False, 'error': 'Invalid method'}, status=405)
+
+
+@login_required
+def subtask_update(request, subtask_id):
+    """
+    Update a subtask (AJAX endpoint)
+    """
+    if request.method == 'POST':
+        subtask = get_object_or_404(SubTask, id=subtask_id, task__user=request.user)
+        
+        import json
+        data = json.loads(request.body)
+        
+        # Update fields if provided
+        if 'title' in data:
+            subtask.title = data['title'].strip()
+        if 'description' in data:
+            subtask.description = data['description'].strip()
+        if 'status' in data:
+            subtask.status = data['status']
+        if 'order' in data:
+            subtask.order = data['order']
+        
+        subtask.save()
+        
+        return JsonResponse({
+            'success': True,
+            'subtask': {
+                'id': str(subtask.id),
+                'title': subtask.title,
+                'description': subtask.description,
+                'status': subtask.status,
+                'order': subtask.order,
+                'is_completed': subtask.is_completed
+            }
+        })
+    
+    return JsonResponse({'success': False, 'error': 'Invalid method'}, status=405)
+
+
+@login_required
+def subtask_delete(request, subtask_id):
+    """
+    Delete a subtask (AJAX endpoint)
+    """
+    if request.method == 'POST':
+        subtask = get_object_or_404(SubTask, id=subtask_id, task__user=request.user)
+        subtask.delete()
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Subtask deleted successfully'
+        })
+    
+    return JsonResponse({'success': False, 'error': 'Invalid method'}, status=405)
+
+
+@login_required
+def subtask_toggle(request, subtask_id):
+    """
+    Toggle subtask completion status (AJAX endpoint)
+    """
+    if request.method == 'POST':
+        subtask = get_object_or_404(SubTask, id=subtask_id, task__user=request.user)
+        
+        # Toggle status
+        if subtask.status == 'completed':
+            subtask.status = 'pending'
+        else:
+            subtask.status = 'completed'
+        
+        subtask.save()
+        
+        return JsonResponse({
+            'success': True,
+            'subtask': {
+                'id': str(subtask.id),
+                'status': subtask.status,
+                'is_completed': subtask.is_completed,
+                'completed_at': subtask.completed_at.strftime('%Y-%m-%d %H:%M:%S') if subtask.completed_at else None
+            }
+        })
+    
+    return JsonResponse({'success': False, 'error': 'Invalid method'}, status=405)
+
+
+@login_required
+def subtask_reorder(request, task_id):
+    """
+    Reorder subtasks for a task (for drag & drop)
+    """
+    if request.method == 'POST':
+        task = get_object_or_404(Task, id=task_id, user=request.user)
+        
+        import json
+        data = json.loads(request.body)
+        subtask_orders = data.get('orders', [])  # List of {id: ..., order: ...}
+        
+        # Update orders
+        for item in subtask_orders:
+            subtask_id = item.get('id')
+            new_order = item.get('order')
+            
+            if subtask_id and new_order is not None:
+                SubTask.objects.filter(
+                    id=subtask_id,
+                    task=task
+                ).update(order=new_order)
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Subtasks reordered successfully'
+        })
+    
+    return JsonResponse({'success': False, 'error': 'Invalid method'}, status=405)
 

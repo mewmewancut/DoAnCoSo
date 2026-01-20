@@ -32,6 +32,12 @@ urlpatterns = [
     # AI Assistant Page
     path('ai-assistant/', views.ai_assistant, name='ai_assistant'),
   
+    # SubTask CRUD endpoints
+    path('<uuid:task_id>/subtasks/create/', views.subtask_create, name='subtask_create'),
+    path('subtasks/<uuid:subtask_id>/update/', views.subtask_update, name='subtask_update'),
+    path('subtasks/<uuid:subtask_id>/delete/', views.subtask_delete, name='subtask_delete'),
+    path('subtasks/<uuid:subtask_id>/toggle/', views.subtask_toggle, name='subtask_toggle'),
+    path('<uuid:task_id>/subtasks/reorder/', views.subtask_reorder, name='subtask_reorder'),
     
     # Dũng - AI API endpoints
     path('api/improve-description/', ai_views.improve_description_api, name='ai_improve_description'),

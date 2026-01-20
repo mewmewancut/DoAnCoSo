@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Task, AISuggestion
+from .models import Task, AISuggestion, SubTask
 
 
 @admin.register(Task)
@@ -38,5 +38,25 @@ class AISuggestionAdmin(admin.ModelAdmin):
         }),
         ('Timestamp', {
             'fields': ('created_at',)
+        }),
+    )
+
+
+@admin.register(SubTask)
+class SubTaskAdmin(admin.ModelAdmin):
+    list_display = ['title', 'task', 'status', 'order', 'created_at', 'completed_at']
+    list_filter = ['status', 'created_at']
+    search_fields = ['title', 'description', 'task__title']
+    readonly_fields = ['id', 'created_at', 'updated_at', 'completed_at']
+    
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('id', 'task', 'title', 'description')
+        }),
+        ('Status & Order', {
+            'fields': ('status', 'order')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at', 'completed_at')
         }),
     )

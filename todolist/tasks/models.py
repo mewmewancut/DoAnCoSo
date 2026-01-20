@@ -122,3 +122,53 @@ class AISuggestion(models.Model):
     
     def __str__(self):
         return f"{self.get_suggestion_type_display()} - {self.created_at.strftime('%Y-%m-%d %H:%M')}"
+
+
+class SubTask(models.Model):
+    """
+    SubTask model for breaking down tasks into smaller actionable items
+    """
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('in_progress', 'In Progress'),
+        ('completed', 'Completed'),
+    ]
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    task = models.ForeignKey(
+        Task,
+        on_delete=models.CASCADE,
+        related_name='subtasks'
+    )
+    title = models.CharField(max_length=300)
+    description = models.TextField(blank=True, null=True)
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='pending'
+    )
+    order = models.IntegerField(default=0)  # For drag & drop ordering
+    completed_at = models.DateTimeField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['order', 'created_at']
+        verbose_name = 'SubTask'
+        verbose_name_plural = 'SubTasks'
+    
+    def __str__(self):
+        return f"{self.task.title} - {self.title}"
+    
+    def save(self, *args, **kwargs):
+        """Override save to track completion time"""
+        if self.status == 'completed' and not self.completed_at:
+            self.completed_at = timezone.now()
+        elif self.status != 'completed' and self.completed_at:
+            self.completed_at = None
+        super().save(*args, **kwargs)
+    
+    @property
+    def is_completed(self):
+        """Check if subtask is completed"""
+        return self.status == 'completed'
