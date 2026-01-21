@@ -1,0 +1,25 @@
+<h3>Tasks {{ start }} → {{ end }}</h3>
+
+<table class="table table-bordered mt-3">
+<tr>
+    <th>Title</th>
+    <th>Deadline</th>
+    <th>Status</th>
+</tr>
+
+{% for task in tasks %}
+<tr>
+    <td>{{ task.title }}</td>
+    <td>{{ task.deadline|date:"d/m/Y" }}</td>
+    <td>{{ task.status }}</td>
+</tr>
+{% empty %}
+<tr>
+    <td colspan="3" class="text-center">Không có task</td>
+</tr>
+{% endfor %}
+</table>
+
+<a href="{% url 'tasks:download_pdf' %}?type=month" class="btn btn-danger mt-3">
+    Download PDF
+</a>

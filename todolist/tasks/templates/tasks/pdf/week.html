@@ -1,0 +1,16 @@
+<h3>Tasks {{ start }} → {{ end }}</h3>
+
+<table border="1" width="100%" cellspacing="0" cellpadding="5">
+<tr>
+    <th>Title</th>
+    <th>Deadline</th>
+    <th>Status</th>
+</tr>
+{% for task in tasks %}
+<tr>
+    <td>{{ task.title }}</td>
+    <td>{{ task.deadline }}</td>
+    <td>{{ task.status }}</td>
+</tr>
+{% endfor %}
+</table>
