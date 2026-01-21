@@ -22,7 +22,7 @@ urlpatterns = [
     # Minh - Calendar
     path('calendar/', views.task_calendar, name='task_calendar'),
     path('calendar/events/', views.task_calendar_events, name='task_calendar_events'),
-    
+    #path("export/week/pdf/",views.export_tasks_week_pdf,name="export_tasks_week_pdf"), #pip install xhtml2pdf
 
     
     # Sơn - Week 4: Time-based views
@@ -45,4 +45,10 @@ urlpatterns = [
     path('api/improve-description/', ai_views.improve_description_api, name='ai_improve_description'),
     path('api/suggest-priority/', ai_views.suggest_priority_api, name='ai_suggest_priority'),
     path('api/generate-subtasks/', ai_views.generate_subtasks_api, name='ai_generate_subtasks'),
+
+    #PDF
+    path('download/week/', views.download_week_preview, name='download_week'),
+    path('download/month/', views.download_month_preview, name='download_month'),
+    path('download/pdf/', views.download_pdf, name='download_pdf'),
 ]
+

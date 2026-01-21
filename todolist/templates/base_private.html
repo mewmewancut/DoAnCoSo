@@ -20,7 +20,10 @@
         {% include "partials/sidebar.html" %}
                 
         <main class="col-md-9 col-lg-10 content-area h-100">
+            
+           <div id="preview-area" class="mt-4">
             {% block content %}{% endblock %}
+           </div>
         </main>
         </div>
 </div>
@@ -28,3 +31,48 @@
 
 </body>
 </html>
+
+<script>
+function toggleDownloadMenu() {
+    const menu = document.getElementById("download-submenu");
+    menu.classList.toggle("d-none");
+}
+
+function loadPreview(type) {
+    let url = '';
+
+    if (type === 'week') {
+        url = '/tasks/download/week/';
+    } else if (type === 'month') {
+        url = '/tasks/download/month/';
+    }
+
+    fetch(url)
+        .then(res => {
+            if (!res.ok) throw new Error('404 - Không tìm thấy URL');
+            return res.text();
+        })
+        .then(html => {
+            const content = document.getElementById("preview-area");
+            content.innerHTML = html;
+        })
+        .catch(err => console.error(err));
+}
+</script>
+
+
+
+<script>
+function toggleTimeView() {
+    document.getElementById("time-view")
+        .classList.toggle("d-none");
+}
+
+function loadTimeView(type) {
+    fetch(`/tasks/time-view/${type}/`)
+        .then(res => res.text())
+        .then(html => {
+            document.getElementById("main-content").innerHTML = html;
+        });
+}
+</script>

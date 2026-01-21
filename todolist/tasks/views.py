@@ -5,8 +5,15 @@ from django.utils import timezone
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse
 from django.db.models import Count, Q, Max
-from datetime import timedelta
+from datetime import date , timedelta
 from .models import Task, SubTask
+#Minh
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from io import BytesIO
+from django.template.loader import render_to_string
+
 
 
 # ============================
@@ -732,5 +739,81 @@ def subtask_reorder(request, task_id):
     
     return JsonResponse({'success': False, 'error': 'Invalid method'}, status=405)
 
-#Minh
+#PDF
 
+@login_required
+def download_week_preview(request):
+    today = timezone.now().date()
+    start = today - timedelta(days=today.weekday())
+    end = start + timedelta(days=6)
+
+    tasks = Task.objects.filter(
+        user=request.user,
+        deadline__date__range=(start, end)   
+    ).order_by('deadline')
+
+    return render(request, 'tasks/download/preview_week.html', {
+        'tasks': tasks,
+        'start': start,
+        'end': end
+    })
+
+
+import calendar
+
+@login_required
+def download_month_preview(request):
+    today = timezone.now().date()
+    year = today.year
+    month = today.month
+
+    start = date(year, month, 1)
+    end = date(year, month, calendar.monthrange(year, month)[1])
+
+    tasks = Task.objects.filter(
+        user=request.user,
+        deadline__date__range=(start, end)   
+    ).order_by('deadline')
+
+    return render(request, 'tasks/download/preview_month.html', {
+        'tasks': tasks,
+        'start': start,
+        'end': end
+    })
+
+
+@login_required
+def download_pdf(request):
+    pdf_type = request.GET.get('type')
+    today = timezone.now().date()
+
+    if pdf_type == 'month':
+        year, month = today.year, today.month
+        start = date(year, month, 1)
+        end = date(year, month, calendar.monthrange(year, month)[1])
+        template = 'tasks/pdf/month.html'
+        filename = f'tasks_month_{month}_{year}.pdf'
+    else:
+        start = today - timedelta(days=today.weekday())
+        end = start + timedelta(days=6)
+        template = 'tasks/pdf/week.html'
+        filename = f'tasks_week_{start}_{end}.pdf'
+
+    tasks = Task.objects.filter(
+        user=request.user,
+        deadline__range=(start, end)
+    ).order_by('deadline')
+
+    html = render_to_string(template, {
+        'tasks': tasks,
+        'start': start,
+        'end': end,
+        'user': request.user
+    })
+
+    result = BytesIO()
+    pisa.CreatePDF(html, dest=result)
+
+    response = HttpResponse(result.getvalue(), content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    return response
