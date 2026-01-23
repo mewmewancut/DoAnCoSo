@@ -77,12 +77,21 @@ body {
 
         /* Sidebar Container */
 .sidebar {
-    background-color: #fdfaf9; /* Nền trắng hồng cực nhẹ để tách biệt với main content */
+    background-color: #fdfaf9;
     border-right: 1px solid #f0eceb;
-    height: 100%;
-    overflow-y: auto;
-    
+    height: 100vh;          /* QUAN TRỌNG */
+    overflow-y: auto;       /* Sidebar tự scroll */
+    position: sticky;
+    top: 0;
 }
+
+.nav-link.active {
+    font-weight: 600;
+    color: #c3392b !important;   /* màu brand của bạn */
+    background-color: rgba(195, 57, 43, 0.1);
+    border-radius: 6px;
+}
+
 
 /* Tiêu đề DANH SÁCH */
 .sidebar h6 {
@@ -112,6 +121,7 @@ body {
     transition: transform 0.2s ease;
     color: #666; /* Màu icon mặc định */
 }
+
 
 /* Hover Effect */
 .sidebar .nav-link:hover {
@@ -159,4 +169,17 @@ body {
     overflow-y: auto;   /* CHO PHÉP CUỘN */
     scrollbar-width: thin;
 }
+
+/* ===== TÁCH CÁC NHÓM BUTTON TRONG TOOLBAR ===== */
+.fc-toolbar-chunk {
+    display: flex;
+    align-items: center;
+    gap: 14px; /* khoảng cách giữa các group */
+}
+
+/* Khoảng cách giữa các nút trong cùng group */
+.fc-button-group {
+    gap: 6px;
+}
+
     </style>

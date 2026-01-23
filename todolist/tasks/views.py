@@ -13,6 +13,8 @@ from django.template.loader import get_template
 from xhtml2pdf import pisa
 from io import BytesIO
 from django.template.loader import render_to_string
+from django.utils.timezone import localtime
+
 
 
 
@@ -303,7 +305,7 @@ def task_calendar_events(request):
         events.append({
             'id': str(task.id),
             'title': task.title,
-            'start': task.deadline.isoformat(),
+            'start': localtime(task.deadline).isoformat(),
             'url': f'/tasks/{task.id}/',
             'color': color,  
             'extendedProps': {
@@ -357,7 +359,7 @@ def today_view(request):
         'completed_today': completed_today,
         'today_date': now.date(),
     }
-    return render(request, 'tasks/today.html', context)
+    return render(request, 'tasks/partials/today.html', context)
 
 
 # ============================
@@ -398,7 +400,7 @@ def weekly_view(request):
         'total_tasks': tasks_this_week.count(),
         'completed_tasks': tasks_this_week.filter(status='completed').count(),
     }
-    return render(request, 'tasks/weekly_view.html', context)
+    return render(request, 'tasks/partials/weekly_view.html', context)
 
 
 # ============================
@@ -457,7 +459,7 @@ def monthly_view(request):
         'completed_tasks': completed_tasks,
         'progress_percentage': progress_percentage,
     }
-    return render(request, 'tasks/monthly_view.html', context)
+    return render(request, 'tasks/partials/monthly_view.html', context)
 
 
 # ============================
