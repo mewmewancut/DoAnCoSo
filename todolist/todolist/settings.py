@@ -142,6 +142,26 @@ EMAIL_HOST_PASSWORD = "ttve cvzg dmwf dfrx"
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 AUTH_USER_MODEL = "accounts.User"
 
+# Custom Authentication Backend
+AUTHENTICATION_BACKENDS = [
+    'accounts.backends.EmailOrUsernameBackend',  # Custom backend for email/username login
+    'django.contrib.auth.backends.ModelBackend',  # Fallback to default backend
+]
+# Logging Configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+}
+
 # Authentication URLs
 LOGIN_REDIRECT_URL = 'tasks:dashboard' 
 LOGOUT_REDIRECT_URL = 'accounts:login'
