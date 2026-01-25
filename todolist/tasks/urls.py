@@ -18,6 +18,7 @@ urlpatterns = [
     path('<uuid:task_id>/', views.task_detail, name='task_detail'),
     path('<uuid:task_id>/edit/', views.task_update, name='task_update'),
     path('<uuid:task_id>/delete/', views.task_delete, name='task_delete'),
+    path('<uuid:task_id>/quick-status/', views.task_quick_status, name='task_quick_status'),
    
     # Minh - Calendar
     path('calendar/', views.task_calendar, name='task_calendar'),
@@ -45,6 +46,7 @@ urlpatterns = [
     path('api/improve-description/', ai_views.improve_description_api, name='ai_improve_description'),
     path('api/suggest-priority/', ai_views.suggest_priority_api, name='ai_suggest_priority'),
     path('api/generate-subtasks/', ai_views.generate_subtasks_api, name='ai_generate_subtasks'),
+    path('api/ai-history/', ai_views.ai_history_api, name='ai_history'),
 
     #PDF
     path('download/week/', views.download_week_preview, name='download_week'),

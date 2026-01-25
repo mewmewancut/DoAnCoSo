@@ -1,24 +1,239 @@
-<!-- Messages Display -->
+<!-- Toast Container for notifications -->
+<div id="toast-container" class="position-fixed" style="top: 20px; right: 20px; z-index: 9999; max-width: 400px;">
     {% if messages %}
-    <div class="container mt-3" id="messages-container">
         {% for message in messages %}
-        <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags|default:'info' }}{% endif %} alert-dismissible fade show" role="alert" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 0.75rem;">
-            <div class="d-flex align-items-center">
-                {% if message.tags == 'error' or message.tags == 'danger' %}
-                    <i class="bi bi-exclamation-triangle-fill me-2" style="font-size: 1.2rem;"></i>
-                {% elif message.tags == 'success' %}
-                    <i class="bi bi-check-circle-fill me-2" style="font-size: 1.2rem;"></i>
-                {% elif message.tags == 'warning' %}
-                    <i class="bi bi-exclamation-circle-fill me-2" style="font-size: 1.2rem;"></i>
-                {% elif message.tags == 'info' or message.tags == 'debug' %}
-                    <i class="bi bi-info-circle-fill me-2" style="font-size: 1.2rem;"></i>
-                {% else %}
-                    <i class="bi bi-bell-fill me-2" style="font-size: 1.2rem;"></i>
-                {% endif %}
-                <div class="flex-grow-1">{{ message }}</div>
+        <div class="toast-item alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags|default:'info' }}{% endif %} mb-2" 
+             role="alert" 
+             style="
+                 border-radius: 12px; 
+                 box-shadow: 0 8px 24px rgba(0,0,0,0.15); 
+                 backdrop-filter: blur(10px);
+                 animation: toastSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                 border: none;
+             ">
+            <div class="d-flex align-items-start">
+                <div class="toast-icon me-3" style="
+                    width: 36px; 
+                    height: 36px; 
+                    border-radius: 10px; 
+                    display: flex; 
+                    align-items: center; 
+                    justify-content: center;
+                    {% if message.tags == 'error' or message.tags == 'danger' %}
+                    background: rgba(220, 53, 69, 0.15);
+                    {% elif message.tags == 'success' %}
+                    background: rgba(25, 135, 84, 0.15);
+                    {% elif message.tags == 'warning' %}
+                    background: rgba(255, 193, 7, 0.15);
+                    {% else %}
+                    background: rgba(13, 110, 253, 0.15);
+                    {% endif %}
+                ">
+                    {% if message.tags == 'error' or message.tags == 'danger' %}
+                        <i class="bi bi-x-circle-fill text-danger" style="font-size: 1.1rem;"></i>
+                    {% elif message.tags == 'success' %}
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 1.1rem;"></i>
+                    {% elif message.tags == 'warning' %}
+                        <i class="bi bi-exclamation-triangle-fill text-warning" style="font-size: 1.1rem;"></i>
+                    {% else %}
+                        <i class="bi bi-info-circle-fill text-primary" style="font-size: 1.1rem;"></i>
+                    {% endif %}
+                </div>
+                <div class="flex-grow-1">
+                    <div class="fw-semibold mb-1" style="font-size: 0.9rem;">
+                        {% if message.tags == 'error' or message.tags == 'danger' %}
+                            Error
+                        {% elif message.tags == 'success' %}
+                            Success
+                        {% elif message.tags == 'warning' %}
+                            Warning
+                        {% else %}
+                            Info
+                        {% endif %}
+                    </div>
+                    <div style="font-size: 0.85rem; opacity: 0.9;">{{ message }}</div>
+                </div>
+                <button type="button" class="btn-close btn-close-sm ms-2" onclick="dismissToast(this)" aria-label="Close" style="opacity: 0.5;"></button>
             </div>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <!-- Progress bar for auto-dismiss -->
+            <div class="toast-progress mt-2" style="height: 3px; border-radius: 2px; background: rgba(0,0,0,0.1); overflow: hidden;">
+                <div class="toast-progress-bar" style="
+                    height: 100%; 
+                    {% if message.tags == 'error' or message.tags == 'danger' %}
+                    background: #dc3545;
+                    {% elif message.tags == 'success' %}
+                    background: #198754;
+                    {% elif message.tags == 'warning' %}
+                    background: #ffc107;
+                    {% else %}
+                    background: #0d6efd;
+                    {% endif %}
+                    animation: toastProgress 5s linear forwards;
+                "></div>
+            </div>
         </div>
         {% endfor %}
-    </div>
     {% endif %}
+</div>
+
+<style>
+@keyframes toastSlideIn {
+    from {
+        transform: translateX(100%) scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes toastSlideOut {
+    from {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%) scale(0.8);
+        opacity: 0;
+    }
+}
+
+@keyframes toastProgress {
+    from {
+        width: 100%;
+    }
+    to {
+        width: 0%;
+    }
+}
+
+.toast-item {
+    transition: all 0.3s ease;
+}
+
+.toast-item:hover {
+    transform: translateX(-5px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.2) !important;
+}
+
+.toast-item:hover .toast-progress-bar {
+    animation-play-state: paused;
+}
+</style>
+
+<script>
+// Dismiss toast with animation
+function dismissToast(button) {
+    const toast = button.closest('.toast-item');
+    toast.style.animation = 'toastSlideOut 0.3s ease forwards';
+    setTimeout(() => toast.remove(), 300);
+}
+
+// Auto-dismiss toasts after animation completes
+document.addEventListener('DOMContentLoaded', function() {
+    const toasts = document.querySelectorAll('.toast-item');
+    toasts.forEach(toast => {
+        // Auto dismiss after 5 seconds
+        setTimeout(() => {
+            if (toast.parentElement) {
+                toast.style.animation = 'toastSlideOut 0.3s ease forwards';
+                setTimeout(() => toast.remove(), 300);
+            }
+        }, 5000);
+    });
+});
+
+// Global function to show toast from JavaScript
+function showToast(message, type = 'success', title = null) {
+    const container = document.getElementById('toast-container') || createToastContainer();
+    
+    const icons = {
+        success: '<i class="bi bi-check-circle-fill text-success" style="font-size: 1.1rem;"></i>',
+        danger: '<i class="bi bi-x-circle-fill text-danger" style="font-size: 1.1rem;"></i>',
+        warning: '<i class="bi bi-exclamation-triangle-fill text-warning" style="font-size: 1.1rem;"></i>',
+        info: '<i class="bi bi-info-circle-fill text-primary" style="font-size: 1.1rem;"></i>'
+    };
+    
+    const bgColors = {
+        success: 'rgba(25, 135, 84, 0.15)',
+        danger: 'rgba(220, 53, 69, 0.15)',
+        warning: 'rgba(255, 193, 7, 0.15)',
+        info: 'rgba(13, 110, 253, 0.15)'
+    };
+    
+    const progressColors = {
+        success: '#198754',
+        danger: '#dc3545',
+        warning: '#ffc107',
+        info: '#0d6efd'
+    };
+    
+    const titles = {
+        success: 'Success',
+        danger: 'Error',
+        warning: 'Warning',
+        info: 'Info'
+    };
+    
+    const toast = document.createElement('div');
+    toast.className = `toast-item alert alert-${type} mb-2`;
+    toast.setAttribute('role', 'alert');
+    toast.style.cssText = `
+        border-radius: 12px; 
+        box-shadow: 0 8px 24px rgba(0,0,0,0.15); 
+        backdrop-filter: blur(10px);
+        animation: toastSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border: none;
+    `;
+    
+    toast.innerHTML = `
+        <div class="d-flex align-items-start">
+            <div class="toast-icon me-3" style="
+                width: 36px; 
+                height: 36px; 
+                border-radius: 10px; 
+                display: flex; 
+                align-items: center; 
+                justify-content: center;
+                background: ${bgColors[type] || bgColors.info};
+            ">
+                ${icons[type] || icons.info}
+            </div>
+            <div class="flex-grow-1">
+                <div class="fw-semibold mb-1" style="font-size: 0.9rem;">${title || titles[type] || 'Notification'}</div>
+                <div style="font-size: 0.85rem; opacity: 0.9;">${message}</div>
+            </div>
+            <button type="button" class="btn-close btn-close-sm ms-2" onclick="dismissToast(this)" aria-label="Close" style="opacity: 0.5;"></button>
+        </div>
+        <div class="toast-progress mt-2" style="height: 3px; border-radius: 2px; background: rgba(0,0,0,0.1); overflow: hidden;">
+            <div class="toast-progress-bar" style="
+                height: 100%; 
+                background: ${progressColors[type] || progressColors.info};
+                animation: toastProgress 5s linear forwards;
+            "></div>
+        </div>
+    `;
+    
+    container.appendChild(toast);
+    
+    // Auto dismiss after 5 seconds
+    setTimeout(() => {
+        if (toast.parentElement) {
+            toast.style.animation = 'toastSlideOut 0.3s ease forwards';
+            setTimeout(() => toast.remove(), 300);
+        }
+    }, 5000);
+    
+    return toast;
+}
+
+function createToastContainer() {
+    const container = document.createElement('div');
+    container.id = 'toast-container';
+    container.className = 'position-fixed';
+    container.style.cssText = 'top: 20px; right: 20px; z-index: 9999; max-width: 400px;';
+    document.body.appendChild(container);
+    return container;
+}
+</script>

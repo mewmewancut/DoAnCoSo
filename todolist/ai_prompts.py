@@ -8,21 +8,25 @@ from langchain_core.prompts import PromptTemplate
 # ============================================
 # 1. IMPROVE TASK DESCRIPTION
 # ============================================
-IMPROVE_DESCRIPTION_TEMPLATE = """Bạn là một trợ lý quản lý công việc thông minh.
+IMPROVE_DESCRIPTION_TEMPLATE = """You are an intelligent task management assistant.
 
-Nhiệm vụ của bạn là cải thiện mô tả công việc (task) để nó rõ ràng, chi tiết và dễ thực hiện hơn.
+Your job is to improve the task description to make it clearer, more detailed, and actionable.
 
-Task hiện tại:
-Tiêu đề: {title}
-Mô tả: {description}
+Current Task:
+Title: {title}
+Description: {description}
 
-Hãy viết lại mô tả task theo cấu trúc sau:
-1. Mục tiêu: Làm rõ mục tiêu cần đạt được
-2. Các bước thực hiện: Liệt kê các bước cụ thể (nếu cần)
-3. Kết quả mong đợi: Mô tả rõ output/kết quả
+Rewrite the task description with this structure:
+1. Objective: Clarify the goal to be achieved
+2. Steps: List specific steps to complete (if needed)
+3. Expected Result: Describe the output/result clearly
 
-Chỉ trả về mô tả đã cải thiện, không cần giải thích thêm.
-Giữ nguyên ngôn ngữ của task gốc (Tiếng Việt hoặc English).
+IMPORTANT RULES:
+- Return ONLY the improved description, no explanations
+- RESPOND IN THE SAME LANGUAGE AS THE INPUT
+- If the title/description is in Vietnamese, respond in Vietnamese
+- If the title/description is in English, respond in English
+- Keep the response format clean without markdown headers
 """
 
 improve_description_prompt = PromptTemplate(
@@ -34,26 +38,30 @@ improve_description_prompt = PromptTemplate(
 # ============================================
 # 2. SUGGEST PRIORITY
 # ============================================
-SUGGEST_PRIORITY_TEMPLATE = """Bạn là một trợ lý quản lý công việc thông minh.
+SUGGEST_PRIORITY_TEMPLATE = """You are an intelligent task management assistant.
 
-Hãy phân tích task sau và đề xuất mức độ ưu tiên (priority):
+Analyze the following task and suggest a priority level:
 
-Tiêu đề: {title}
-Mô tả: {description}
+Title: {title}
+Description: {description}
 Deadline: {deadline}
 
-Các mức độ ưu tiên:
-- HIGH: Công việc quan trọng và khẩn cấp, cần làm ngay
-- MEDIUM: Công việc quan trọng nhưng không quá gấp
-- LOW: Công việc có thể làm sau
+Priority levels:
+- HIGH: Important and urgent, needs immediate attention
+- MEDIUM: Important but not very urgent
+- LOW: Can be done later
 
-Hãy trả về JSON với format:
+Return JSON with this format:
 {{
     "priority": "HIGH|MEDIUM|LOW",
-    "reason": "Giải thích ngắn gọn lý do (1-2 câu)"
+    "reason": "Brief explanation (1-2 sentences)"
 }}
 
-Chỉ trả về JSON, không thêm text nào khác.
+IMPORTANT RULES:
+- Return ONLY valid JSON, no extra text
+- The "reason" MUST BE IN THE SAME LANGUAGE AS THE INPUT
+- If title/description is Vietnamese, write reason in Vietnamese
+- If title/description is English, write reason in English
 """
 
 suggest_priority_prompt = PromptTemplate(
@@ -65,20 +73,20 @@ suggest_priority_prompt = PromptTemplate(
 # ============================================
 # 3. GENERATE SUBTASKS
 # ============================================
-GENERATE_SUBTASKS_TEMPLATE = """Bạn là một trợ lý quản lý công việc thông minh.
+GENERATE_SUBTASKS_TEMPLATE = """You are an intelligent task management assistant.
 
-Hãy chia nhỏ task phức tạp sau thành các subtasks cụ thể, dễ thực hiện:
+Break down the following complex task into specific, actionable subtasks:
 
-Tiêu đề: {title}
-Mô tả: {description}
+Title: {title}
+Description: {description}
 
-Yêu cầu:
-- Mỗi subtask phải là một bước cụ thể, có thể hoàn thành
-- Sắp xếp theo thứ tự logic (bước 1 -> 2 -> 3...)
-- Tối đa 5-8 subtasks
-- Mỗi subtask nên ngắn gọn (1 câu)
+Requirements:
+- Generate exactly {count} subtasks
+- Each subtask must be a concrete, completable step
+- Arrange in logical order (step 1 -> 2 -> 3...)
+- Each subtask should be concise (1 sentence)
 
-Trả về JSON format:
+Return JSON format:
 {{
     "subtasks": [
         "Subtask 1",
@@ -87,13 +95,36 @@ Trả về JSON format:
     ]
 }}
 
-Chỉ trả về JSON, không thêm text nào khác.
+IMPORTANT RULES:
+- Return ONLY valid JSON, no extra text
+- Generate EXACTLY {count} subtasks
+- Subtasks MUST BE IN THE SAME LANGUAGE AS THE INPUT
+- If title/description is Vietnamese, write subtasks in Vietnamese
+- If title/description is English, write subtasks in English
 """
 
 generate_subtasks_prompt = PromptTemplate(
     input_variables=["title", "description"],
-    template=GENERATE_SUBTASKS_TEMPLATE
+    template=GENERATE_SUBTASKS_TEMPLATE.replace("{count}", "5")  # Default count
 )
+
+
+def get_generate_subtasks_prompt(count=5):
+    """
+    Get the subtasks prompt template with dynamic count
+    
+    Args:
+        count (int): Number of subtasks to generate (3-10)
+    
+    Returns:
+        PromptTemplate: Prompt template with count value
+    """
+    count = max(3, min(10, int(count)))
+    template = GENERATE_SUBTASKS_TEMPLATE.replace("{count}", str(count))
+    return PromptTemplate(
+        input_variables=["title", "description"],
+        template=template
+    )
 
 
 # ============================================

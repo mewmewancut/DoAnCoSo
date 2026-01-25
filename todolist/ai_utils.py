@@ -208,13 +208,14 @@ def suggest_task_priority(title, description="", deadline=None):
             raise Exception(f"AI service error: {str(e)}")
 
 
-def generate_task_subtasks(title, description=""):
+def generate_task_subtasks(title, description="", count=5):
     """
     Use AI to generate subtasks for a task with enhanced error handling
     
     Args:
         title (str): Task title
         description (str): Task description
+        count (int): Number of subtasks to generate (3-10)
     
     Returns:
         list: List of subtask titles
@@ -225,13 +226,17 @@ def generate_task_subtasks(title, description=""):
     if not title or not title.strip():
         raise ValueError("Title cannot be empty")
     
+    # Validate and clamp count
+    count = max(3, min(10, int(count)))
+    
     try:
         llm = get_llm_client()
         
-        # Format the prompt
-        prompt = generate_subtasks_prompt.format(
+        # Format the prompt with count
+        from ai_prompts import get_generate_subtasks_prompt
+        prompt = get_generate_subtasks_prompt(count).format(
             title=title,
-            description=description if description else "Chưa có mô tả"
+            description=description if description else "No description provided"
         )
         
         # Call LLM
@@ -253,7 +258,7 @@ def generate_task_subtasks(title, description=""):
                 # Remove numbering if present
                 cleaned = subtask.strip()
                 # Remove common prefixes
-                for prefix in ['1.', '2.', '3.', '4.', '5.', '6.', '7.', '-', '•', '*']:
+                for prefix in ['1.', '2.', '3.', '4.', '5.', '6.', '7.', '8.', '9.', '10.', '-', '•', '*']:
                     if cleaned.startswith(prefix):
                         cleaned = cleaned[len(prefix):].strip()
                 if cleaned:
@@ -262,8 +267,8 @@ def generate_task_subtasks(title, description=""):
         if not cleaned_subtasks:
             raise ValueError("No valid subtasks after cleaning")
         
-        # Limit to 7 subtasks maximum
-        return cleaned_subtasks[:7]
+        # Limit to requested count
+        return cleaned_subtasks[:count]
         
     except json.JSONDecodeError as e:
         raise Exception(f"Failed to parse AI response. Please try again.")

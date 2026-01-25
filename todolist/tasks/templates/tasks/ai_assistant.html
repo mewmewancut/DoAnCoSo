@@ -3,7 +3,7 @@
 
 {% block content %}
 <style>
-    /* --- HỆ THỐNG MÀU THƯƠNG HIỆU --- */
+    /* --- COLOR SYSTEM --- */
     :root {
         --brand-red: #c3392b;
         --brand-dark: #8b2820;
@@ -11,256 +11,509 @@
         --ai-glow: 0 0 15px rgba(195, 57, 43, 0.2);
     }
 
-    /* --- CẤU TRÚC CARD AI --- */
-    .ai-feature-card {
-        border: none;
-        border-radius: 20px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        background: #ffffff;
-        overflow: hidden;
-    }
-    .ai-feature-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 15px 35px rgba(139, 40, 32, 0.12) !important;
+    /* --- MAIN CONTAINER --- */
+    .ai-container {
+        max-width: 900px;
+        margin: 0 auto;
     }
 
-    .ai-icon-box {
-        width: 60px;
-        height: 60px;
+    /* --- TAB NAVIGATION --- */
+    .ai-tabs {
+        display: flex;
+        gap: 8px;
+        background: #f8f9fa;
+        padding: 8px;
+        border-radius: 16px;
+        margin-bottom: 24px;
+    }
+    .ai-tab-btn {
+        flex: 1;
+        padding: 14px 20px;
+        border: none;
+        background: transparent;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: #666;
+        transition: all 0.3s ease;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 16px;
-        background: rgba(195, 57, 43, 0.08);
+        gap: 8px;
+    }
+    .ai-tab-btn:hover {
+        background: rgba(195, 57, 43, 0.05);
         color: var(--brand-red);
-        font-size: 1.5rem;
-        margin-bottom: 20px;
-        transition: 0.3s;
     }
-    .ai-feature-card:hover .ai-icon-box {
+    .ai-tab-btn.active {
         background: var(--brand-gradient);
-        color: #ffffff;
-        box-shadow: var(--ai-glow);
-    }
-
-    /* --- NÚT BẤM BRAND --- */
-    .btn-brand-ai {
-        background: var(--brand-gradient) !important;
-        color: #ffffff !important;
-        border: none;
-        border-radius: 12px;
-        padding: 12px;
-        font-weight: 700;
-        text-transform: uppercase;
-        font-size: 0.75rem;
-        letter-spacing: 0.5px;
-        transition: 0.3s;
-    }
-    .btn-brand-ai:hover {
-        filter: brightness(1.1);
-        box-shadow: 0 5px 15px rgba(195, 57, 43, 0.3);
-    }
-
-    /* --- MODAL STYLE --- */
-    .modal-content { border: none; border-radius: 25px; overflow: hidden; }
-    .modal-header-brand {
-        background: var(--brand-gradient) !important;
-        color: #ffffff;
-        padding: 20px 30px;
-        border: none;
-    }
-    .modal-body { padding: 30px; }
-    .form-control { border-radius: 12px; padding: 12px; border: 1px solid #eee; }
-    .form-control:focus {
-        border-color: var(--brand-red);
-        box-shadow: 0 0 0 0.25rem rgba(195, 57, 43, 0.1);
-    }
-
-    /* --- VÙNG HIỂN THỊ KẾT QUẢ AI --- */
-    .ai-output-area {
-        background: #fff9f8;
-        border: 1px dashed var(--brand-red);
-        border-radius: 15px;
-        padding: 20px;
-        position: relative;
-    }
-    .ai-badge {
-        position: absolute;
-        top: -10px;
-        right: 20px;
-        background: var(--brand-red);
         color: white;
-        font-size: 0.65rem;
-        padding: 4px 10px;
+        box-shadow: 0 4px 15px rgba(195, 57, 43, 0.3);
+    }
+    .ai-tab-btn i {
+        font-size: 1.1rem;
+    }
+
+    /* --- TAB CONTENT --- */
+    .ai-tab-content {
+        display: none;
+        animation: fadeIn 0.3s ease;
+    }
+    .ai-tab-content.active {
+        display: block;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* --- FEATURE CARD --- */
+    .ai-feature-panel {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        overflow: hidden;
+    }
+    .ai-panel-header {
+        background: var(--brand-gradient);
+        padding: 24px 30px;
+        color: white;
+    }
+    .ai-panel-header h4 {
+        margin: 0;
+        font-weight: 700;
+    }
+    .ai-panel-header p {
+        margin: 8px 0 0 0;
+        opacity: 0.9;
+        font-size: 0.9rem;
+    }
+    .ai-panel-body {
+        padding: 30px;
+    }
+
+    /* --- FORM STYLES --- */
+    .ai-form-group {
+        margin-bottom: 20px;
+    }
+    .ai-form-label {
+        font-weight: 600;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        color: #666;
+        margin-bottom: 8px;
+        display: block;
+    }
+    .ai-form-input {
+        width: 100%;
+        padding: 14px 16px;
+        border: 2px solid #eee;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+    }
+    .ai-form-input:focus {
+        outline: none;
+        border-color: var(--brand-red);
+        box-shadow: 0 0 0 4px rgba(195, 57, 43, 0.1);
+    }
+    .ai-form-input::placeholder {
+        color: #aaa;
+    }
+
+    /* --- SUBMIT BUTTON --- */
+    .ai-submit-btn {
+        background: var(--brand-gradient);
+        color: white;
+        border: none;
+        padding: 14px 28px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .ai-submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(195, 57, 43, 0.4);
+    }
+    .ai-submit-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* --- RESULT AREA --- */
+    .ai-result-area {
+        margin-top: 24px;
+        background: linear-gradient(135deg, #fff9f8 0%, #fff 100%);
+        border: 2px dashed var(--brand-red);
+        border-radius: 16px;
+        padding: 24px;
+        position: relative;
+        display: none;
+    }
+    .ai-result-area.show {
+        display: block;
+        animation: resultSlideIn 0.4s ease;
+    }
+    @keyframes resultSlideIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .ai-result-badge {
+        position: absolute;
+        top: -12px;
+        left: 20px;
+        background: var(--brand-gradient);
+        color: white;
+        font-size: 0.7rem;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+
+    /* --- FORMATTED OUTPUT --- */
+    .formatted-output {
+        line-height: 1.8;
+        color: #333;
+    }
+    .formatted-output p {
+        margin-bottom: 0.75rem;
+    }
+    .formatted-output ol, .formatted-output ul {
+        padding-left: 1.5rem;
+        margin-bottom: 0.75rem;
+    }
+    .formatted-output li {
+        margin-bottom: 0.5rem;
+    }
+    .formatted-output strong.text-primary {
+        display: block;
+        margin-top: 1rem;
+        margin-bottom: 0.25rem;
+        font-size: 0.9rem;
+        color: var(--brand-red);
+    }
+
+    /* --- PRIORITY DISPLAY --- */
+    .priority-display {
+        text-align: center;
+        padding: 20px;
+    }
+    .priority-emoji {
+        font-size: 3rem;
+        margin-bottom: 12px;
+    }
+    .priority-badge {
+        display: inline-block;
+        padding: 10px 30px;
+        border-radius: 30px;
+        font-size: 1.2rem;
+        font-weight: 700;
+    }
+    .priority-badge.high { background: #ffebee; color: #c62828; }
+    .priority-badge.medium { background: #fff8e1; color: #f57f17; }
+    .priority-badge.low { background: #e8f5e9; color: #2e7d32; }
+
+    /* --- SUBTASKS LIST --- */
+    .subtask-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .subtask-item {
+        display: flex;
+        align-items: center;
+        padding: 14px 16px;
+        background: white;
         border-radius: 10px;
-        font-weight: 800;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        transition: all 0.2s ease;
+    }
+    .subtask-item:hover {
+        transform: translateX(5px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .subtask-number {
+        width: 28px;
+        height: 28px;
+        background: var(--brand-gradient);
+        color: white;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.8rem;
+        margin-right: 14px;
+        flex-shrink: 0;
+    }
+    .subtask-text {
+        flex-grow: 1;
+        font-size: 0.95rem;
+    }
+    .subtask-check {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+    }
+
+    /* --- ACTION BUTTONS --- */
+    .ai-action-btns {
+        display: flex;
+        gap: 10px;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #eee;
+    }
+    .ai-action-btn {
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .ai-action-btn.copy {
+        background: #e3f2fd;
+        color: #1976d2;
+        border: none;
+    }
+    .ai-action-btn.copy:hover {
+        background: #1976d2;
+        color: white;
+    }
+
+    /* --- RECENT ACTIVITIES --- */
+    .ai-history-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        margin-top: 30px;
+    }
+    .ai-history-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid #eee;
+    }
+    .ai-history-header h5 {
+        margin: 0;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .ai-history-body {
+        padding: 24px;
+    }
+    .ai-history-empty {
+        text-align: center;
+        padding: 40px;
+        color: #999;
+    }
+    .ai-history-empty i {
+        font-size: 3rem;
+        opacity: 0.3;
+        margin-bottom: 12px;
+    }
+
+    /* --- SUBTASK COUNT OPTION --- */
+    .subtask-count-options {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    .count-option {
+        flex: 1;
+        padding: 12px;
+        border: 2px solid #eee;
+        border-radius: 10px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: white;
+    }
+    .count-option:hover {
+        border-color: var(--brand-red);
+    }
+    .count-option.selected {
+        border-color: var(--brand-red);
+        background: rgba(195, 57, 43, 0.05);
+    }
+    .count-option .count-number {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--brand-red);
+    }
+    .count-option .count-label {
+        font-size: 0.75rem;
+        color: #666;
+        text-transform: uppercase;
     }
 </style>
 
 <div class="container py-4">
-    <div class="row mb-5">
-        <div class="col-md-12">
+    <div class="ai-container">
+        <!-- Header -->
+        <div class="mb-4">
             <h2 class="fw-bold text-dark mb-1">🤖 AI Assistant</h2>
-            <p class="text-muted fw-bold small text-uppercase mb-0">Optimize your workflow with Intelligent Suggestions</p>
-        </div>
-    </div>
-
-    <div class="row g-4 mb-5">
-        <div class="col-md-4">
-            <div class="card ai-feature-card shadow-sm h-100">
-                <div class="card-body p-4">
-                    <div class="ai-icon-box"><i class="bi bi-pencil-square"></i></div>
-                    <h5 class="fw-bold text-dark">Improve Description</h5>
-                    <p class="text-muted small mb-4">Let AI rewrite your tasks to be more professional, clear, and actionable.</p>
-                    <button class="btn btn-brand-ai w-100" data-bs-toggle="modal" data-bs-target="#improveModal">
-                        <i class="bi bi-magic me-2"></i> Enhance Content
-                    </button>
-                </div>
-            </div>
+            <p class="text-muted mb-0">Optimize your workflow with intelligent suggestions</p>
         </div>
 
-        <div class="col-md-4">
-            <div class="card ai-feature-card shadow-sm h-100">
-                <div class="card-body p-4">
-                    <div class="ai-icon-box"><i class="bi bi-flag-fill"></i></div>
-                    <h5 class="fw-bold text-dark">Suggest Priority</h5>
-                    <p class="text-muted small mb-4">AI analyzes your titles and deadlines to recommend the best priority level.</p>
-                    <button class="btn btn-brand-ai w-100" data-bs-toggle="modal" data-bs-target="#priorityModal">
-                        <i class="bi bi-lightning-fill me-2"></i> Get Priority
-                    </button>
-                </div>
-            </div>
+        <!-- Tab Navigation -->
+        <div class="ai-tabs">
+            <button class="ai-tab-btn active" data-tab="improve">
+                <i class="bi bi-pencil-square"></i>
+                <span>Enhance</span>
+            </button>
+            <button class="ai-tab-btn" data-tab="priority">
+                <i class="bi bi-flag-fill"></i>
+                <span>Priority</span>
+            </button>
+            <button class="ai-tab-btn" data-tab="subtasks">
+                <i class="bi bi-diagram-3-fill"></i>
+                <span>Subtasks</span>
+            </button>
         </div>
 
-        <div class="col-md-4">
-            <div class="card ai-feature-card shadow-sm h-100">
-                <div class="card-body p-4">
-                    <div class="ai-icon-box"><i class="bi bi-diagram-3-fill"></i></div>
-                    <h5 class="fw-bold text-dark">Generate Subtasks</h5>
-                    <p class="text-muted small mb-4">Break down complex projects into small, manageable steps automatically.</p>
-                    <button class="btn btn-brand-ai w-100" data-bs-toggle="modal" data-bs-target="#subtasksModal">
-                        <i class="bi bi-list-check me-2"></i> Breakdown Task
-                    </button>
+        <!-- Tab 1: Improve Description -->
+        <div class="ai-tab-content active" id="tab-improve">
+            <div class="ai-feature-panel">
+                <div class="ai-panel-header">
+                    <h4><i class="bi bi-stars me-2"></i>Enhance Task Description</h4>
+                    <p>Let AI rewrite your task to be clearer and more actionable</p>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card border-0 shadow-sm rounded-4">
-                <div class="card-header bg-white border-0 py-3">
-                    <h6 class="mb-0 fw-bold text-dark text-uppercase small">
-                        <i class="bi bi-clock-history me-2 text-brand"></i>Recent AI Activities
-                    </h6>
-                </div>
-                <div class="card-body py-5 text-center">
-                    <div class="opacity-25 mb-3"><i class="bi bi-robot" style="font-size: 3rem;"></i></div>
-                    <p class="text-muted small mb-0">History is currently being processed. Your suggestions will appear here soon.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="improveModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content shadow-lg">
-            <div class="modal-header modal-header-brand">
-                <h5 class="modal-title fw-bold"><i class="bi bi-stars me-2"></i>Enhance Task Description</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="improveForm">
-                    <div class="mb-3">
-                        <label class="form-label fw-bold small text-uppercase">Task Title</label>
-                        <input type="text" class="form-control shadow-none" id="improveTitle" required placeholder="e.g., Finish Monthly Report">
-                    </div>
-                    <div class="mb-4">
-                        <label class="form-label fw-bold small text-uppercase">Draft Description (Optional)</label>
-                        <textarea class="form-control shadow-none" id="improveDesc" rows="3" placeholder="Briefly describe your task..."></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-brand-ai px-4">
-                        <span class="spinner-border spinner-border-sm d-none" id="improveSpinner"></span>
-                        <i class="bi bi-magic me-1" id="improveIcon"></i> AI Optimize
-                    </button>
-                </form>
-                <div id="improveResult" class="mt-4 d-none">
-                    <div class="ai-output-area">
-                        <span class="ai-badge">AI SUGGESTION</span>
-                        <div id="improveOutput" class="small text-dark"></div>
+                <div class="ai-panel-body">
+                    <form id="improveForm">
+                        <div class="ai-form-group">
+                            <label class="ai-form-label">Task Title *</label>
+                            <input type="text" class="ai-form-input" id="improveTitle" required 
+                                   placeholder="e.g., Complete the quarterly report">
+                        </div>
+                        <div class="ai-form-group">
+                            <label class="ai-form-label">Current Description (Optional)</label>
+                            <textarea class="ai-form-input" id="improveDesc" rows="3" 
+                                      placeholder="Describe your task briefly..."></textarea>
+                        </div>
+                        <button type="submit" class="ai-submit-btn" id="improveBtn">
+                            <i class="bi bi-magic"></i>
+                            <span>Enhance with AI</span>
+                        </button>
+                    </form>
+                    
+                    <div class="ai-result-area" id="improveResult">
+                        <span class="ai-result-badge">✨ AI ENHANCED</span>
+                        <div id="improveOutput"></div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
-<div class="modal fade" id="priorityModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content shadow-lg">
-            <div class="modal-header modal-header-brand">
-                <h5 class="modal-title fw-bold"><i class="bi bi-lightning-fill me-2"></i>Suggest Priority</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="priorityForm">
-                    <div class="mb-3">
-                        <label class="form-label fw-bold small text-uppercase">Task Title</label>
-                        <input type="text" class="form-control shadow-none" id="priorityTitle" required placeholder="e.g., Fix Critical Bug">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold small text-uppercase">Description</label>
-                        <textarea class="form-control shadow-none" id="priorityDesc" rows="3"></textarea>
-                    </div>
-                    <div class="mb-4">
-                        <label class="form-label fw-bold small text-uppercase">Deadline</label>
-                        <input type="datetime-local" class="form-control shadow-none" id="priorityDeadline">
-                    </div>
-                    <button type="submit" class="btn btn-brand-ai px-4">
-                        <span class="spinner-border spinner-border-sm d-none" id="prioritySpinner"></span>
-                        <i class="bi bi-lightning-fill me-1" id="priorityIcon"></i> Get Priority
-                    </button>
-                </form>
-                <div id="priorityResult" class="mt-4 d-none">
-                    <div class="ai-output-area">
-                        <span class="ai-badge">AI ANALYSIS</span>
-                        <div id="priorityOutput" class="small text-dark"></div>
+        <!-- Tab 2: Suggest Priority -->
+        <div class="ai-tab-content" id="tab-priority">
+            <div class="ai-feature-panel">
+                <div class="ai-panel-header">
+                    <h4><i class="bi bi-lightning-fill me-2"></i>Suggest Priority</h4>
+                    <p>AI analyzes your task to recommend the optimal priority level</p>
+                </div>
+                <div class="ai-panel-body">
+                    <form id="priorityForm">
+                        <div class="ai-form-group">
+                            <label class="ai-form-label">Task Title *</label>
+                            <input type="text" class="ai-form-input" id="priorityTitle" required 
+                                   placeholder="e.g., Fix critical bug in production">
+                        </div>
+                        <div class="ai-form-group">
+                            <label class="ai-form-label">Description</label>
+                            <textarea class="ai-form-input" id="priorityDesc" rows="3"
+                                      placeholder="More context helps AI give better suggestions..."></textarea>
+                        </div>
+                        <div class="ai-form-group">
+                            <label class="ai-form-label">Deadline</label>
+                            <input type="datetime-local" class="ai-form-input" id="priorityDeadline">
+                        </div>
+                        <button type="submit" class="ai-submit-btn" id="priorityBtn">
+                            <i class="bi bi-lightning-fill"></i>
+                            <span>Get Priority Suggestion</span>
+                        </button>
+                    </form>
+                    
+                    <div class="ai-result-area" id="priorityResult">
+                        <span class="ai-result-badge">🎯 AI ANALYSIS</span>
+                        <div id="priorityOutput"></div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
-<div class="modal fade" id="subtasksModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content shadow-lg">
-            <div class="modal-header modal-header-brand">
-                <h5 class="modal-title fw-bold"><i class="bi bi-diagram-3-fill me-2"></i>Generate Subtasks</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="subtasksForm">
-                    <div class="mb-3">
-                        <label class="form-label fw-bold small text-uppercase">Task Title</label>
-                        <input type="text" class="form-control shadow-none" id="subtasksTitle" required placeholder="e.g., Rebranding Project">
-                    </div>
-                    <div class="mb-4">
-                        <label class="form-label fw-bold small text-uppercase">Context/Description</label>
-                        <textarea class="form-control shadow-none" id="subtasksDesc" rows="3"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-brand-ai px-4">
-                        <span class="spinner-border spinner-border-sm d-none" id="subtasksSpinner"></span>
-                        <i class="bi bi-list-check me-1" id="subtasksIcon"></i> Generate Steps
-                    </button>
-                </form>
-                <div id="subtasksResult" class="mt-4 d-none">
-                    <div class="ai-output-area">
-                        <span class="ai-badge">AI SUBTASKS</span>
-                        <div id="subtasksOutput" class="small text-dark"></div>
+        <!-- Tab 3: Generate Subtasks -->
+        <div class="ai-tab-content" id="tab-subtasks">
+            <div class="ai-feature-panel">
+                <div class="ai-panel-header">
+                    <h4><i class="bi bi-diagram-3-fill me-2"></i>Generate Subtasks</h4>
+                    <p>Break down complex tasks into manageable steps automatically</p>
+                </div>
+                <div class="ai-panel-body">
+                    <form id="subtasksForm">
+                        <div class="ai-form-group">
+                            <label class="ai-form-label">Task Title *</label>
+                            <input type="text" class="ai-form-input" id="subtasksTitle" required 
+                                   placeholder="e.g., Launch new marketing campaign">
+                        </div>
+                        <div class="ai-form-group">
+                            <label class="ai-form-label">Description / Context</label>
+                            <textarea class="ai-form-input" id="subtasksDesc" rows="3"
+                                      placeholder="Provide more details for better subtask generation..."></textarea>
+                        </div>
+                        <div class="ai-form-group">
+                            <label class="ai-form-label">Number of Subtasks</label>
+                            <div class="subtask-count-options">
+                                <div class="count-option" data-count="3">
+                                    <div class="count-number">3</div>
+                                    <div class="count-label">Quick</div>
+                                </div>
+                                <div class="count-option selected" data-count="5">
+                                    <div class="count-number">5</div>
+                                    <div class="count-label">Standard</div>
+                                </div>
+                                <div class="count-option" data-count="8">
+                                    <div class="count-number">8</div>
+                                    <div class="count-label">Detailed</div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="subtaskCount" value="5">
+                        </div>
+                        <button type="submit" class="ai-submit-btn" id="subtasksBtn">
+                            <i class="bi bi-list-check"></i>
+                            <span>Generate Subtasks</span>
+                        </button>
+                    </form>
+                    
+                    <div class="ai-result-area" id="subtasksResult">
+                        <span class="ai-result-badge">📋 AI GENERATED</span>
+                        <div id="subtasksOutput"></div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Recent AI Activities -->
+        <div class="ai-history-card">
+            <div class="ai-history-header">
+                <h5><i class="bi bi-clock-history text-muted"></i> Recent AI Activities</h5>
+            </div>
+            <div class="ai-history-body" id="aiHistoryBody">
+                <!-- Will be populated by JavaScript -->
             </div>
         </div>
     </div>
@@ -284,25 +537,87 @@ function getCookie(name) {
 }
 const csrftoken = getCookie('csrftoken');
 
+// Tab Navigation
+document.querySelectorAll('.ai-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        // Update active tab button
+        document.querySelectorAll('.ai-tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Show corresponding content
+        const tabId = 'tab-' + btn.dataset.tab;
+        document.querySelectorAll('.ai-tab-content').forEach(c => c.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+    });
+});
+
+// Subtask Count Selection
+document.querySelectorAll('.count-option').forEach(option => {
+    option.addEventListener('click', () => {
+        document.querySelectorAll('.count-option').forEach(o => o.classList.remove('selected'));
+        option.classList.add('selected');
+        document.getElementById('subtaskCount').value = option.dataset.count;
+    });
+});
+
+// Helper Functions
+function setLoading(btn, loading) {
+    if (loading) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Processing...';
+    } else {
+        btn.disabled = false;
+        const icons = {
+            'improveBtn': '<i class="bi bi-magic"></i> <span>Enhance with AI</span>',
+            'priorityBtn': '<i class="bi bi-lightning-fill"></i> <span>Get Priority Suggestion</span>',
+            'subtasksBtn': '<i class="bi bi-list-check"></i> <span>Generate Subtasks</span>'
+        };
+        btn.innerHTML = icons[btn.id] || 'Submit';
+    }
+}
+
+function formatDescription(text) {
+    if (!text) return '';
+    let formatted = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    formatted = formatted.replace(/^\d+\.\s+(.+)$/gm, '<li>$1</li>');
+    if (formatted.includes('<li>')) {
+        formatted = formatted.replace(/(<li>[\s\S]*?<\/li>)/g, '<ol class="mb-2">$1</ol>');
+    }
+    formatted = formatted.replace(/^[-•]\s+(.+)$/gm, '<li>$1</li>');
+    formatted = formatted.replace(/^(Mục tiêu|Objective|Các bước|Steps|Kết quả|Expected Result|Result)[:\s]*/gim, 
+        '<strong class="text-primary">$1:</strong> ');
+    formatted = formatted.replace(/\n\n/g, '</p><p class="mb-2">');
+    formatted = formatted.replace(/\n/g, '<br>');
+    return '<p class="mb-2">' + formatted + '</p>';
+}
+
+function escapeForJS(str) {
+    return str.replace(/'/g, "\\'").replace(/\n/g, '\\n').replace(/"/g, '\\"');
+}
+
+function copyToClipboard(text) {
+    const unescaped = text.replace(/\\n/g, '\n').replace(/\\'/g, "'").replace(/\\"/g, '"');
+    navigator.clipboard.writeText(unescaped).then(() => {
+        if (typeof showToast === 'function') {
+            showToast('Copied to clipboard!', 'success');
+        }
+    });
+}
+
 // 1. Improve Description
 document.getElementById('improveForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const spinner = document.getElementById('improveSpinner');
-    const icon = document.getElementById('improveIcon');
+    const btn = document.getElementById('improveBtn');
     const result = document.getElementById('improveResult');
     const output = document.getElementById('improveOutput');
     
-    spinner.classList.remove('d-none');
-    icon.classList.add('d-none');
-    result.classList.add('d-none');
+    setLoading(btn, true);
+    result.classList.remove('show');
     
     try {
         const response = await fetch('/tasks/api/improve-description/', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken
-            },
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
             body: JSON.stringify({
                 title: document.getElementById('improveTitle').value,
                 description: document.getElementById('improveDesc').value
@@ -312,40 +627,43 @@ document.getElementById('improveForm').addEventListener('submit', async (e) => {
         const data = await response.json();
         
         if (data.success) {
-            output.innerHTML = `<strong>Mô tả đã cải thiện:</strong><br><br>${data.improved_description}`;
-            result.classList.remove('d-none');
+            const escapedText = escapeForJS(data.improved_description);
+            output.innerHTML = `
+                <div class="formatted-output">${formatDescription(data.improved_description)}</div>
+                <div class="ai-action-btns">
+                    <button class="ai-action-btn copy" onclick="copyToClipboard('${escapedText}')">
+                        <i class="bi bi-clipboard"></i> Copy to Clipboard
+                    </button>
+                </div>
+            `;
+            result.classList.add('show');
+            loadAIHistory();
         } else {
-            output.innerHTML = `<strong class="text-danger">Lỗi:</strong> ${data.error}`;
-            result.classList.remove('d-none');
+            output.innerHTML = `<div class="text-danger"><strong>Error:</strong> ${data.error}</div>`;
+            result.classList.add('show');
         }
     } catch (error) {
-        output.innerHTML = `<strong class="text-danger">Lỗi kết nối:</strong> ${error.message}`;
-        result.classList.remove('d-none');
+        output.innerHTML = `<div class="text-danger"><strong>Connection Error:</strong> ${error.message}</div>`;
+        result.classList.add('show');
     } finally {
-        spinner.classList.add('d-none');
-        icon.classList.remove('d-none');
+        setLoading(btn, false);
     }
 });
 
 // 2. Suggest Priority
 document.getElementById('priorityForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const spinner = document.getElementById('prioritySpinner');
-    const icon = document.getElementById('priorityIcon');
+    const btn = document.getElementById('priorityBtn');
     const result = document.getElementById('priorityResult');
     const output = document.getElementById('priorityOutput');
     
-    spinner.classList.remove('d-none');
-    icon.classList.add('d-none');
-    result.classList.add('d-none');
+    setLoading(btn, true);
+    result.classList.remove('show');
     
     try {
         const response = await fetch('/tasks/api/suggest-priority/', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken
-            },
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
             body: JSON.stringify({
                 title: document.getElementById('priorityTitle').value,
                 description: document.getElementById('priorityDesc').value,
@@ -356,73 +674,141 @@ document.getElementById('priorityForm').addEventListener('submit', async (e) => 
         const data = await response.json();
         
         if (data.success) {
-            const priorityClass = data.priority === 'HIGH' ? 'danger' : data.priority === 'MEDIUM' ? 'warning' : 'info';
+            const priorityInfo = {
+                'HIGH': { emoji: '🔴', class: 'high', label: 'High Priority' },
+                'MEDIUM': { emoji: '🟡', class: 'medium', label: 'Medium Priority' },
+                'LOW': { emoji: '🟢', class: 'low', label: 'Low Priority' }
+            };
+            const p = priorityInfo[data.priority] || priorityInfo['MEDIUM'];
+            
             output.innerHTML = `
-                <strong>Độ ưu tiên đề xuất:</strong> 
-                <span class="badge bg-${priorityClass} fs-6">${data.priority}</span>
-                <br><br>
-                <strong>Lý do:</strong><br>${data.reason}
+                <div class="priority-display">
+                    <div class="priority-emoji">${p.emoji}</div>
+                    <div class="priority-badge ${p.class}">${data.priority}</div>
+                </div>
+                <div class="bg-light rounded-3 p-3 mt-3">
+                    <strong class="text-muted small">AI Analysis:</strong>
+                    <p class="mb-0 mt-2">${data.reason}</p>
+                </div>
             `;
-            result.classList.remove('d-none');
+            result.classList.add('show');
+            loadAIHistory();
         } else {
-            output.innerHTML = `<strong class="text-danger">Lỗi:</strong> ${data.error}`;
-            result.classList.remove('d-none');
+            output.innerHTML = `<div class="text-danger"><strong>Error:</strong> ${data.error}</div>`;
+            result.classList.add('show');
         }
     } catch (error) {
-        output.innerHTML = `<strong class="text-danger">Lỗi kết nối:</strong> ${error.message}`;
-        result.classList.remove('d-none');
+        output.innerHTML = `<div class="text-danger"><strong>Connection Error:</strong> ${error.message}</div>`;
+        result.classList.add('show');
     } finally {
-        spinner.classList.add('d-none');
-        icon.classList.remove('d-none');
+        setLoading(btn, false);
     }
 });
 
 // 3. Generate Subtasks
 document.getElementById('subtasksForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const spinner = document.getElementById('subtasksSpinner');
-    const icon = document.getElementById('subtasksIcon');
+    const btn = document.getElementById('subtasksBtn');
     const result = document.getElementById('subtasksResult');
     const output = document.getElementById('subtasksOutput');
+    const count = document.getElementById('subtaskCount').value;
     
-    spinner.classList.remove('d-none');
-    icon.classList.add('d-none');
-    result.classList.add('d-none');
+    setLoading(btn, true);
+    result.classList.remove('show');
     
     try {
         const response = await fetch('/tasks/api/generate-subtasks/', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken
-            },
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
             body: JSON.stringify({
                 title: document.getElementById('subtasksTitle').value,
-                description: document.getElementById('subtasksDesc').value
+                description: document.getElementById('subtasksDesc').value,
+                count: parseInt(count)
             })
         });
         
         const data = await response.json();
         
-        if (data.success) {
-            let subtasksList = '<ol class="mb-0">';
-            data.subtasks.forEach(subtask => {
-                subtasksList += `<li class="mb-2">${subtask}</li>`;
+        if (data.success && data.subtasks && data.subtasks.length > 0) {
+            let html = `<div class="mb-3"><span class="badge bg-success">${data.count} subtasks generated</span></div>`;
+            html += '<ul class="subtask-list">';
+            data.subtasks.forEach((subtask, i) => {
+                html += `
+                    <li class="subtask-item">
+                        <span class="subtask-number">${i + 1}</span>
+                        <span class="subtask-text">${subtask}</span>
+                        <input type="checkbox" class="subtask-check form-check-input" checked>
+                    </li>
+                `;
             });
-            subtasksList += '</ol>';
-            output.innerHTML = `<strong>Tìm thấy ${data.count} subtasks:</strong><br><br>${subtasksList}`;
-            result.classList.remove('d-none');
+            html += '</ul>';
+            output.innerHTML = html;
+            result.classList.add('show');
+            loadAIHistory();
         } else {
-            output.innerHTML = `<strong class="text-danger">Lỗi:</strong> ${data.error}`;
-            result.classList.remove('d-none');
+            output.innerHTML = `<div class="text-danger"><strong>Error:</strong> ${data.error || 'No subtasks generated'}</div>`;
+            result.classList.add('show');
         }
     } catch (error) {
-        output.innerHTML = `<strong class="text-danger">Lỗi kết nối:</strong> ${error.message}`;
-        result.classList.remove('d-none');
+        output.innerHTML = `<div class="text-danger"><strong>Connection Error:</strong> ${error.message}</div>`;
+        result.classList.add('show');
     } finally {
-        spinner.classList.add('d-none');
-        icon.classList.remove('d-none');
+        setLoading(btn, false);
     }
 });
+
+// Load AI History
+async function loadAIHistory() {
+    const container = document.getElementById('aiHistoryBody');
+    
+    try {
+        const response = await fetch('/tasks/api/ai-history/');
+        const data = await response.json();
+        
+        if (data.success && data.history && data.history.length > 0) {
+            let html = '<div class="list-group list-group-flush">';
+            data.history.forEach(item => {
+                const typeIcons = {
+                    'description': '✨',
+                    'priority': '🎯',
+                    'subtasks': '📋'
+                };
+                const typeLabels = {
+                    'description': 'Description Enhanced',
+                    'priority': 'Priority Suggested',
+                    'subtasks': 'Subtasks Generated'
+                };
+                html += `
+                    <div class="list-group-item d-flex align-items-center">
+                        <span class="me-3 fs-5">${typeIcons[item.type] || '🤖'}</span>
+                        <div class="flex-grow-1">
+                            <div class="fw-semibold">${typeLabels[item.type] || item.type}</div>
+                            <small class="text-muted">${item.title} • ${item.created_at}</small>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        } else {
+            container.innerHTML = `
+                <div class="ai-history-empty">
+                    <i class="bi bi-robot d-block"></i>
+                    <p class="mb-0">No AI activities yet. Start using the features above!</p>
+                </div>
+            `;
+        }
+    } catch (error) {
+        container.innerHTML = `
+            <div class="ai-history-empty">
+                <i class="bi bi-robot d-block"></i>
+                <p class="mb-0">Use the AI features above and your history will appear here.</p>
+            </div>
+        `;
+    }
+}
+
+// Load history on page load
+document.addEventListener('DOMContentLoaded', loadAIHistory);
 </script>
 {% endblock %}

@@ -19,6 +19,47 @@
     .subtask-item:hover {
         background-color: #f8f9fa;
     }
+    
+    /* Quick Status Button for Detail Page */
+    .btn-status-detail {
+        padding: 6px 16px;
+        font-size: 0.85rem;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: none;
+        font-weight: 600;
+    }
+    .btn-status-detail:hover {
+        transform: scale(1.02);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .btn-status-detail.pending { background: #e3f2fd; color: #1976d2; }
+    .btn-status-detail.in_progress { background: #fff3e0; color: #f57c00; }
+    .btn-status-detail.completed { background: #e8f5e9; color: #388e3c; }
+    .btn-status-detail.cancelled { background: #ffebee; color: #d32f2f; }
+    
+    .status-dropdown-detail {
+        min-width: 160px;
+        padding: 0.5rem 0;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        border: none;
+    }
+    .status-dropdown-detail .dropdown-item {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .status-dropdown-detail .dropdown-item:hover {
+        background: #f5f5f5;
+    }
+    .status-dropdown-detail .dropdown-item.active {
+        background: #e3f2fd;
+        color: #1976d2;
+    }
 </style>
 {% endblock %}
 
@@ -53,10 +94,45 @@
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
                         <div class="border rounded p-3">
-                            <small class="text-muted d-block text-uppercase">Status</small>
-                            <span class="fw-bold text-primary">
-                                {{ task.get_status_display }}
-                            </span>
+                            <small class="text-muted d-block text-uppercase mb-2">Status</small>
+                            <!-- Quick Status Dropdown -->
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-status-detail {{ task.status }}" 
+                                        type="button" 
+                                        data-bs-toggle="dropdown" 
+                                        id="detail-status-btn"
+                                        aria-expanded="false">
+                                    <span id="status-text">{{ task.get_status_display }}</span>
+                                    <i class="bi bi-chevron-down ms-1"></i>
+                                </button>
+                                <ul class="dropdown-menu status-dropdown-detail">
+                                    <li>
+                                        <a class="dropdown-item detail-status-option {% if task.status == 'pending' %}active{% endif %}" 
+                                           href="#" data-status="pending">
+                                            <i class="bi bi-clock text-primary"></i> Pending
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item detail-status-option {% if task.status == 'in_progress' %}active{% endif %}" 
+                                           href="#" data-status="in_progress">
+                                            <i class="bi bi-arrow-repeat text-warning"></i> In Progress
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item detail-status-option {% if task.status == 'completed' %}active{% endif %}" 
+                                           href="#" data-status="completed">
+                                            <i class="bi bi-check-circle text-success"></i> Completed
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider my-1"></li>
+                                    <li>
+                                        <a class="dropdown-item detail-status-option {% if task.status == 'cancelled' %}active{% endif %}" 
+                                           href="#" data-status="cancelled">
+                                            <i class="bi bi-x-circle text-danger"></i> Cancelled
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -338,10 +414,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Toggle Subtask Completion
+// Toggle Subtask Completion (without page reload)
 document.querySelectorAll('.subtask-checkbox').forEach(checkbox => {
     checkbox.addEventListener('change', async (e) => {
         const subtaskId = e.target.dataset.subtaskId;
+        const subtaskItem = e.target.closest('.subtask-item');
+        const titleElement = subtaskItem.querySelector('.subtask-title');
         
         try {
             const response = await fetch(`/tasks/subtasks/${subtaskId}/toggle/`, {
@@ -355,13 +433,55 @@ document.querySelectorAll('.subtask-checkbox').forEach(checkbox => {
             const data = await response.json();
             
             if (data.success) {
-                location.reload(); // Reload to update progress
+                // Update UI without reloading
+                const isCompleted = data.subtask.is_completed;
+                
+                // Update checkbox visual
+                if (isCompleted) {
+                    titleElement.classList.add('text-decoration-line-through', 'text-muted');
+                } else {
+                    titleElement.classList.remove('text-decoration-line-through', 'text-muted');
+                }
+                
+                // Update progress bar
+                updateProgressBar();
+                
+                // Show toast notification (uses global showToast from messages.html)
+                if (typeof showToast === 'function') {
+                    showToast(isCompleted ? 'Subtask completed!' : 'Subtask marked as pending', 'success');
+                }
             }
         } catch (error) {
-            alert('Error: ' + error.message);
+            // Revert checkbox state on error
+            e.target.checked = !e.target.checked;
+            if (typeof showToast === 'function') {
+                showToast('Error: ' + error.message, 'danger');
+            }
         }
     });
 });
+
+// Function to update progress bar without reloading
+function updateProgressBar() {
+    const allCheckboxes = document.querySelectorAll('.subtask-checkbox');
+    const checkedCheckboxes = document.querySelectorAll('.subtask-checkbox:checked');
+    const total = allCheckboxes.length;
+    const completed = checkedCheckboxes.length;
+    const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+    
+    // Update progress bar
+    const progressBar = document.querySelector('.progress-bar');
+    if (progressBar) {
+        progressBar.style.width = percent + '%';
+        progressBar.setAttribute('aria-valuenow', percent);
+    }
+    
+    // Update text
+    const progressText = document.querySelector('.progress').parentElement.querySelector('small:last-child');
+    if (progressText) {
+        progressText.textContent = `${completed}/${total} completed`;
+    }
+}
 
 // Delete Subtask
 document.querySelectorAll('.delete-subtask').forEach(button => {
@@ -386,6 +506,59 @@ document.querySelectorAll('.delete-subtask').forEach(button => {
             }
         } catch (error) {
             alert('Error: ' + error.message);
+        }
+    });
+});
+
+// Quick Status Change for Detail Page
+document.querySelectorAll('.detail-status-option').forEach(item => {
+    item.addEventListener('click', async function(e) {
+        e.preventDefault();
+        
+        const newStatus = this.dataset.status;
+        const button = document.getElementById('detail-status-btn');
+        const taskId = '{{ task.id }}';
+        
+        try {
+            const response = await fetch(`/tasks/${taskId}/quick-status/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify({ status: newStatus })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                // Update button text
+                document.getElementById('status-text').textContent = data.task.status_display;
+                
+                // Update button class
+                button.className = 'btn btn-sm btn-status-detail ' + newStatus;
+                
+                // Update active state in dropdown
+                document.querySelectorAll('.detail-status-option').forEach(opt => {
+                    opt.classList.remove('active');
+                    if (opt.dataset.status === newStatus) {
+                        opt.classList.add('active');
+                    }
+                });
+                
+                // Show toast
+                if (typeof showToast === 'function') {
+                    showToast(`Status updated to "${data.task.status_display}"`, 'success');
+                }
+            } else {
+                if (typeof showToast === 'function') {
+                    showToast('Error: ' + data.error, 'danger');
+                }
+            }
+        } catch (error) {
+            if (typeof showToast === 'function') {
+                showToast('Error: ' + error.message, 'danger');
+            }
         }
     });
 });

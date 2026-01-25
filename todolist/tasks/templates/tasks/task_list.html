@@ -87,6 +87,45 @@
     .btn-delete-sm { color: #dc3545; background-color: rgba(220, 53, 69, 0.08); }
     .btn-delete-sm:hover { background-color: #dc3545; color: white !important; }
 
+    /* Quick Status Button */
+    .btn-status-quick {
+        padding: 2px 8px;
+        font-size: 0.7rem;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: none;
+        font-weight: 600;
+    }
+    .btn-status-quick:hover {
+        transform: scale(1.05);
+    }
+    .btn-status-quick.pending { background: #e3f2fd; color: #1976d2; }
+    .btn-status-quick.in_progress { background: #fff3e0; color: #f57c00; }
+    .btn-status-quick.completed { background: #e8f5e9; color: #388e3c; }
+    .btn-status-quick.cancelled { background: #ffebee; color: #d32f2f; }
+    
+    .status-dropdown {
+        min-width: 140px;
+        padding: 0.5rem 0;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        border: none;
+    }
+    .status-dropdown .dropdown-item {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .status-dropdown .dropdown-item:hover {
+        background: #f5f5f5;
+    }
+    .status-dropdown .dropdown-item i {
+        width: 16px;
+    }
+
     /* Badge & Row Style */
     .task-row:hover { background-color: rgba(195, 57, 43, 0.01) !important; }
     .badge-overdue { background-color: var(--brand-red); font-size: 0.6rem; }
@@ -162,9 +201,44 @@
                             </span>
                         </td>
                         <td>
-                            <small class="text-muted fw-bold" style="font-size: 0.7rem;">
-                                {{ task.get_status_display }}
-                            </small>
+                            <!-- Quick Status Dropdown -->
+                            <div class="dropdown">
+                                <button class="btn-status-quick {{ task.status }}" 
+                                        type="button" 
+                                        data-bs-toggle="dropdown" 
+                                        data-task-id="{{ task.id }}"
+                                        aria-expanded="false">
+                                    {{ task.get_status_display }}
+                                    <i class="bi bi-chevron-down ms-1" style="font-size: 0.6rem;"></i>
+                                </button>
+                                <ul class="dropdown-menu status-dropdown">
+                                    <li>
+                                        <a class="dropdown-item status-option {% if task.status == 'pending' %}active{% endif %}" 
+                                           href="#" data-status="pending" data-task-id="{{ task.id }}">
+                                            <i class="bi bi-clock text-primary"></i> Pending
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item status-option {% if task.status == 'in_progress' %}active{% endif %}" 
+                                           href="#" data-status="in_progress" data-task-id="{{ task.id }}">
+                                            <i class="bi bi-arrow-repeat text-warning"></i> In Progress
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item status-option {% if task.status == 'completed' %}active{% endif %}" 
+                                           href="#" data-status="completed" data-task-id="{{ task.id }}">
+                                            <i class="bi bi-check-circle text-success"></i> Completed
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider my-1"></li>
+                                    <li>
+                                        <a class="dropdown-item status-option {% if task.status == 'cancelled' %}active{% endif %}" 
+                                           href="#" data-status="cancelled" data-task-id="{{ task.id }}">
+                                            <i class="bi bi-x-circle text-danger"></i> Cancelled
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </td>
                         <td class="text-center">
                             <div class="d-inline-flex">
@@ -195,4 +269,78 @@
 </div>
 {% endblock %}
 
+{% block extra_js %}
+<script>
+// CSRF Token helper
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Quick status change handler
+document.querySelectorAll('.status-option').forEach(item => {
+    item.addEventListener('click', async function(e) {
+        e.preventDefault();
+        
+        const taskId = this.dataset.taskId;
+        const newStatus = this.dataset.status;
+        const button = document.querySelector(`button[data-task-id="${taskId}"]`);
+        
+        try {
+            const response = await fetch(`/tasks/${taskId}/quick-status/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ status: newStatus })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                // Update button text and class
+                button.textContent = data.task.status_display;
+                button.innerHTML = data.task.status_display + ' <i class="bi bi-chevron-down ms-1" style="font-size: 0.6rem;"></i>';
+                
+                // Update button class
+                button.className = 'btn-status-quick ' + newStatus;
+                
+                // Update active state in dropdown
+                const dropdown = button.nextElementSibling;
+                dropdown.querySelectorAll('.status-option').forEach(opt => {
+                    opt.classList.remove('active');
+                    if (opt.dataset.status === newStatus) {
+                        opt.classList.add('active');
+                    }
+                });
+                
+                // Show toast notification
+                if (typeof showToast === 'function') {
+                    showToast(`Task status updated to "${data.task.status_display}"`, 'success');
+                }
+            } else {
+                if (typeof showToast === 'function') {
+                    showToast('Error: ' + data.error, 'danger');
+                }
+            }
+        } catch (error) {
+            if (typeof showToast === 'function') {
+                showToast('Error: ' + error.message, 'danger');
+            }
+        }
+    });
+});
+</script>
+{% endblock %}
 

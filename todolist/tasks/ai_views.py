@@ -174,7 +174,8 @@ def generate_subtasks_api(request):
     POST /api/task/generate-subtasks
     Body: {
         "title": "Task title",
-        "description": "Task description (optional)"
+        "description": "Task description (optional)",
+        "count": 5 (optional, default 5, range 3-10)
     }
     
     Response: {
@@ -189,6 +190,14 @@ def generate_subtasks_api(request):
         data = json.loads(request.body)
         title = data.get('title', '').strip()
         description = data.get('description', '').strip()
+        count = data.get('count', 5)
+        
+        # Validate count
+        try:
+            count = int(count)
+            count = max(3, min(10, count))  # Clamp between 3 and 10
+        except (ValueError, TypeError):
+            count = 5
         
         # Validate input
         if not title:
@@ -197,14 +206,14 @@ def generate_subtasks_api(request):
                 'error': 'Title is required'
             }, status=400)
         
-        # Call AI function
-        subtasks = generate_task_subtasks(title, description)
+        # Call AI function with count parameter
+        subtasks = generate_task_subtasks(title, description, count)
         
         # Save AI suggestion to history
         AISuggestion.objects.create(
             user=request.user,
             suggestion_type='subtasks',
-            input_data={'title': title, 'description': description},
+            input_data={'title': title, 'description': description, 'count': count},
             output_data={'subtasks': subtasks}
         )
         
@@ -221,6 +230,87 @@ def generate_subtasks_api(request):
             'success': False,
             'error': 'Invalid JSON format'
         }, status=400)
+        
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=500)
+
+
+@login_required
+@require_http_methods(["GET"])
+def ai_history_api(request):
+    """
+    API endpoint to get recent AI activities for the current user
+    
+    GET /api/ai-history/
+    Query params:
+        limit (optional): Number of items to return (default 10, max 50)
+    
+    Response: {
+        "success": true,
+        "history": [
+            {
+                "id": 1,
+                "type": "description|priority|subtasks",
+                "title": "Task title",
+                "created_at": "2 hours ago",
+                "input_data": {...},
+                "output_data": {...}
+            },
+            ...
+        ],
+        "total": 25
+    }
+    """
+    try:
+        from django.utils.timesince import timesince
+        from django.utils import timezone
+        
+        # Get limit from query params
+        limit = request.GET.get('limit', 10)
+        try:
+            limit = min(int(limit), 50)  # Max 50 items
+        except (ValueError, TypeError):
+            limit = 10
+        
+        # Get recent AI suggestions for this user
+        suggestions = AISuggestion.objects.filter(
+            user=request.user
+        ).order_by('-created_at')[:limit]
+        
+        # Format history data
+        history = []
+        for suggestion in suggestions:
+            # Get title from input_data
+            title = suggestion.input_data.get('title', 'Unknown')
+            if len(title) > 50:
+                title = title[:50] + '...'
+            
+            # Format timestamp
+            try:
+                time_ago = timesince(suggestion.created_at, timezone.now()) + ' ago'
+            except:
+                time_ago = suggestion.created_at.strftime('%Y-%m-%d %H:%M')
+            
+            history.append({
+                'id': suggestion.id,
+                'type': suggestion.suggestion_type,
+                'title': title,
+                'created_at': time_ago,
+                'input_data': suggestion.input_data,
+                'output_data': suggestion.output_data
+            })
+        
+        # Get total count
+        total = AISuggestion.objects.filter(user=request.user).count()
+        
+        return JsonResponse({
+            'success': True,
+            'history': history,
+            'total': total
+        })
         
     except Exception as e:
         return JsonResponse({
