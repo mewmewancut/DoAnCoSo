@@ -30,9 +30,7 @@ urlpatterns = [
         name="password_reset_complete"
     ),
     
-    # Dashboard
-    path("user-dashboard/", views.user_dashboard, name="user_dashboard"),
-    
+        
     # Profile
     path("profile/", views.profile_view, name="profile"),
     path("profile/edit/", views.profile_edit, name="profile_edit"),

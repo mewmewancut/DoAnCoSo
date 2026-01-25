@@ -7,51 +7,49 @@ User = get_user_model()
 
 
 class RegisterForm(UserCreationForm):
-    """
-    Enhanced registration form with email validation
-    """
+
     email = forms.EmailField(
         label="Email",
         required=True,
         widget=forms.EmailInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Nhập email của bạn',
+            'placeholder': 'Enter your email',
             'autocomplete': 'email',
         }),
-        help_text="Email sẽ được dùng để kích hoạt tài khoản và khôi phục mật khẩu."
+        help_text="Email will be used for account activation and password recovery."
     )
     
     username = forms.CharField(
-        label="Tên đăng nhập",
+        label="Username",
         required=True,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Nhập tên đăng nhập',
+            'placeholder': 'Enter your username',
             'autocomplete': 'username',
         }),
-        help_text="Bắt buộc. 150 ký tự trở xuống. Chỉ chứa chữ cái, số và @/./+/-/_.",
+        help_text="Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
         min_length=3,
         max_length=150,
     )
     
     password1 = forms.CharField(
-        label="Mật khẩu",
+        label="Password",
         widget=forms.PasswordInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Nhập mật khẩu',
+            'placeholder': 'Enter your password',
             'autocomplete': 'new-password',
         }),
-        help_text="Mật khẩu phải có ít nhất 8 ký tự và không được quá giống thông tin cá nhân.",
+        help_text="Password must be at least 8 characters and not too similar to personal information.",
     )
     
     password2 = forms.CharField(
-        label="Xác nhận mật khẩu",
+        label="Confirm Password",
         widget=forms.PasswordInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Nhập lại mật khẩu',
+            'placeholder': 'Enter your password again',
             'autocomplete': 'new-password',
         }),
-        help_text="Nhập lại mật khẩu để xác nhận.",
+        help_text="Enter your password again to confirm.",
     )
     
     class Meta:
@@ -59,35 +57,29 @@ class RegisterForm(UserCreationForm):
         fields = ("email", "username", "password1", "password2")
     
     def clean_email(self):
-        """
-        Validate email uniqueness
-        """
+
         email = self.cleaned_data.get("email")
         if email:
             email = email.lower().strip()
             if User.objects.filter(email=email).exists():
                 raise ValidationError(
-                    "Email này đã được sử dụng. Vui lòng chọn email khác hoặc đăng nhập."
+                    "Email has already been used. Please choose another one."
                 )
         return email
     
     def clean_username(self):
-        """
-        Validate username
-        """
+
         username = self.cleaned_data.get("username")
         if username:
             username = username.strip()
             if User.objects.filter(username=username).exists():
                 raise ValidationError(
-                    "Tên đăng nhập này đã được sử dụng. Vui lòng chọn tên khác."
+                    "Username is already taken. Please choose another one."
                 )
         return username
     
     def save(self, commit=True):
-        """
-        Save user with normalized email
-        """
+
         user = super().save(commit=False)
         user.email = self.cleaned_data["email"].lower().strip()
         if commit:
@@ -96,15 +88,13 @@ class RegisterForm(UserCreationForm):
 
 
 class ProfileEditForm(forms.ModelForm):
-    """
-    Form for editing user profile information (email cannot be changed)
-    """
+
     username = forms.CharField(
-        label="Tên đăng nhập",
+        label="Username",
         required=True,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Nhập tên đăng nhập',
+            'placeholder': 'Enter your username',
             'autocomplete': 'username',
         }),
         min_length=3,
@@ -116,7 +106,7 @@ class ProfileEditForm(forms.ModelForm):
         required=False,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Nhập họ của bạn',
+            'placeholder': 'Enter your first name',
             'autocomplete': 'given-name',
         }),
         max_length=150,
@@ -127,20 +117,20 @@ class ProfileEditForm(forms.ModelForm):
         required=False,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Nhập tên của bạn',
+            'placeholder': 'Enter your last name',
             'autocomplete': 'family-name',
         }),
         max_length=150,
     )
     
     avatar = forms.ImageField(
-        label="Ảnh đại diện",
+        label="Avatar",
         required=False,
         widget=forms.FileInput(attrs={
             'class': 'form-control',
             'accept': 'image/*',
         }),
-        help_text="Upload ảnh đại diện của bạn (JPG, PNG, GIF - tối đa 5MB)",
+        help_text="Upload your avatar (JPG, PNG, GIF - max 5MB)",
     )
     
     class Meta:
@@ -152,48 +142,44 @@ class ProfileEditForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
     
     def clean_username(self):
-        """
-        Validate username uniqueness (excluding current user)
-        """
+
         username = self.cleaned_data.get("username")
         if username:
             username = username.strip()
             if self.user and User.objects.filter(username=username).exclude(pk=self.user.pk).exists():
                 raise ValidationError(
-                    "Tên đăng nhập này đã được sử dụng. Vui lòng chọn tên khác."
+                    "Username is already taken. Please choose another one."
                 )
         return username
 
 
 class CustomPasswordChangeForm(PasswordChangeForm):
-    """
-    Custom password change form with better styling
-    """
+
     old_password = forms.CharField(
-        label="Mật khẩu hiện tại",
+        label="Current Password",
         widget=forms.PasswordInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Nhập mật khẩu hiện tại',
+            'placeholder': 'Enter your current password',
             'autocomplete': 'current-password',
         }),
     )
     
     new_password1 = forms.CharField(
-        label="Mật khẩu mới",
+        label="New Password",
         widget=forms.PasswordInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Nhập mật khẩu mới',
+            'placeholder': 'Enter your new password',
             'autocomplete': 'new-password',
         }),
-        help_text="Mật khẩu phải có ít nhất 8 ký tự và không được quá giống thông tin cá nhân.",
+        help_text="Password must be at least 8 characters and not too similar to personal information.",
     )
     
     new_password2 = forms.CharField(
-        label="Xác nhận mật khẩu mới",
+        label="Confirm Password",
         widget=forms.PasswordInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Nhập lại mật khẩu mới',
+            'placeholder': 'Enter your password again',
             'autocomplete': 'new-password',
         }),
-        help_text="Nhập lại mật khẩu mới để xác nhận.",
+        help_text="Enter your password again to confirm.",
     )

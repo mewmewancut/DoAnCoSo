@@ -6,9 +6,7 @@ from cloudinary_storage.storage import MediaCloudinaryStorage
 
 
 class User(AbstractUser):
-    """
-    Custom User model with UUID primary key and email field
-    """
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(
         unique=True,
@@ -33,36 +31,26 @@ class User(AbstractUser):
         ordering = ["-date_joined"]
     
     def __str__(self):
-        """
-        String representation of user
-        """
+
         return f"{self.username} ({self.email})"
     
     def get_full_name_or_username(self):
-        """
-        Return full name if available, otherwise username
-        """
+
         if self.first_name or self.last_name:
             return f"{self.first_name} {self.last_name}".strip()
         return self.username
     
     def is_account_activated(self):
-        """
-        Check if account is activated
-        """
+
         return self.is_active
     
     def get_display_name(self):
-        """
-        Get display name for user (full name > username)
-        """
+
         full_name = self.get_full_name()
         return full_name if full_name else self.username
     
     def get_avatar_url(self):
-        """
-        Get avatar URL or return default avatar
-        """
+
         if self.avatar:
             return self.avatar.url
         return None

@@ -1,0 +1,55 @@
+import logging
+logger = logging.getLogger(__name__)
+
+class UserProfileService:
+    @staticmethod
+    def get_profile_statistics(user):
+        try:
+            from tasks.models import Task
+            
+            user_tasks = Task.objects.filter(user=user)
+            total_tasks = user_tasks.count()
+            completed_tasks = user_tasks.filter(status='completed').count()
+            pending_tasks = user_tasks.filter(status='pending').count()
+            in_progress_tasks = user_tasks.filter(status='in_progress').count()
+            overdue_tasks = [task for task in user_tasks if task.is_overdue]
+            overdue_count = len(overdue_tasks)
+            
+            return {
+                'total_tasks': total_tasks,
+                'completed_tasks': completed_tasks,
+                'pending_tasks': pending_tasks,
+                'in_progress_tasks': in_progress_tasks,
+                'overdue_count': overdue_count
+            }
+            
+        except ImportError:
+            logger.warning("Tasks app not available, returning zero statistics")
+            return {
+                'total_tasks': 0,
+                'completed_tasks': 0,
+                'pending_tasks': 0,
+                'in_progress_tasks': 0,
+                'overdue_count': 0
+            }
+    
+    @staticmethod
+    def update_profile(form, user):
+        try:
+            form.save()
+            logger.info(f"Profile updated for user: {user.username} ({user.email})")
+            
+            return {
+                'success': True,
+                'message': "Update profile successfully!",
+                'error': None
+            }
+            
+        except Exception as e:
+            logger.error(f"Error updating profile for user {user.username}: {str(e)}")
+            return {
+                'success': False,
+                'message': "An error occurred while updating your profile. Please try again.",
+                'error': str(e)
+            }
+

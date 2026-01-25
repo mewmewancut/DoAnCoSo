@@ -12,16 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 def send_activation_email(user, request=None):
-    """
-    Send activation email to user
-    
-    Args:
-        user: User instance
-        request: HttpRequest object for building absolute URL
-        
-    Returns:
-        bool: True if email sent successfully, False otherwise
-    """
+
     try:
         # Generate activation token
         token = default_token_generator.make_token(user)
@@ -66,15 +57,7 @@ def send_activation_email(user, request=None):
 
 
 def get_user_from_uidb64(uidb64):
-    """
-    Safely decode uidb64 and get user
-    
-    Args:
-        uidb64: Base64 encoded user ID
-        
-    Returns:
-        User instance or None
-    """
+
     from django.utils.http import urlsafe_base64_decode
     from django.contrib.auth import get_user_model
     
