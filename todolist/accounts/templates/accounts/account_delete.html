@@ -1,6 +1,6 @@
 {% extends 'base_private.html' %}
 
-{% block title %}Xóa tài khoản - {{ user.username }}{% endblock %}
+{% block title %}Delete Account - {{ user.username }}{% endblock %}
 
 {% block content %}
 <style>
@@ -83,22 +83,22 @@
                         <div class="warning-icon">
                             <i class="bi bi-exclamation-triangle-fill text-white" style="font-size: 3rem;"></i>
                         </div>
-                        <h2 class="fw-bold mb-2" style="color: #dc3545;">Cảnh báo: Xóa tài khoản</h2>
-                        <p class="text-muted mb-0">Hành động này không thể hoàn tác!</p>
+                        <h2 class="fw-bold mb-2" style="color: #dc3545;">Warning: Delete Account</h2>
+                        <p class="text-muted mb-0">This action cannot be undone!</p>
                     </div>
                     
                     <div class="warning-box">
                         <h5 class="fw-bold mb-3" style="color: #856404;">
-                            <i class="bi bi-exclamation-triangle-fill me-2"></i>Bạn có chắc chắn muốn xóa tài khoản?
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>Are you sure you want to delete your account?
                         </h5>
                         <p class="mb-2" style="color: #856404; font-weight: 600;">
-                            Khi xóa tài khoản, tất cả dữ liệu của bạn sẽ bị xóa vĩnh viễn:
+                            When deleting your account, all your data will be permanently deleted:
                         </p>
                         <ul style="color: #856404;">
-                            <li>Tất cả công việc và dự án của bạn</li>
-                            <li>Lịch sử hoạt động</li>
-                            <li>Thông tin cá nhân</li>
-                            <li>Không thể khôi phục sau khi xóa</li>
+                            <li>All your tasks and projects</li>
+                            <li>Activity history</li>
+                            <li>Personal information</li>
+                            <li>Cannot be restored after deletion</li>
                         </ul>
                     </div>
                     
@@ -108,35 +108,35 @@
                         <div class="mb-4">
                             <label class="form-label fw-bold">
                                 <i class="bi bi-shield-exclamation me-2"></i>
-                                Để xác nhận, vui lòng nhập tên đăng nhập của bạn:
+                                To confirm, please enter your username:
                             </label>
                             <input 
                                 type="text" 
                                 name="confirm_username" 
                                 class="form-control" 
-                                placeholder="Nhập tên đăng nhập: {{ user.username }}"
+                                placeholder="Username: {{ user.username }}"
                                 required
                                 autocomplete="off"
                             >
                             <small class="text-muted mt-2 d-block">
                                 <i class="bi bi-info-circle me-1"></i>
-                                Nhập <strong>{{ user.username }}</strong> để xác nhận xóa tài khoản
+                                Enter <strong>{{ user.username }}</strong> to confirm account deletion
                             </small>
                         </div>
                         
                         <div class="alert alert-danger" style="border-radius: 12px; border-left: 4px solid #dc3545;">
                             <i class="bi bi-exclamation-circle-fill me-2"></i>
-                            <strong>Lưu ý cuối cùng:</strong> Hành động này sẽ xóa vĩnh viễn tài khoản 
-                            <strong>{{ user.username }}</strong> và tất cả dữ liệu liên quan. 
-                            Bạn sẽ không thể đăng nhập hoặc khôi phục dữ liệu sau khi xóa.
+                            <strong>Last warning:</strong> This action will permanently delete your account 
+                            <strong>{{ user.username }}</strong> and all related data. 
+                            You will not be able to log in or restore data after deletion.
                         </div>
                         
                         <div class="d-flex gap-3 mt-4">
                             <button type="submit" class="btn btn-lg px-5 fw-bold text-white" style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); border-radius: 12px; border: none; box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);">
-                                <i class="bi bi-trash-fill me-2"></i>Xóa tài khoản vĩnh viễn
+                                <i class="bi bi-trash-fill me-2"></i>Delete account permanently
                             </button>
                             <a href="{% url 'accounts:profile' %}" class="btn btn-lg btn-outline-secondary px-5" style="border-radius: 12px;">
-                                <i class="bi bi-x-circle me-2"></i>Hủy
+                                <i class="bi bi-x-circle me-2"></i>Cancel
                             </a>
                         </div>
                     </form>
@@ -152,15 +152,15 @@
         const confirmUsername = document.querySelector('input[name="confirm_username"]').value.trim();
         
         if (confirmUsername !== username) {
-            alert('Tên đăng nhập không khớp!');
+            alert('Username does not match!');
             return false;
         }
         
         return confirm(
-            '⚠️ CẢNH BÁO CUỐI CÙNG ⚠️\n\n' +
-            'Bạn có CHẮC CHẮN muốn xóa tài khoản "' + username + '"?\n\n' +
-            'Tất cả dữ liệu sẽ bị xóa vĩnh viễn và không thể khôi phục!\n\n' +
-            'Nhấn OK để xác nhận xóa, hoặc Cancel để hủy.'
+            '⚠️  ⚠️\n\n' +
+            'Are you SURE you want to delete account "' + username + '"?\n\n' +
+            'All data will be permanently deleted and cannot be restored!\n\n' +
+            'Press OK to confirm deletion, or Cancel to cancel.'
         );
     }
     
@@ -169,7 +169,7 @@
         const confirmInput = document.querySelector('input[name="confirm_username"]');
         if (confirmInput.value.trim() !== '{{ user.username }}') {
             e.preventDefault();
-            alert('Vui lòng nhập đúng tên đăng nhập để xác nhận!');
+            alert('Please enter the correct username to confirm deletion!');
             confirmInput.focus();
         }
     });

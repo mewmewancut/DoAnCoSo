@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kích hoạt tài khoản - Todoist</title>
+    <title>Activate Account - Todoist</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -100,31 +100,31 @@
     <div class="email-container">
         <div class="email-header">
             <div class="icon">📋</div>
-            <h1>Chào mừng đến với Todoist!</h1>
+            <h1>Welcome to Todoist!</h1>
         </div>
         
         <div class="email-body">
-            <h2>Xin chào {{ user.username }},</h2>
+            <h2>Hello {{ user.username }},</h2>
             
             <p>
-                Cảm ơn bạn đã đăng ký tài khoản tại <strong style="color: #c3392b;">Todoist</strong> - 
-                ứng dụng quản lý công việc hàng đầu!
+                Thank you for registering an account at <strong style="color: #c3392b;">Todoist</strong> - 
+                the leading task management application!
             </p>
             
             <p>
-                Để bắt đầu sử dụng tài khoản, vui lòng kích hoạt tài khoản của bạn bằng cách nhấn vào nút bên dưới:
+                To start using your account, please activate your account by clicking the button below:
             </p>
             
             <div class="button-container">
                 <a href="{{ activation_link }}" class="activation-button">
-                    ✨ Kích hoạt tài khoản
+                    ✨ Activate Account
                 </a>
             </div>
             
             <div class="divider"></div>
             
             <p style="font-size: 14px; color: #999; margin-top: 30px;">
-                <strong>Nếu nút không hoạt động</strong>, bạn có thể sao chép và dán đường link sau vào trình duyệt:
+                <strong>If the button doesn't work</strong>, you can copy and paste the following link into your browser:
             </p>
             
             <div class="link-fallback">
@@ -132,16 +132,16 @@
             </div>
             
             <p style="font-size: 14px; color: #999; margin-top: 30px;">
-                <strong>Lưu ý:</strong> Link kích hoạt sẽ hết hạn sau 24 giờ. 
-                Nếu bạn không yêu cầu tạo tài khoản này, vui lòng bỏ qua email này.
+                <strong>Note:</strong> Activation link will expire after 24 hours. 
+                If you did not request this account, please ignore this email.
             </p>
         </div>
         
         <div class="email-footer">
-            <p><strong>Trân trọng,</strong></p>
-            <p>Đội ngũ hỗ trợ Todoist</p>
+            <p><strong>Best regards,</strong></p>
+            <p>Todoist Support Team</p>
             <p style="margin-top: 20px; font-size: 12px;">
-                Email này được gửi tự động, vui lòng không trả lời email này.
+                This email was sent automatically, please do not reply to this email.
             </p>
         </div>
     </div>
