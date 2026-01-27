@@ -59,7 +59,7 @@ class CalendarService:
         return {
             'id': str(task.id),
             'title': task.title,
-            'start': task.deadline.isoformat(),
+            'start': timezone.localtime(task.deadline).isoformat(),
             'url': f'/tasks/{task.id}/',
             'color': color,
             'extendedProps': {
