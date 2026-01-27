@@ -79,10 +79,26 @@ body {
 .sidebar {
     background-color: #fdfaf9;
     border-right: 1px solid #f0eceb;
-    height: 100vh;          /* QUAN TRỌNG */
-    overflow-y: auto;       /* Sidebar tự scroll */
-    position: sticky;
+    width: 260px;
+    height: 100%;
+
+    position: absolute;   
+    left: 0;
     top: 0;
+
+    transition: transform 0.3s ease;
+    overflow-y: auto;
+
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+}
+
+.sidebar-title {
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: #9ca3af;
+    margin-bottom: 1rem;
 }
 
 .nav-link.active {
@@ -153,6 +169,7 @@ body {
 .main-layout {
     height: calc(100vh - 64px); /* 64px ≈ height navbar */
     overflow: hidden;
+    display: flex;
 }
 .private-layout {
     height: calc(100vh - 64px);
@@ -164,12 +181,52 @@ body {
 }
 
 .content-area {
-    scroll-behavior: smooth;
+    flex: 1;
     height: 100%;
-    overflow-y: auto;   /* CHO PHÉP CUỘN */
-    scrollbar-width: thin;
+    overflow-y: auto;
+    min-width: 0;
+    padding-left: 260px; 
+    transition: all 0.3s ease;
+}
+.sidebar-collapsed .sidebar {
+    transform: translateX(-100%);
 }
 
+.sidebar-collapsed .content-area {
+    padding-left: 0;   
+}
+
+
+/* ===== NÚT TOGGLE ===== */
+.sidebar-toggle {
+    position: fixed;
+    top: 50%;
+    left: 260px;
+    transform: translateY(-50%);
+    background: #ffffff;
+    border: 1px solid #eee;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2000;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: left 0.3s ease;
+}
+
+.sidebar-collapsed .sidebar-toggle {
+    left: 8px;
+}
+
+
+
+.sidebar-toggle i {
+    font-size: 14px;
+    transition: transform 0.3s ease;
+}
 /* ===== TÁCH CÁC NHÓM BUTTON TRONG TOOLBAR ===== */
 .fc-toolbar-chunk {
     display: flex;
@@ -182,4 +239,12 @@ body {
     gap: 6px;
 }
 
+/* ===== APP LAYOUT ===== */
+.app-layout {
+    display: flex;
+    position: relative;
+    height: calc(100vh - 64px);
+    width: 100vw;
+    overflow: hidden;
+}
     </style>

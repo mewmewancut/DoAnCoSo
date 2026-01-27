@@ -1,25 +1,104 @@
-<h3>Tasks {{ start }} → {{ end }}</h3>
 
-<table class="table table-bordered mt-3">
-<tr>
-    <th>Title</th>
-    <th>Deadline</th>
-    <th>Status</th>
-</tr>
+<style>
+    :root {
+        --brand-red: #c3392b;
+        --brand-gradient: linear-gradient(135deg, #c3392b 0%, #8b2820 100%);
+    }
 
-{% for task in tasks %}
-<tr>
-    <td>{{ task.title }}</td>
-    <td>{{ task.deadline|date:"d/m/Y" }}</td>
-    <td>{{ task.status }}</td>
-</tr>
-{% empty %}
-<tr>
-    <td colspan="3" class="text-center">Không có task</td>
-</tr>
-{% endfor %}
-</table>
+    .preview-container { background: #f8f9fa; border-radius: 30px; overflow: hidden; border: 1px solid #eee; }
+    
+    /* Header Header hiện đại */
+    .preview-banner {
+        background: var(--brand-gradient);
+        padding: 60px 40px;
+        color: white;
+        position: relative;
+    }
+    
+    .preview-banner .deco-icon {
+        position: absolute; right: 50px; top: 50%; transform: translateY(-50%);
+        font-size: 8rem; opacity: 0.15;
+    }
 
-<a href="{% url 'tasks:download_pdf' %}?type=week" class="btn btn-danger mt-3">
-    Download PDF
-</a>
+    .stat-pill {
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(5px);
+        padding: 10px 20px;
+        border-radius: 15px;
+        display: inline-block;
+    }
+
+    .btn-print-now {
+        background: white !important;
+        color: var(--brand-red) !important;
+        font-weight: 800;
+        border-radius: 12px;
+        padding: 12px 35px;
+        border: none;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        transition: 0.3s;
+    }
+    .btn-print-now:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(195, 57, 43, 0.3); }
+
+    .table-custom thead { background: #f1f3f5; }
+    .table-custom th { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #666; border: none; }
+    .table-custom td { vertical-align: middle; border-color: #f1f1f1; padding: 15px 10px; }
+</style>
+
+<div class="container py-5">
+    <div class="preview-container shadow-lg">
+        <div class="preview-banner">
+            <i class="fas fa-file-invoice deco-icon"></i>
+            <h6 class="text-uppercase fw-bold mb-2" style="letter-spacing: 3px;">Document Preview</h6>
+            <h1 class="display-5 fw-bold mb-3">Tasks Report Summary</h1>
+            <p class="mb-4 fs-5 opacity-75">Reviewing tasks from <strong>{{ start }}</strong> to <strong>{{ end }}</strong></p>
+            
+            <div class="d-flex gap-3 align-items-center flex-wrap">
+                <div class="stat-pill">
+                    <small class="d-block opacity-75">Total Tasks</small>
+                    <span class="fw-bold fs-5">{{ tasks|length }}</span>
+                </div>
+                <a href="{% url 'tasks:download_pdf' %}?type={% if 'month' in request.path %}month{% else %}week{% endif %}" class="btn btn-print-now ms-md-auto">
+                    <i class="fas fa-download me-2"></i> DOWNLOAD PDF
+                </a>
+            </div>
+        </div>
+
+        <div class="bg-white p-4 p-md-5">
+            <h5 class="fw-bold mb-4 text-dark"><i class="fas fa-list-check me-2 text-danger"></i>Included Content:</h5>
+            <div class="table-responsive">
+                <table class="table table-custom table-hover">
+                    <thead>
+                        <tr>
+                            <th class="ps-3">Task Detail</th>
+                            <th>Deadline</th>
+                            <th class="text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for task in tasks %}
+                        <tr>
+                            <td class="ps-3">
+                                <div class="fw-bold text-dark">{{ task.title }}</div>
+                                <small class="text-muted">{{ task.description|truncatechars:50 }}</small>
+                            </td>
+                            <td>
+                                <span class="badge bg-light text-dark border fw-normal">
+                                    <i class="far fa-calendar-alt me-1 text-danger"></i> {{ task.deadline|date:"d/m/Y" }}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge {% if task.status == 'completed' %}bg-success{% else %}bg-secondary{% endif %} rounded-pill px-3">
+                                    {{ task.get_status_display|default:task.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="3" class="text-center py-5 text-muted">No data found for this period.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

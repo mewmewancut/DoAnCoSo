@@ -16,16 +16,17 @@
 {% include "partials/navbar_private.html" %}
 {% include "partials/messages.html" %}
 <div class="container-fluid private-layout">
-    <div class="row h-100">
-        {% include "partials/sidebar.html" %}
-                
-        <main class="col-md-9 col-lg-10 content-area h-100">
-            
-           <div id="preview-area" class="mt-4">
-            {% block content %}{% endblock %}
-           </div>
-        </main>
-        </div>
+                <div class="app-layout">
+
+                {% include "partials/sidebar.html" %}
+
+                <main class="content-area">
+                    <div id="preview-area" class="mt-4">
+                        {% block content %}{% endblock %}
+                    </div>
+                </main>
+
+                </div>
 </div>
 {% include "partials/scripts.html" %}
 
@@ -119,5 +120,19 @@ function toggleMainMenu() {
 
 
 
+<script>
+function toggleSidebar() {
+    const body = document.body;
+    const icon = document.getElementById("sidebarIcon");
+
+    body.classList.toggle("sidebar-collapsed");
+
+    if (body.classList.contains("sidebar-collapsed")) {
+        icon.classList.replace("bi-chevron-left", "bi-chevron-right");
+    } else {
+        icon.classList.replace("bi-chevron-right", "bi-chevron-left");
+    }
+}
+</script>
 
 

@@ -1,16 +1,137 @@
-<h3>Tasks {{ start }} → {{ end }}</h3>
+<style>
+    /* Thiết lập chuẩn in A4 */
+    @page { size: A4; margin: 1.5cm; }
+    body { 
+        font-family: 'DejaVu Sans', sans-serif; 
+        color: #333; 
+        line-height: 1.6; 
+        margin: 0; 
+    }
 
-<table border="1" width="100%" cellspacing="0" cellpadding="5">
-<tr>
-    <th>Title</th>
-    <th>Deadline</th>
-    <th>Status</th>
-</tr>
-{% for task in tasks %}
-<tr>
-    <td>{{ task.title }}</td>
-    <td>{{ task.deadline }}</td>
-    <td>{{ task.status }}</td>
-</tr>
-{% endfor %}
+    /* --- PROFESSIONAL HEADER --- */
+    .report-header { 
+        border-bottom: 3px solid #c3392b; 
+        padding-bottom: 15px; 
+        margin-bottom: 30px; 
+    }
+    .brand-name { 
+        color: #c3392b; 
+        font-weight: 800; 
+        font-size: 22px; 
+        text-transform: uppercase; 
+        margin: 0;
+    }
+
+    /* --- PLANNER TABLE --- */
+    .planner-table { 
+        width: 100%; 
+        border-collapse: collapse; 
+    }
+    
+    .planner-table th { 
+        background: #f8f9fa; 
+        color: #c3392b; 
+        font-size: 11px; 
+        font-weight: bold; 
+        padding: 12px; 
+        text-align: left; 
+        border-bottom: 2px solid #c3392b;
+        text-transform: uppercase;
+    }
+
+    .planner-table td { 
+        padding: 18px 12px; 
+        border-bottom: 1px solid #eee; 
+        vertical-align: middle; 
+    }
+
+    /* --- CỘT CHECK RIÊNG BIỆT [ ] --- */
+    .manual-checkbox {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #444; /* Viền sậm rõ nét khi in */
+        border-radius: 4px;
+        background-color: #fff;
+        margin: 0 auto; /* Căn giữa trong ô */
+    }
+
+    .task-title { 
+        font-weight: bold; 
+        font-size: 14px; 
+        color: #000; 
+    }
+    .task-desc { 
+        font-size: 11px; 
+        color: #777; 
+        margin-top: 4px; 
+    }
+    .task-time { 
+        font-size: 12px; 
+        color: #333; 
+    }
+
+    .footer-note { 
+        margin-top: 40px; 
+        font-size: 10px; 
+        color: #999; 
+        text-align: center; 
+        font-style: italic;
+        border-top: 1px dashed #ddd;
+        padding-top: 10px;
+    }
+</style>
+
+<div class="report-header">
+    <table width="100%">
+        <tr>
+            <td>
+                <div class="brand-name">TaskMaster Planner</div>
+                <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                    Schedule: <strong>{{ start }}</strong> &mdash; <strong>{{ end }}</strong>
+                </div>
+            </td>
+            <td align="right" valign="bottom">
+                <div style="font-size: 10px; color: #888;">
+                    Printed on: {% now "d/m/Y" %}
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<table class="planner-table">
+    <thead>
+        <tr>
+            <th width="10%" style="text-align: center;">DONE</th>
+            <th width="60%">TASK DETAILS</th>
+            <th width="30%">DEADLINE</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for task in tasks %}
+        <tr>
+            <td align="center">
+                <div class="manual-checkbox"></div>
+            </td>
+            <td>
+                <div class="task-title">{{ task.title }}</div>
+                {% if task.description %}
+                    <div class="task-desc">
+                        {{ task.description|truncatewords:12 }}
+                    </div>
+                {% endif %}
+            </td>
+            <td>
+                <div class="task-time">
+                    <strong>{{ task.deadline|date:"d/m/Y" }}</strong><br>
+                    <small style="color: #888;">{{ task.deadline|date:"H:i" }}</small>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
+
+<div class="footer-note">
+    Note: Tick the [ ] box once you've completed the task manually. Stay productive!
+</div>
