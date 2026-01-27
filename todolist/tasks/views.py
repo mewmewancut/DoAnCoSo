@@ -232,7 +232,7 @@ def today_view(request):
     Display tasks due today
     """
     data = CalendarService.get_today_data(request.user)
-    return render(request, "tasks/today.html", data)
+    return render(request, "tasks/partials/today.html", data)
 
 
 # ============================
@@ -244,7 +244,7 @@ def weekly_view(request):
     Display tasks for the current week
     """
     data = CalendarService.get_weekly_data(request.user)
-    return render(request, "tasks/weekly_view.html", data)
+    return render(request, "tasks/partials/weekly_view.html", data)
 
 
 # ============================
@@ -256,7 +256,7 @@ def monthly_view(request):
     Display tasks for the current month
     """
     data = CalendarService.get_monthly_data(request.user)
-    return render(request, "tasks/monthly_view.html", data)
+    return render(request, "tasks/partials/monthly_view.html", data)
 
 
 # ============================
