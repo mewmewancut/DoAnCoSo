@@ -1,9 +1,9 @@
 
 {% extends 'base_private.html' %}
-
 {% load static %}
+{% load i18n %}
 
-{% block title %}Profile - {{ user.username }}{% endblock %}
+{% block title %}{% trans "Profile" %} - {{ user.username }}{% endblock %}
 
 {% block content %}
 <style>
@@ -130,14 +130,14 @@
                     <div class="p-4">
                         <div class="info-item">
                             <div class="info-label">
-                                <i class="bi bi-envelope me-2"></i>Email
+                                <i class="bi bi-envelope me-2"></i>{% trans "Email" %}
                             </div>
                             <div class="info-value">{{ user.email }}</div>
                         </div>
                         
                         <div class="info-item">
                             <div class="info-label">
-                                <i class="bi bi-person me-2"></i>Username
+                                <i class="bi bi-person me-2"></i>{% trans "Username" %}
                             </div>
                             <div class="info-value">{{ user.username }}</div>
                         </div>
@@ -145,7 +145,7 @@
                         {% if user.first_name or user.last_name %}
                         <div class="info-item">
                             <div class="info-label">
-                                <i class="bi bi-person-badge me-2"></i>full Name
+                                <i class="bi bi-person-badge me-2"></i>{% trans "Full Name" %}
                             </div>
                             <div class="info-value">{{ user.get_full_name|default:"None" }}</div>
                         </div>
@@ -153,7 +153,7 @@
                         
                         <div class="info-item">
                             <div class="info-label">
-                                <i class="bi bi-calendar-check me-2"></i>Created At
+                                <i class="bi bi-calendar-check me-2"></i>{% trans "Created At" %}
                             </div>
                             <div class="info-value">{{ user.date_joined|date:"d/m/Y" }}</div>
                         </div>
@@ -161,7 +161,7 @@
                         {% if user.last_login %}
                         <div class="info-item">
                             <div class="info-label">
-                                <i class="bi bi-clock-history me-2"></i>Last Login
+                                <i class="bi bi-clock-history me-2"></i>{% trans "Last Login" %}
                             </div>
                             <div class="info-value">{{ user.last_login|date:"d/m/Y H:i" }}</div>
                         </div>
@@ -169,27 +169,27 @@
                         
                         <div class="info-item">
                             <div class="info-label">
-                                <i class="bi bi-shield-check me-2"></i>Status
+                                <i class="bi bi-shield-check me-2"></i>{% trans "Status" %}
                             </div>
                             <div class="info-value">
                                 {% if user.is_active %}
-                                    <span class="badge bg-success">activated</span>
+                                    <span class="badge bg-success">{% trans "Activated" %}</span>
                                 {% else %}
-                                    <span class="badge bg-warning">Not activated</span>
+                                    <span class="badge bg-warning">{% trans "Not activated" %}</span>
                                 {% endif %}
                             </div>
                         </div>
                         
                         <div class="d-grid gap-2 mt-4">
                             <a href="{% url 'accounts:profile_edit' %}" class="btn action-btn" style="background: linear-gradient(135deg, #c3392b 0%, #8b2820 100%); color: white;">
-                                <i class="bi bi-pencil-square me-2"></i>Edit Profile
+                                <i class="bi bi-pencil-square me-2"></i>{% trans "Edit Profile" %}
                             </a>
                             <a href="{% url 'accounts:password_change' %}" class="btn action-btn btn-outline-primary">
-                                <i class="bi bi-key me-2"></i>Change Password
+                                <i class="bi bi-key me-2"></i>{% trans "Change Password" %}
                             </a>
                             <hr class="my-2">
                             <a href="{% url 'accounts:account_delete' %}" class="btn action-btn btn-outline-danger">
-                                <i class="bi bi-trash me-2"></i>Delete Account
+                                <i class="bi bi-trash me-2"></i>{% trans "Delete Account" %}
                             </a>
                         </div>
                     </div>
@@ -200,7 +200,7 @@
             <div class="col-lg-8">
                 <div class="profile-card p-4">
                     <h4 class="fw-bold mb-4">
-                        <i class="bi bi-graph-up me-2" style="color: #c3392b;"></i>Job Statistics
+                        <i class="bi bi-graph-up me-2" style="color: #c3392b;"></i>{% trans "Job Statistics" %}
                     </h4>
                     
                     <div class="row g-4 mb-4">
@@ -210,7 +210,7 @@
                                     <i class="bi bi-list-task text-white" style="font-size: 1.8rem;"></i>
                                 </div>
                                 <h3 class="fw-bold mb-1" style="color: #c3392b;">{{ total_tasks }}</h3>
-                                <p class="text-muted mb-0">Total Tasks</p>
+                                <p class="text-muted mb-0">{% trans "Total Tasks" %}</p>
                             </div>
                         </div>
                         
@@ -220,7 +220,7 @@
                                     <i class="bi bi-check-circle text-white" style="font-size: 1.8rem;"></i>
                                 </div>
                                 <h3 class="fw-bold mb-1" style="color: #28a745;">{{ completed_tasks }}</h3>
-                                <p class="text-muted mb-0">Completed Tasks</p>
+                                <p class="text-muted mb-0">{% trans "Completed Tasks" %}</p>
                             </div>
                         </div>
                         
@@ -230,7 +230,7 @@
                                     <i class="bi bi-hourglass-split text-white" style="font-size: 1.8rem;"></i>
                                 </div>
                                 <h3 class="fw-bold mb-1" style="color: #ffc107;">{{ pending_tasks }}</h3>
-                                <p class="text-muted mb-0">Pending Tasls</p>
+                                <p class="text-muted mb-0">{% trans "Pending Tasks" %}</p>
                             </div>
                         </div>
                         
@@ -240,7 +240,7 @@
                                     <i class="bi bi-arrow-repeat text-white" style="font-size: 1.8rem;"></i>
                                 </div>
                                 <h3 class="fw-bold mb-1" style="color: #17a2b8;">{{ in_progress_tasks }}</h3>
-                                <p class="text-muted mb-0">In Progress Tasks</p>
+                                <p class="text-muted mb-0">{% trans "In Progress Tasks" %}</p>
                             </div>
                         </div>
                     </div>
@@ -249,18 +249,18 @@
                     <div class="alert alert-danger d-flex align-items-center" style="border-radius: 12px;">
                         <i class="bi bi-exclamation-triangle-fill me-2" style="font-size: 1.5rem;"></i>
                         <div>
-                            <strong>You have {{ overdue_count }} overdue tasks!</strong>
-                            <p class="mb-0">Please check and complete them as soon as possible.</p>
+                            <strong>{% blocktrans %}You have {{ overdue_count }} overdue tasks!{% endblocktrans %}</strong>
+                            <p class="mb-0">{% trans "Please check and complete them as soon as possible." %}</p>
                         </div>
                     </div>
                     {% endif %}
                     
                     <div class="mt-4">
                         <a href="{% url 'tasks:task_list' %}" class="btn btn-outline-primary action-btn">
-                            <i class="bi bi-arrow-right me-2"></i>View All Tasks
+                            <i class="bi bi-arrow-right me-2"></i>{% trans "View All Tasks" %}
                         </a>
                         <a href="{% url 'tasks:dashboard' %}" class="btn btn-outline-secondary action-btn ms-2">
-                            <i class="bi bi-house-door me-2"></i>Return to Dashboard
+                            <i class="bi bi-house-door me-2"></i>{% trans "Return to Dashboard" %}
                         </a>
                     </div>
                 </div>

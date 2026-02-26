@@ -1,6 +1,7 @@
 {% extends 'base_public.html' %}
+{% load i18n %}
 
-{% block title %}Login - Todoist{% endblock %}
+{% block title %}{% trans "Login" %} - Todoist{% endblock %}
 
 {% block content %}
 <style>
@@ -173,8 +174,8 @@
                         <div class="login-icon">
                             <i class="bi bi-box-arrow-in-right text-white" style="font-size: 2.5rem;"></i>
                         </div>
-                        <h2 class="fw-bold mb-2" style="color: #333; font-size: 2rem;">Welcome Back</h2>
-                        <p class="text-muted mb-0" style="font-size: 0.95rem;">Sign in to continue your work</p>
+                        <h2 class="fw-bold mb-2" style="color: #333; font-size: 2rem;">{% trans "Welcome Back" %}</h2>
+                        <p class="text-muted mb-0" style="font-size: 0.95rem;">{% trans "Sign in to continue your work" %}</p>
                     </div>
 
                     <form method="POST" id="loginForm">
@@ -186,7 +187,7 @@
                         
                         <div class="mb-4">
                             <label class="form-label">
-                                <i class="bi bi-person me-2"></i>Username or Email
+                                <i class="bi bi-person me-2"></i>{% trans "Username or Email" %}
                             </label>
                             <div class="input-group-icon">
                                 <i class="bi bi-person-fill"></i>
@@ -194,7 +195,7 @@
                                     type="text" 
                                     name="username" 
                                     class="form-control" 
-                                    placeholder="Enter username or email" 
+                                    placeholder="{% trans 'Enter username or email' %}" 
                                     required 
                                     autocomplete="username"
                                 >
@@ -203,7 +204,7 @@
 
                         <div class="mb-4">
                             <label class="form-label">
-                                <i class="bi bi-lock me-2"></i>Password
+                                <i class="bi bi-lock me-2"></i>{% trans "Password" %}
                             </label>
                             <div class="input-group-icon">
                                 <i class="bi bi-lock-fill"></i>
@@ -211,7 +212,7 @@
                                     type="password" 
                                     name="password" 
                                     class="form-control" 
-                                    placeholder="Enter password" 
+                                    placeholder="{% trans 'Enter password' %}" 
                                     required 
                                     autocomplete="current-password"
                                 >
@@ -222,28 +223,28 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="rememberMe" name="remember_me">
                                 <label class="form-check-label" for="rememberMe" style="font-size: 0.9rem; color: #666;">
-                                    Remember me
+                                    {% trans "Remember me" %}
                                 </label>
                             </div>
                             <a href="{% url 'accounts:password_reset' %}" class="link-custom" style="font-size: 0.9rem;">
-                                Forgot password?
+                                {% trans "Forgot password?" %}
                             </a>
                         </div>
 
                         <button class="btn btn-login w-100 text-white mb-4" type="submit">
-                            <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+                            <i class="bi bi-box-arrow-in-right me-2"></i>{% trans "Sign In" %}
                         </button>
                     </form>
 
                     <div class="divider">
-                        <span>or</span>
+                        <span>{% trans "or" %}</span>
                     </div>
 
                     <div class="text-center">
                         <p class="mb-0" style="color: #666; font-size: 0.95rem;">
-                            Don't have an account? 
+                            {% trans "Don't have an account?" %} 
                             <a href="{% url 'accounts:register' %}" class="link-custom">
-                                Sign up now
+                                {% trans "Sign up now" %}
                             </a>
                         </p>
                     </div>

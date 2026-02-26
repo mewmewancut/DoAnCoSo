@@ -1,5 +1,6 @@
 {% extends 'base_private.html' %}
-{% block title %}Detail: {{ task.title }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Detail" %}: {{ task.title }}{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -69,7 +70,7 @@
         <nav aria-label="breadcrumb" class="mb-4">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
-                    <a href="{% url 'tasks:task_list' %}">Task List</a>
+                    <a href="{% url 'tasks:task_list' %}">{% trans "Task List" %}</a>
                 </li>
                 <li class="breadcrumb-item active">{{ task.title }}</li>
             </ol>
@@ -85,9 +86,9 @@
                 </div>
 
                 <div class="mb-4">
-                    <h6 class="text-uppercase text-muted fw-bold small">Description</h6>
+                    <h6 class="text-uppercase text-muted fw-bold small">{% trans "Description" %}</h6>
                     <p class="fs-5 text-dark bg-light p-3 rounded" style="white-space: pre-wrap;">
-                        {{ task.description|default:"No detailed description." }}
+                        {% if task.description %}{{ task.description }}{% else %}{% trans "No detailed description." %}{% endif %}
                     </p>
                 </div>
 
@@ -108,7 +109,7 @@
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
                         <div class="border rounded p-3">
-                            <small class="text-muted d-block text-uppercase mb-2">Status</small>
+                            <small class="text-muted d-block text-uppercase mb-2">{% trans "Status" %}</small>
                             <!-- Quick Status Dropdown -->
                             <div class="dropdown">
                                 <button class="btn btn-sm btn-status-detail {{ task.status }}" 
@@ -123,26 +124,27 @@
                                     <li>
                                         <a class="dropdown-item detail-status-option {% if task.status == 'pending' %}active{% endif %}" 
                                            href="#" data-status="pending">
-                                            <i class="bi bi-clock text-primary"></i> Pending
+                                            <i class="bi bi-clock text-primary"></i> {% trans "Pending" %}
                                         </a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item detail-status-option {% if task.status == 'in_progress' %}active{% endif %}" 
                                            href="#" data-status="in_progress">
-                                            <i class="bi bi-arrow-repeat text-warning"></i> In Progress
+                                            <i class="bi bi-arrow-repeat text-warning"></i> {% trans "In Progress" %}
                                         </a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item detail-status-option {% if task.status == 'completed' %}active{% endif %}" 
                                            href="#" data-status="completed">
-                                            <i class="bi bi-check-circle text-success"></i> Completed
+                                            <i class="bi bi-check-circle text-success"></i> {% trans "Completed" %}
                                         </a>
                                     </li>
                                     <li><hr class="dropdown-divider my-1"></li>
                                     <li>
                                         <a class="dropdown-item detail-status-option {% if task.status == 'cancelled' %}active{% endif %}" 
                                            href="#" data-status="cancelled">
-                                            <i class="bi bi-x-circle text-danger"></i> Cancelled
+                                            <i class="bi bi-x-circle text-danger"></i> {% trans "Cancelled" %}
+
                                         </a>
                                     </li>
                                 </ul>

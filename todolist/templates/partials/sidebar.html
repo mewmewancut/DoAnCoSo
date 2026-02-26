@@ -1,7 +1,8 @@
 <aside class="col-md-3 col-lg-2 sidebar p-3 "id="sidebar">
 
+{% load i18n %}
 <h6 class="sidebar-title">
-    MENU
+    {% trans "MENU" %}
 </h6>
 
 
@@ -17,13 +18,13 @@
             <ul class="dropdown-menu" aria-labelledby="userDropdown">
                 <li>
                     <a class="dropdown-item" href="{% url 'accounts:profile' %}">
-                        <i class="bi bi-person me-2"></i>Profile
+                        <i class="bi bi-person me-2"></i>{% trans "Profile" %}
                     </a>
                 </li>
                 <li><hr class="dropdown-divider"></li>
                 <li>
                     <a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}">
-                        <i class="bi bi-box-arrow-right me-2"></i>Logout
+                        <i class="bi bi-box-arrow-right me-2"></i>{% trans "Logout" %}
                     </a>
                 </li>
             </ul>
@@ -32,27 +33,27 @@
         <!-- DASHBOARD -->
         <li class="nav-item">
             <a class="nav-link" href="{% url 'tasks:dashboard' %}">
-                <i class="bi bi-house-door me-2"></i>Dashboard
+                <i class="bi bi-house-door me-2"></i>{% trans "Dashboard" %}
             </a>
         </li>
 
         <!-- TASKS -->
         <li class="nav-item">
             <a class="nav-link" href="{% url 'tasks:task_list' %}">
-                <i class="bi bi-list-task me-2"></i>All Tasks
+                <i class="bi bi-list-task me-2"></i>{% trans "All Tasks" %}
             </a>
         </li>
 
         <li class="nav-item">
             <a class="nav-link" href="{% url 'tasks:task_list' %}?status=completed">
-                <i class="bi bi-check-circle me-2"></i>Completed
+                <i class="bi bi-check-circle me-2"></i>{% trans "Completed" %}
             </a>
         </li>
 
         
         <li class="nav-item">
             <a class="nav-link" href="{% url 'tasks:task_calendar' %}">
-                <i class="bi bi-calendar-week me-2"></i>Calendar
+                <i class="bi bi-calendar-week me-2"></i>{% trans "Calendar" %}
             </a>
         </li>
         
@@ -62,7 +63,7 @@
             onclick="toggleDownloadMenu()">
 
                 <span>
-                    <i class="bi bi-calendar-week me-2"></i>Download
+                    <i class="bi bi-calendar-week me-2"></i>{% trans "Download" %}
                 </span>
 
                 <i class="bi bi-chevron-down small"></i>
@@ -75,7 +76,7 @@
                     href="javascript:void(0);"
                     data-type="week"
                     onclick="loadPreview(this)">
-                        This Week
+                        {% trans "This Week" %}
                     </a>
                 </li>
 
@@ -84,7 +85,7 @@
                     href="javascript:void(0);"
                     data-type="month"
                     onclick="loadPreview(this)">
-                        This Month
+                        {% trans "This Month" %}
                     </a>
                 </li>
             </ul>
@@ -101,7 +102,7 @@
                     onclick="toggleTimeViewMenu()"
                     style="background: none; border: none;">
                 <span>
-                    <i class="bi bi-clock me-2"></i>Time View
+                    <i class="bi bi-clock me-2"></i>{% trans "Time View" %}
                 </span>
                 <i class="bi bi-chevron-down small"></i>
             </button>
@@ -115,7 +116,7 @@
                 href="javascript:void(0);"
                 data-type="today"
                 onclick="switchTimeView(this)">
-                    <i class="bi bi-calendar-day me-2"></i>Today
+                    <i class="bi bi-calendar-day me-2"></i>{% trans "Today" %}
                 </a>
             </li>
 
@@ -124,7 +125,7 @@
                 href="javascript:void(0);"
                 data-type="weekly"
                 onclick="switchTimeView(this)">
-                    <i class="bi bi-calendar-week me-2"></i>This Week
+                    <i class="bi bi-calendar-week me-2"></i>{% trans "This Week" %}
                 </a>
             </li>
 
@@ -133,7 +134,7 @@
                 href="javascript:void(0);"
                 data-type="monthly"
                 onclick="switchTimeView(this)">
-                    <i class="bi bi-calendar-month me-2"></i>This Month
+                    <i class="bi bi-calendar-month me-2"></i>{% trans "This Month" %}
                 </a>
             </li>
 
@@ -143,12 +144,12 @@
 
 
     <!-- AI -->
-    <h6 class="text-muted mb-3 mt-4">AI</h6>
+    <h6 class="text-muted mb-3 mt-4">{% trans "AI" %}</h6>
     <ul class="nav flex-column gap-2">
         <li class="nav-item">
             <a class="nav-link text-warning fw-bold"
                href="{% url 'tasks:ai_assistant' %}">
-                <i class="bi bi-stars me-2"></i>AI Assistant
+                <i class="bi bi-stars me-2"></i>{% trans "AI Assistant" %}
             </a>
         </li>
     </ul>

@@ -1,6 +1,7 @@
 {% extends 'base_public.html' %}
+{% load i18n %}
 
-{% block title %}Register - Todoist{% endblock %}
+{% block title %}{% trans "Register" %} - Todoist{% endblock %}
 
 {% block content %}
 <style>
@@ -167,8 +168,8 @@
                         <div class="register-icon">
                             <i class="bi bi-person-plus text-white" style="font-size: 2.5rem;"></i>
                         </div>
-                        <h2 class="fw-bold mb-2" style="color: #333; font-size: 2rem;">Create New Account</h2>
-                        <p class="text-muted mb-0" style="font-size: 0.95rem;">Sign up to start managing your tasks efficiently</p>
+                        <h2 class="fw-bold mb-2" style="color: #333; font-size: 2rem;">{% trans "Create New Account" %}</h2>
+                        <p class="text-muted mb-0" style="font-size: 0.95rem;">{% trans "Sign up to start managing your tasks efficiently" %}</p>
                     </div>
 
                     <form method="POST" id="registerForm">
@@ -178,13 +179,13 @@
                             <div class="form-group">
                                 <label for="{{ field.id_for_label }}">
                                     {% if field.name == 'email' %}
-                                        <i class="bi bi-envelope me-2"></i>Email
+                                        <i class="bi bi-envelope me-2"></i>{% trans "Email" %}
                                     {% elif field.name == 'username' %}
-                                        <i class="bi bi-person me-2"></i>Username
+                                        <i class="bi bi-person me-2"></i>{% trans "Username" %}
                                     {% elif field.name == 'password1' %}
-                                        <i class="bi bi-lock me-2"></i>Password
+                                        <i class="bi bi-lock me-2"></i>{% trans "Password" %}
                                     {% elif field.name == 'password2' %}
-                                        <i class="bi bi-lock-fill me-2"></i>Confirm Password
+                                        <i class="bi bi-lock-fill me-2"></i>{% trans "Confirm Password" %}
                                     {% else %}
                                         {{ field.label }}
                                     {% endif %}
@@ -200,15 +201,15 @@
                         {% endfor %}
 
                         <button class="btn btn-register w-100 text-white mb-4" type="submit">
-                            <i class="bi bi-rocket-takeoff me-2"></i>Create Account
+                            <i class="bi bi-rocket-takeoff me-2"></i>{% trans "Create Account" %}
                         </button>
                     </form>
 
                     <div class="text-center border-top pt-4">
                         <p class="mb-0" style="color: #666; font-size: 0.95rem;">
-                            Did you have account? 
+                            {% trans "Did you have account?" %} 
                             <a href="{% url 'accounts:login' %}" class="link-custom" style="color: #c3392b; font-weight: 600;">
-                                Login Now
+                                {% trans "Login Now" %}
                             </a>
                         </p>
                     </div>

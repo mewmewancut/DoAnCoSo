@@ -16,11 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from .views import home
+from django.views.i18n import set_language as django_set_language
+from .views import home, set_language
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('tasks/', include('tasks.urls')),
+    path('i18n/setlang/', set_language, name='set_language'),  # Custom language switching
     path('', home, name='home'),
 ]

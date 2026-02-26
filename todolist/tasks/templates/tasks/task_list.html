@@ -1,5 +1,6 @@
 {% extends 'base_private.html' %}
-{% block title %}Task List | TaskMaster{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "All Tasks" %} | TaskMaster{% endblock %}
 
 {% block content %}
 <style>
@@ -137,26 +138,26 @@
             <form method="get" class="row g-2 align-items-center">
                 <div class="col-md-2">
                     <select name="status" class="form-select form-select-brand">
-                        <option value="">-- Status --</option>
-                        <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
-                        <option value="in_progress" {% if status_filter == 'in_progress' %}selected{% endif %}>In Progress</option>
-                        <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Completed</option>
-                        <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                        <option value="">-- {% trans "Status" %} --</option>
+                        <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>{% trans "Pending" %}</option>
+                        <option value="in_progress" {% if status_filter == 'in_progress' %}selected{% endif %}>{% trans "In Progress" %}</option>
+                        <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>{% trans "Completed" %}</option>
+                        <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>{% trans "Cancelled" %}</option>
                     </select>
                 </div>
                 <div class="col-md-2">
                     <select name="priority" class="form-select form-select-brand">
-                        <option value="">-- Priority --</option>
-                        <option value="low" {% if priority_filter == 'low' %}selected{% endif %}>Low</option>
-                        <option value="medium" {% if priority_filter == 'medium' %}selected{% endif %}>Medium</option>
-                        <option value="high" {% if priority_filter == 'high' %}selected{% endif %}>High</option>
+                        <option value="">-- {% trans "Priority" %} --</option>
+                        <option value="low" {% if priority_filter == 'low' %}selected{% endif %}>{% trans "Low" %}</option>
+                        <option value="medium" {% if priority_filter == 'medium' %}selected{% endif %}>{% trans "Medium" %}</option>
+                        <option value="high" {% if priority_filter == 'high' %}selected{% endif %}>{% trans "High" %}</option>
                     </select>
                 </div>
                 <div class="col-md-2">
                     <select name="deadline" class="form-select form-select-brand">
-                        <option value="">-- Deadline --</option>
-                        <option value="overdue" {% if deadline_filter == 'overdue' %}selected{% endif %}>Overdue</option>
-                        <option value="today" {% if deadline_filter == 'today' %}selected{% endif %}>Today</option>
+                        <option value="">-- {% trans "Deadline" %} --</option>
+                        <option value="overdue" {% if deadline_filter == 'overdue' %}selected{% endif %}>{% trans "Overdue" %}</option>
+                        <option value="today" {% if deadline_filter == 'today' %}selected{% endif %}>{% trans "Today" %}</option>
                     </select>
                 </div>
                 <div class="col-md-2">
@@ -168,12 +169,12 @@
                     </select>
                 </div>
                 <div class="col-md-2 text-center">
-                    <button type="submit" class="btn btn-dark btn-sm px-4 rounded-3">Filter</button>
-                    <a href="{% url 'tasks:task_list' %}" class="text-muted small ms-2">Clear</a>
+                    <button type="submit" class="btn btn-dark btn-sm px-4 rounded-3">{% trans "Filter" %}</button>
+                    <a href="{% url 'tasks:task_list' %}" class="text-muted small ms-2">{% trans "Clear" %}</a>
                 </div>
                 <div class="col-md-2 text-end">
                     <a href="{% url 'tasks:task_create' %}" class="btn-create-brand">
-                        <i class="fas fa-plus me-2"></i> CREATE
+                        <i class="fas fa-plus me-2"></i> {% trans "CREATE" %}
                     </a>
                 </div>
             </form>
@@ -185,10 +186,10 @@
             <table class="table table-hover align-middle mb-0">
                 <thead>
                     <tr>
-                        <th class="ps-4">Task</th>
-                        <th>Priority</th>
-                        <th>Status</th>
-                        <th class="text-center">Actions</th>
+                        <th class="ps-4">{% trans "Task" %}</th>
+                        <th>{% trans "Priority" %}</th>
+                        <th>{% trans "Status" %}</th>
+                        <th class="text-center">{% trans "Actions" %}</th>
                         
                     </tr>
                 </thead>
@@ -230,26 +231,26 @@
                                     <li>
                                         <a class="dropdown-item status-option {% if task.status == 'pending' %}active{% endif %}" 
                                            href="#" data-status="pending" data-task-id="{{ task.id }}">
-                                            <i class="bi bi-clock text-primary"></i> Pending
+                                            <i class="bi bi-clock text-primary"></i> {% trans "Pending" %}
                                         </a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item status-option {% if task.status == 'in_progress' %}active{% endif %}" 
                                            href="#" data-status="in_progress" data-task-id="{{ task.id }}">
-                                            <i class="bi bi-arrow-repeat text-warning"></i> In Progress
+                                            <i class="bi bi-arrow-repeat text-warning"></i> {% trans "In Progress" %}
                                         </a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item status-option {% if task.status == 'completed' %}active{% endif %}" 
                                            href="#" data-status="completed" data-task-id="{{ task.id }}">
-                                            <i class="bi bi-check-circle text-success"></i> Completed
+                                            <i class="bi bi-check-circle text-success"></i> {% trans "Completed" %}
                                         </a>
                                     </li>
                                     <li><hr class="dropdown-divider my-1"></li>
                                     <li>
                                         <a class="dropdown-item status-option {% if task.status == 'cancelled' %}active{% endif %}" 
                                            href="#" data-status="cancelled" data-task-id="{{ task.id }}">
-                                            <i class="bi bi-x-circle text-danger"></i> Cancelled
+                                            <i class="bi bi-x-circle text-danger"></i> {% trans "Cancelled" %}
                                         </a>
                                     </li>
                                 </ul>
@@ -257,13 +258,13 @@
                         </td>
                         <td class="text-center">
                             <div class="d-inline-flex">
-                                <a href="{% url 'tasks:task_detail' task.id %}" class="btn-action-small btn-view-sm" title="View">
+                                <a href="{% url 'tasks:task_detail' task.id %}" class="btn-action-small btn-view-sm" title="{% trans 'View' %}">
                                     <i class="bi bi-eye"></i>
                                 </a>
-                                <a href="{% url 'tasks:task_update' task.id %}" class="btn-action-small btn-edit-sm" title="Edit">
+                                <a href="{% url 'tasks:task_update' task.id %}" class="btn-action-small btn-edit-sm" title="{% trans 'Edit' %}">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <a href="{% url 'tasks:task_delete' task.id %}" class="btn-action-small btn-delete-sm" title="Delete">
+                                <a href="{% url 'tasks:task_delete' task.id %}" class="btn-action-small btn-delete-sm" title="{% trans 'Delete' %}">
                                     <i class="bi bi-trash"></i>
                                 </a>
                             </div>
@@ -273,7 +274,7 @@
                     {% empty %}
                     <tr>
                         <td colspan="4" class="text-center py-5 text-muted">
-                            No tasks available.
+                            {% trans "No tasks available." %}
                         </td>
                     </tr>
                     {% endfor %}

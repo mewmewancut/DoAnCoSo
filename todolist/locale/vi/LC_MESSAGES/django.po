@@ -1,0 +1,558 @@
+# Django translation file for Vietnamese
+# This file contains all translatable strings for the Todoist application
+
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+
+# Navbar
+msgid "Login"
+msgstr "Đăng nhập"
+
+msgid "Register"
+msgstr "Đăng ký"
+
+msgid "Switch to Vietnamese"
+msgstr "Chuyển sang tiếng Việt"
+
+msgid "Switch to English"
+msgstr "Chuyển sang tiếng Anh"
+
+# Sidebar
+msgid "MENU"
+msgstr "MENU"
+
+msgid "Profile"
+msgstr "Hồ sơ"
+
+msgid "Logout"
+msgstr "Đăng xuất"
+
+msgid "Dashboard"
+msgstr "Bảng điều khiển"
+
+msgid "All Tasks"
+msgstr "Tất cả công việc"
+
+msgid "Completed"
+msgstr "Hoàn thành"
+
+msgid "Calendar"
+msgstr "Lịch"
+
+msgid "Download"
+msgstr "Tải xuống"
+
+msgid "This Week"
+msgstr "Tuần này"
+
+msgid "This Month"
+msgstr "Tháng này"
+
+msgid "Time View"
+msgstr "Xem theo thời gian"
+
+msgid "Today"
+msgstr "Hôm nay"
+
+msgid "AI"
+msgstr "AI"
+
+msgid "AI Assistant"
+msgstr "Trợ lý AI"
+
+# Login page
+msgid "Welcome Back"
+msgstr "Chào mừng trở lại"
+
+msgid "Sign in to continue your work"
+msgstr "Đăng nhập để tiếp tục công việc của bạn"
+
+msgid "Username or Email"
+msgstr "Tên đăng nhập hoặc Email"
+
+msgid "Enter username or email"
+msgstr "Nhập tên đăng nhập hoặc email"
+
+msgid "Password"
+msgstr "Mật khẩu"
+
+msgid "Enter password"
+msgstr "Nhập mật khẩu"
+
+msgid "Remember me"
+msgstr "Ghi nhớ đăng nhập"
+
+msgid "Forgot password?"
+msgstr "Quên mật khẩu?"
+
+msgid "Sign In"
+msgstr "Đăng nhập"
+
+msgid "or"
+msgstr "hoặc"
+
+msgid "Don't have an account?"
+msgstr "Chưa có tài khoản?"
+
+msgid "Sign up now"
+msgstr "Đăng ký ngay"
+
+# Register page
+msgid "Create New Account"
+msgstr "Tạo tài khoản mới"
+
+msgid "Sign up to start managing your tasks efficiently"
+msgstr "Đăng ký để bắt đầu quản lý công việc hiệu quả"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Username"
+msgstr "Tên đăng nhập"
+
+msgid "Confirm Password"
+msgstr "Xác nhận mật khẩu"
+
+msgid "Create Account"
+msgstr "Tạo tài khoản"
+
+msgid "Did you have account?"
+msgstr "Đã có tài khoản?"
+
+msgid "Login Now"
+msgstr "Đăng nhập ngay"
+
+# Dashboard
+msgid "Welcome back! Here is a summary of your tasks."
+msgstr "Chào mừng trở lại! Đây là tóm tắt công việc của bạn."
+
+msgid "Create New Task"
+msgstr "Tạo công việc mới"
+
+msgid "Total Tasks"
+msgstr "Tổng công việc"
+
+msgid "In Progress"
+msgstr "Đang thực hiện"
+
+msgid "Overdue"
+msgstr "Quá hạn"
+
+msgid "Urgent Tasks"
+msgstr "Công việc khẩn cấp"
+
+msgid "Title"
+msgstr "Tiêu đề"
+
+msgid "Deadline"
+msgstr "Hạn chót"
+
+msgid "Action"
+msgstr "Hành động"
+
+msgid "Details"
+msgstr "Chi tiết"
+
+msgid "Great! No tasks are overdue."
+msgstr "Tuyệt vời! Không có công việc nào quá hạn."
+
+msgid "Recent Activities"
+msgstr "Hoạt động gần đây"
+
+msgid "No task data available."
+msgstr "Không có dữ liệu công việc."
+
+msgid "View All"
+msgstr "Xem tất cả"
+
+# Task List
+msgid "Status"
+msgstr "Trạng thái"
+
+msgid "Priority"
+msgstr "Độ ưu tiên"
+
+msgid "Task"
+msgstr "Công việc"
+
+msgid "Actions"
+msgstr "Hành động"
+
+msgid "Pending"
+msgstr "Chờ xử lý"
+
+msgid "Cancelled"
+msgstr "Đã hủy"
+
+msgid "Low"
+msgstr "Thấp"
+
+msgid "Medium"
+msgstr "Trung bình"
+
+msgid "High"
+msgstr "Cao"
+
+msgid "Filter"
+msgstr "Lọc"
+
+msgid "Clear"
+msgstr "Xóa"
+
+msgid "CREATE"
+msgstr "TẠO MỚI"
+
+msgid "No tasks available."
+msgstr "Không có công việc nào."
+
+msgid "View"
+msgstr "Xem"
+
+msgid "Edit"
+msgstr "Sửa"
+
+msgid "Delete"
+msgstr "Xóa"
+
+# Task Form
+msgid "Edit Task"
+msgstr "Chỉnh sửa công việc"
+
+msgid "Task Title"
+msgstr "Tiêu đề công việc"
+
+msgid "Detailed Description"
+msgstr "Mô tả chi tiết"
+
+msgid "Save Task"
+msgstr "Lưu công việc"
+
+msgid "Cancel and go back"
+msgstr "Hủy và quay lại"
+
+# Home page
+msgid "Welcome to Todoist"
+msgstr "Chào mừng đến với Todoist"
+
+msgid "Finally, everything is clearer."
+msgstr "Cuối cùng, mọi thứ đã rõ ràng hơn."
+
+msgid "Organize your professional and personal life. The world's favorite task management app."
+msgstr "Tổ chức cuộc sống nghề nghiệp và cá nhân của bạn. Ứng dụng quản lý công việc được yêu thích nhất trên thế giới."
+
+msgid "Try it free"
+msgstr "Dùng thử miễn phí"
+
+msgid "from 10,000+ reviews"
+msgstr "từ 10,000+ đánh giá"
+
+msgid "FEATURES"
+msgstr "TÍNH NĂNG"
+
+msgid "Everything you need"
+msgstr "Mọi thứ bạn cần"
+
+msgid "To become the most productive employee with a comprehensive task management toolkit"
+msgstr "Để trở thành nhân viên năng suất nhất với bộ công cụ quản lý công việc toàn diện"
+
+msgid "Task Management"
+msgstr "Quản lý Tác vụ"
+
+msgid "Create, track and complete tasks easily with an intuitive and friendly interface."
+msgstr "Tạo, theo dõi và hoàn thành các tác vụ một cách dễ dàng với giao diện trực quan và thân thiện."
+
+msgid "Project Management"
+msgstr "Quản lý Dự án"
+
+msgid "Organize tasks into projects, set priorities and track progress effectively."
+msgstr "Tổ chức các tác vụ thành các dự án, thiết lập mức độ ưu tiên và theo dõi tiến độ một cách hiệu quả."
+
+msgid "Smart Reminders"
+msgstr "Nhắc nhở thông minh"
+
+msgid "Get timely notifications so you never miss any important work."
+msgstr "Nhận thông báo đúng lúc để không bao giờ bỏ lỡ bất kỳ công việc quan trọng nào."
+
+msgid "Team Collaboration"
+msgstr "Cộng tác nhóm"
+
+msgid "Share projects, assign tasks and work together seamlessly and efficiently."
+msgstr "Chia sẻ dự án, giao công việc và làm việc cùng nhau một cách liền mạch và hiệu quả."
+
+msgid "Analytics & Statistics"
+msgstr "Phân tích & Thống kê"
+
+msgid "Track productivity and view detailed statistics about your work progress."
+msgstr "Theo dõi năng suất và xem thống kê chi tiết về tiến độ làm việc của bạn."
+
+msgid "Synchronization"
+msgstr "Đồng bộ hóa"
+
+msgid "Access your work from any device, anytime, anywhere securely."
+msgstr "Truy cập công việc của bạn từ mọi thiết bị, mọi lúc, mọi nơi một cách an toàn."
+
+msgid "Active daily users"
+msgstr "Người dùng hoạt động hàng ngày"
+
+msgid "Average rating from users"
+msgstr "Đánh giá trung bình từ người dùng"
+
+msgid "Powerful features"
+msgstr "Tính năng mạnh mẽ"
+
+msgid "Start free today"
+msgstr "Bắt đầu miễn phí hôm nay"
+
+msgid "No credit card required. No commitment. Cancel anytime."
+msgstr "Không cần thẻ tín dụng. Không có cam kết. Hủy bất cứ lúc nào."
+
+msgid "Create free account"
+msgstr "Tạo tài khoản miễn phí"
+
+msgid "Ready to be more productive?"
+msgstr "Sẵn sàng trở nên năng suất hơn?"
+
+msgid "Join thousands of satisfied users and start organizing your life today."
+msgstr "Tham gia hàng ngàn người dùng hài lòng và bắt đầu tổ chức cuộc sống của bạn ngay hôm nay."
+
+# Password reset flow
+msgid "Forgot password"
+msgstr "Quên mật khẩu"
+
+msgid "Forget password?"
+msgstr "Quên mật khẩu?"
+
+msgid "Don't worry! We will send one link to reset your password to your Email."
+msgstr "Đừng lo! Chúng tôi sẽ gửi một liên kết để đặt lại mật khẩu đến email của bạn."
+
+msgid "Your Email"
+msgstr "Email của bạn"
+
+msgid "Send link"
+msgstr "Gửi liên kết"
+
+msgid "Return to Login"
+msgstr "Quay lại đăng nhập"
+
+msgid "Enter your email"
+msgstr "Nhập email của bạn"
+
+msgid "Email has been sent"
+msgstr "Email đã được gửi"
+
+msgid "Email has been sent!"
+msgstr "Email đã được gửi!"
+
+msgid "We have sent password reset instructions to your email. Please check your inbox and follow the instructions."
+msgstr "Chúng tôi đã gửi hướng dẫn đặt lại mật khẩu đến email của bạn. Vui lòng kiểm tra hộp thư và làm theo hướng dẫn."
+
+msgid "If you don't see the email, please check your spam or junk folder."
+msgstr "Nếu bạn không thấy email, vui lòng kiểm tra thư rác (spam/junk)."
+
+msgid "Back to Login"
+msgstr "Quay lại đăng nhập"
+
+msgid "Reset password"
+msgstr "Đặt lại mật khẩu"
+
+msgid "Set new password"
+msgstr "Đặt mật khẩu mới"
+
+msgid "Please enter your new password"
+msgstr "Vui lòng nhập mật khẩu mới"
+
+msgid "New password"
+msgstr "Mật khẩu mới"
+
+msgid "Confirm new password"
+msgstr "Xác nhận mật khẩu mới"
+
+msgid "Update Password"
+msgstr "Cập nhật mật khẩu"
+
+msgid "Password Reset Complete"
+msgstr "Hoàn tất đặt lại mật khẩu"
+
+msgid "Success!"
+msgstr "Thành công!"
+
+msgid "Your password has been reset successfully. You can now log in with your new password."
+msgstr "Mật khẩu của bạn đã được đặt lại thành công. Bạn có thể đăng nhập bằng mật khẩu mới."
+
+msgid "Log in now"
+msgstr "Đăng nhập ngay"
+
+# Task form placeholders
+msgid "Example: Complete quarterly report..."
+msgstr "Ví dụ: Hoàn thành báo cáo quý..."
+
+msgid "Add notes or details for this task..."
+msgstr "Thêm ghi chú hoặc chi tiết cho công việc này..."
+
+# Home title helper
+msgid "Smart Task Management"
+msgstr "Quản lý công việc thông minh"
+
+# Password reset emails
+msgid "Click the button below to create a new password:"
+msgstr "Nhấn nút bên dưới để tạo mật khẩu mới:"
+
+msgid "If the button doesn't work, copy and paste this link into your browser:"
+msgstr "Nếu nút không hoạt động, hãy sao chép và dán liên kết này vào trình duyệt:"
+
+msgid "Security note:"
+msgstr "Lưu ý bảo mật:"
+
+msgid "This password reset link will expire after 24 hours."
+msgstr "Liên kết đặt lại mật khẩu sẽ hết hạn sau 24 giờ."
+
+msgid "If you did not request a password reset, please ignore this email."
+msgstr "Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này."
+
+msgid "Best regards,"
+msgstr "Trân trọng,"
+
+msgid "Todoist Support Team"
+msgstr "Đội ngũ hỗ trợ Todoist"
+
+msgid "This email was sent automatically. Please do not reply."
+msgstr "Email này được gửi tự động. Vui lòng không trả lời."
+
+msgid "You requested a password reset for your Todoist account."
+msgstr "Bạn đã yêu cầu đặt lại mật khẩu cho tài khoản Todoist."
+
+msgid "Please open the link below to reset your password:"
+msgstr "Vui lòng mở liên kết dưới đây để đặt lại mật khẩu:"
+
+msgid "Note: This link will expire after 24 hours."
+msgstr "Lưu ý: Liên kết này sẽ hết hạn sau 24 giờ."
+
+msgid "Reset your password"
+msgstr "Đặt lại mật khẩu"
+
+# Password change
+msgid "Update your password to secure your account"
+msgstr "Cập nhật mật khẩu để bảo vệ tài khoản của bạn"
+
+msgid "Current Password"
+msgstr "Mật khẩu hiện tại"
+
+msgid "New Password"
+msgstr "Mật khẩu mới"
+
+msgid "Confirm New Password"
+msgstr "Xác nhận mật khẩu mới"
+
+msgid "Password must be at least 8 characters and not too similar to personal information."
+msgstr "Mật khẩu phải có ít nhất 8 ký tự và không quá giống thông tin cá nhân."
+
+# Account delete
+msgid "Delete Account"
+msgstr "Xóa tài khoản"
+
+msgid "Warning: Delete Account"
+msgstr "Cảnh báo: Xóa tài khoản"
+
+msgid "This action cannot be undone!"
+msgstr "Hành động này không thể hoàn tác!"
+
+msgid "Are you sure you want to delete your account?"
+msgstr "Bạn có chắc muốn xóa tài khoản của mình không?"
+
+msgid "When deleting your account, all your data will be permanently deleted:"
+msgstr "Khi xóa tài khoản, toàn bộ dữ liệu của bạn sẽ bị xóa vĩnh viễn:"
+
+msgid "All your tasks and projects"
+msgstr "Tất cả công việc và dự án của bạn"
+
+msgid "Activity history"
+msgstr "Lịch sử hoạt động"
+
+msgid "Personal information"
+msgstr "Thông tin cá nhân"
+
+msgid "Cannot be restored after deletion"
+msgstr "Không thể khôi phục sau khi xóa"
+
+msgid "To confirm, please enter your username:"
+msgstr "Để xác nhận, vui lòng nhập tên đăng nhập của bạn:"
+
+msgid "Enter <strong>{{ username }}</strong> to confirm account deletion"
+msgstr "Nhập <strong>{{ username }}</strong> để xác nhận xóa tài khoản"
+
+msgid "Last warning:"
+msgstr "Cảnh báo cuối cùng:"
+
+msgid "This action will permanently delete your account <strong>{{ username }}</strong> and all related data. You will not be able to log in or restore data after deletion."
+msgstr "Hành động này sẽ xóa vĩnh viễn tài khoản <strong>{{ username }}</strong> và toàn bộ dữ liệu liên quan. Bạn sẽ không thể đăng nhập hoặc khôi phục dữ liệu sau khi xóa."
+
+msgid "Delete account permanently"
+msgstr "Xóa tài khoản vĩnh viễn"
+
+msgid "Username does not match!"
+msgstr "Tên đăng nhập không khớp!"
+
+msgid "Are you SURE you want to delete account"
+msgstr "Bạn CÓ CHẮC muốn xóa tài khoản"
+
+msgid "All data will be permanently deleted and cannot be restored!"
+msgstr "Tất cả dữ liệu sẽ bị xóa vĩnh viễn và không thể khôi phục!"
+
+msgid "Press OK to confirm deletion, or Cancel to cancel."
+msgstr "Nhấn OK để xác nhận xóa, hoặc Cancel để hủy."
+
+msgid "Please enter the correct username to confirm deletion!"
+msgstr "Vui lòng nhập đúng tên đăng nhập để xác nhận xóa!"
+
+# Activation email
+msgid "Activate Account"
+msgstr "Kích hoạt tài khoản"
+
+msgid "Welcome to Todoist!"
+msgstr "Chào mừng đến với Todoist!"
+
+msgid "To start using your account, please activate it by clicking the button below:"
+msgstr "Để bắt đầu sử dụng tài khoản, vui lòng kích hoạt bằng cách nhấn nút bên dưới:"
+
+msgid "If the button doesn't work"
+msgstr "Nếu nút không hoạt động"
+
+msgid "you can copy and paste the following link into your browser:"
+msgstr "bạn có thể sao chép và dán liên kết sau vào trình duyệt:"
+
+msgid "Activation link will expire after 24 hours."
+msgstr "Liên kết kích hoạt sẽ hết hạn sau 24 giờ."
+
+msgid "If you did not request this account, please ignore this email."
+msgstr "Nếu bạn không yêu cầu tạo tài khoản này, vui lòng bỏ qua email."
+
+# Tasks (detail + delete)
+msgid "Delete Task"
+msgstr "Xóa công việc"
+
+msgid "Are you sure?"
+msgstr "Bạn có chắc không?"
+
+msgid "This action cannot be undone. You are about to permanently delete the task:"
+msgstr "Hành động này không thể hoàn tác. Bạn sắp xóa vĩnh viễn công việc:"
+
+msgid "Yes, delete it"
+msgstr "Có, xóa"
+
+msgid "Go back"
+msgstr "Quay lại"
+
+msgid "Detail"
+msgstr "Chi tiết"
+
+msgid "Task List"
+msgstr "Danh sách công việc"
+
+msgid "Description"
+msgstr "Mô tả"
+
+msgid "No detailed description."
+msgstr "Không có mô tả chi tiết."

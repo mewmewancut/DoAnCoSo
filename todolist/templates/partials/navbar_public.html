@@ -1,10 +1,11 @@
+{% load i18n %}
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
                 <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #c3392b 0%, #8b2820 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
                     <i class="bi bi-check2-square text-white" style="font-size: 1.5rem;"></i>
                 </div>
-                <span class="fw-bold" style="color: #c3392b; font-size: 1.3rem;">Todoist</span>
+                <span class="fw-bold" style="color: #c3392b; font-size: 1.3rem;">TodoList</span>
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -13,16 +14,33 @@
             
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
+                    <!-- Language Switcher -->
+                    <li class="nav-item me-2">
+                        <form method="post" action="{% url 'set_language' %}" class="d-inline">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                            {% get_current_language as CURRENT_LANGUAGE %}
+                            {% if CURRENT_LANGUAGE == 'en' %}
+                                <button type="submit" name="language" value="vi" class="btn btn-sm btn-outline-secondary" title="{% trans 'Switch to Vietnamese' %}">
+                                    <i class="bi bi-translate me-1"></i>VI
+                                </button>
+                            {% else %}
+                                <button type="submit" name="language" value="en" class="btn btn-sm btn-outline-secondary" title="{% trans 'Switch to English' %}">
+                                    <i class="bi bi-translate me-1"></i>EN
+                                </button>
+                            {% endif %}
+                        </form>
+                    </li>
 
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'accounts:login' %}">
-                                <i class="bi bi-box-arrow-in-right me-1"></i>Đăng nhập
+                                <i class="bi bi-box-arrow-in-right me-1"></i>{% trans "Login" %}
                             </a>
                         </li>
                         
                         <li class="nav-item ms-2">
                             <a class="btn btn-todoist" href="{% url 'accounts:register' %}">
-                                <i class="bi bi-person-plus me-1"></i>Đăng ký
+                                <i class="bi bi-person-plus me-1"></i>{% trans "Register" %}
                             </a>
                         </li>
                     
