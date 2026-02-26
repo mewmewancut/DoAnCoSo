@@ -1,7 +1,11 @@
 Django>=5.0
-python-dotenv
-langchain
+python-decouple
+pydantic>=2.0
+langchain>=0.3
+langchain-core>=0.3
 langchain-openai
+langchain-google-genai
 openai
 cloudinary
 django-cloudinary-storage
+xhtml2pdf

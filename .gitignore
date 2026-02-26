@@ -1,6 +1,7 @@
 # Project planning (internal use only)
 PLAN.md
 PROJECT_PROGRESS_REPORT.md
+PROJECT_DOCUMENTATION.md
 WEEK*_PROGRESS.md
 WEEK*_SUMMARY.md
 week*_commits.txt
@@ -42,3 +43,6 @@ venv.bak/
 # OS
 .DS_Store
 Thumbs.db
+
+# Temp files from Claude
+tmpclaude-*

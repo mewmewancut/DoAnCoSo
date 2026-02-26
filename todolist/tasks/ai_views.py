@@ -1,20 +1,25 @@
 """
-AI API views for TodoList application
-These endpoints provide AI-powered features for task management
+AI API views for TodoList application.
+
+These endpoints delegate all AI logic to the ``ai_assistant`` app
+(LCEL chains + Pydantic validation).  Views only handle HTTP
+request/response and persistence of AISuggestion history.
 """
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from django.utils.dateparse import parse_datetime
 import json
-import sys
-from pathlib import Path
+import logging
 
-# Add parent directory to path to import ai_utils
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-
-from ai_utils import improve_task_description, suggest_task_priority, generate_task_subtasks
+from ai_assistant.chains import (
+    improve_description,
+    suggest_priority,
+    generate_subtasks,
+)
 from .models import AISuggestion, Task
+
+logger = logging.getLogger(__name__)
 
 
 @login_required
@@ -49,21 +54,21 @@ def improve_description_api(request):
                 'error': 'Title is required'
             }, status=400)
         
-        # Call AI function
-        improved_description = improve_task_description(title, description)
+        # Call AI chain (LCEL + Pydantic validated)
+        improved = improve_description(title, description)
         
         # Save AI suggestion to history
         AISuggestion.objects.create(
             user=request.user,
             suggestion_type='description',
             input_data={'title': title, 'description': description},
-            output_data={'improved_description': improved_description}
+            output_data={'improved_description': improved}
         )
         
         # Return success response
         return JsonResponse({
             'success': True,
-            'improved_description': improved_description,
+            'improved_description': improved,
             'original_title': title,
             'original_description': description
         })
@@ -75,6 +80,7 @@ def improve_description_api(request):
         }, status=400)
         
     except Exception as e:
+        logger.exception("improve_description_api failed")
         return JsonResponse({
             'success': False,
             'error': str(e)
@@ -126,8 +132,8 @@ def suggest_priority_api(request):
                     'error': 'Invalid deadline format. Use ISO format (YYYY-MM-DDTHH:MM:SS)'
                 }, status=400)
         
-        # Call AI function
-        result = suggest_task_priority(title, description, deadline)
+        # Call AI chain (LCEL + Pydantic validated)
+        result = suggest_priority(title, description, deadline)
         
         # Save AI suggestion to history
         AISuggestion.objects.create(
@@ -159,6 +165,7 @@ def suggest_priority_api(request):
         }, status=400)
         
     except Exception as e:
+        logger.exception("suggest_priority_api failed")
         return JsonResponse({
             'success': False,
             'error': str(e)
@@ -206,22 +213,26 @@ def generate_subtasks_api(request):
                 'error': 'Title is required'
             }, status=400)
         
-        # Call AI function with count parameter
-        subtasks = generate_task_subtasks(title, description, count)
+        # Call AI chain (LCEL + Pydantic validated — returns list of dicts with time_estimate)
+        subtask_items = generate_subtasks(title, description, count)
         
-        # Save AI suggestion to history
+        # Extract just the titles for backward-compat response
+        subtask_titles = [item['title'] for item in subtask_items]
+        
+        # Save AI suggestion to history (store full items with time estimates)
         AISuggestion.objects.create(
             user=request.user,
             suggestion_type='subtasks',
             input_data={'title': title, 'description': description, 'count': count},
-            output_data={'subtasks': subtasks}
+            output_data={'subtasks': subtask_items}
         )
         
         # Return success response
         return JsonResponse({
             'success': True,
-            'subtasks': subtasks,
-            'count': len(subtasks),
+            'subtasks': subtask_titles,
+            'subtask_details': subtask_items,
+            'count': len(subtask_items),
             'original_title': title
         })
         
@@ -232,6 +243,7 @@ def generate_subtasks_api(request):
         }, status=400)
         
     except Exception as e:
+        logger.exception("generate_subtasks_api failed")
         return JsonResponse({
             'success': False,
             'error': str(e)
@@ -313,7 +325,8 @@ def ai_history_api(request):
         })
         
     except Exception as e:
+        logger.exception("ai_history_api failed")
         return JsonResponse({
             'success': False,
-            'error': str(e)
+            'error': 'Failed to load AI history.'
         }, status=500)

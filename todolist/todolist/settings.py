@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config, Csv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,13 +20,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-x3s&fbl+#llz0$@(!9g+h$s7ax66aavpu-!d118=j$it8v*gy6'
+# SECURITY: All secrets loaded from .env via python-decouple
+SECRET_KEY = config('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost', cast=Csv())
 
 
 # Application definition
@@ -42,8 +42,10 @@ INSTALLED_APPS = [
     'cloudinary_storage',
     'cloudinary',
     
+    # Project apps
     'accounts',
     'tasks',
+    'ai_assistant',
 ]
 
 MIDDLEWARE = [
@@ -133,12 +135,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Login URL
 LOGIN_URL = '/accounts/login/'
 
+# Email Configuration — all secrets from .env
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "ntson10052005@gmail.com"
-EMAIL_HOST_PASSWORD = "ttve cvzg dmwf dfrx"
+EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
+EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 AUTH_USER_MODEL = "accounts.User"
 
@@ -176,28 +179,29 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',  # Map Django's 'error' to Bootstrap's 'danger'
 }
 
-# Cloudinary Configuration
-# Lấy credentials từ: https://console.cloudinary.com/
-# Hoặc sử dụng environment variables để bảo mật hơn
-from dotenv import load_dotenv
-import os
+# Cloudinary Configuration — secrets from .env
 import cloudinary
 
-load_dotenv()
-
 cloudinary.config(
-    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
-    api_key=os.getenv("CLOUDINARY_API_KEY"),
-    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
+    cloud_name=config("CLOUDINARY_CLOUD_NAME", default=""),
+    api_key=config("CLOUDINARY_API_KEY", default=""),
+    api_secret=config("CLOUDINARY_API_SECRET", default=""),
 )
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
-    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
+    'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME', default=''),
+    'API_KEY': config('CLOUDINARY_API_KEY', default=''),
+    'API_SECRET': config('CLOUDINARY_API_SECRET', default=''),
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+
+# AI / LLM Configuration
+LLM_PROVIDER = config('LLM_PROVIDER', default='gemini')
+OPENAI_API_KEY = config('OPENAI_API_KEY', default='')
+GOOGLE_API_KEY = config('GOOGLE_API_KEY', default='')
+GROQ_API_KEY = config('GROQ_API_KEY', default='')
 
 
 # Media files configuration (Cloudinary sẽ xử lý)
