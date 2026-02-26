@@ -31,10 +31,7 @@ def register(request):
             result = UserRegistrationService.register_user(form, request)
             
             if result['success']:
-                if result['error'] == 'email_send_failed':
-                    messages.warning(request, result['message'])
-                else:
-                    messages.success(request, result['message'])
+                messages.success(request, result['message'])
                 return redirect("accounts:login")
             else:
                 messages.error(request, result['message'])
