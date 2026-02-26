@@ -1,6 +1,6 @@
 import logging
 from django.contrib.auth.tokens import default_token_generator
-
+from django.utils.translation import gettext as _
 from ..utils import get_user_from_uidb64
 
 logger = logging.getLogger(__name__)
@@ -15,7 +15,7 @@ class UserActivationService:
             return {
                 'success': False,
                 'user': None,
-                'message': "Activation link is invalid or has expired.",
+                'message': _("Activation link is invalid or has expired."),
                 'error': 'invalid_uidb64',
                 'already_activated': False
             }
@@ -25,7 +25,7 @@ class UserActivationService:
             return {
                 'success': True,
                 'user': user,
-                'message': "Your account is already activated!",
+                'message': _("Your account is already activated!"),
                 'error': None,
                 'already_activated': True
             }
@@ -36,7 +36,7 @@ class UserActivationService:
             return {
                 'success': False,
                 'user': user,
-                'message': "Activation link is invalid or has expired.",
+                'message': _("Activation link is invalid or has expired."),
                 'error': 'invalid_token',
                 'already_activated': False
             }
@@ -50,7 +50,7 @@ class UserActivationService:
             return {
                 'success': True,
                 'user': user,
-                'message': "Account activated successfully! Please log in.",
+                'message': _("Account activated successfully! Please log in."),
                 'error': None,
                 'already_activated': False
             }
@@ -60,7 +60,7 @@ class UserActivationService:
             return {
                 'success': False,
                 'user': user,
-                'message': "An error occurred while activating your account. Please try again.",
+                'message': _("An error occurred while activating your account. Please try again."),
                 'error': str(e),
                 'already_activated': False
             }

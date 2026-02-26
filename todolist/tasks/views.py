@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse, HttpResponse
 from django.template.loader import render_to_string
+from django.utils.translation import gettext as _
 from io import BytesIO
 import json
 
@@ -110,7 +111,10 @@ def task_create(request):
             task.user = request.user
             task.save()
             form.save_m2m()  # Save M2M (tags)
-            messages.success(request, f'Task "{task.title}" created successfully!')
+            messages.success(
+                request,
+                _('Task "%(title)s" created successfully!') % {"title": task.title},
+            )
             return redirect("tasks:task_detail", task_id=task.id)
     else:
         form = TaskForm()
@@ -133,7 +137,10 @@ def task_update(request, task_id):
         form = TaskForm(request.POST, instance=task)
         if form.is_valid():
             form.save()
-            messages.success(request, f'Task "{task.title}" updated successfully!')
+            messages.success(
+                request,
+                _('Task "%(title)s" updated successfully!') % {"title": task.title},
+            )
             return redirect("tasks:task_detail", task_id=task.id)
     else:
         form = TaskForm(instance=task)
@@ -155,7 +162,10 @@ def task_delete(request, task_id):
     if request.method == "POST":
         task_title = task.title
         TaskService.delete_task(task)
-        messages.success(request, f'Task "{task_title}" deleted successfully!')
+        messages.success(
+            request,
+            _('Task "%(title)s" deleted successfully!') % {"title": task_title},
+        )
         return redirect("tasks:task_list")
 
     context = {"task": task}
@@ -177,7 +187,9 @@ def task_quick_status(request, task_id):
         new_status = data.get("status")
 
         if new_status not in ["pending", "in_progress", "completed", "cancelled"]:
-            return JsonResponse({"success": False, "error": "Invalid status value"}, status=400)
+            return JsonResponse(
+                {"success": False, "error": _("Invalid status value")}, status=400
+            )
 
         TaskService.update_task_status(task, new_status)
 
@@ -186,7 +198,7 @@ def task_quick_status(request, task_id):
             "task": {"id": str(task.id), "status": task.status, "status_display": task.get_status_display()},
         })
 
-    return JsonResponse({"success": False, "error": "Invalid method"}, status=405)
+    return JsonResponse({"success": False, "error": _("Invalid method")}, status=405)
 
 
 # ============================
@@ -293,19 +305,24 @@ def subtask_create(request, task_id):
         description = data.get("description", "").strip()
         
         if not title:
-            return JsonResponse({
-                'success': False,
-                'error': 'Title is required'
-            }, status=400)
+            return JsonResponse(
+                {
+                    "success": False,
+                    "error": _("Title is required"),
+                },
+                status=400,
+            )
         
         subtask = SubtaskService.create_subtask(task, title, description)
         
-        return JsonResponse({
-            'success': True,
-            'subtask': SubtaskService.subtask_to_dict(subtask)
-        })
+        return JsonResponse(
+            {
+                "success": True,
+                "subtask": SubtaskService.subtask_to_dict(subtask),
+            }
+        )
     
-    return JsonResponse({'success': False, 'error': 'Invalid method'}, status=405)
+    return JsonResponse({"success": False, "error": _("Invalid method")}, status=405)
 
 
 @login_required
@@ -317,27 +334,32 @@ def subtask_update(request, subtask_id):
         subtask = SubtaskService.get_subtask_by_id(subtask_id, request.user)
         
         if not subtask:
-            return JsonResponse({
-                'success': False,
-                'error': 'Subtask not found'
-            }, status=404)
+            return JsonResponse(
+                {
+                    "success": False,
+                    "error": _("Subtask not found"),
+                },
+                status=404,
+            )
         
         data = json.loads(request.body)
         
         SubtaskService.update_subtask(
             subtask,
-            title=data.get('title'),
-            description=data.get('description'),
-            status=data.get('status'),
-            order=data.get('order')
+            title=data.get("title"),
+            description=data.get("description"),
+            status=data.get("status"),
+            order=data.get("order"),
         )
         
-        return JsonResponse({
-            'success': True,
-            'subtask': SubtaskService.subtask_to_dict(subtask)
-        })
+        return JsonResponse(
+            {
+                "success": True,
+                "subtask": SubtaskService.subtask_to_dict(subtask),
+            }
+        )
     
-    return JsonResponse({'success': False, 'error': 'Invalid method'}, status=405)
+    return JsonResponse({"success": False, "error": _("Invalid method")}, status=405)
 
 
 @login_required
@@ -349,19 +371,24 @@ def subtask_delete(request, subtask_id):
         subtask = SubtaskService.get_subtask_by_id(subtask_id, request.user)
         
         if not subtask:
-            return JsonResponse({
-                'success': False,
-                'error': 'Subtask not found'
-            }, status=404)
+            return JsonResponse(
+                {
+                    "success": False,
+                    "error": _("Subtask not found"),
+                },
+                status=404,
+            )
         
         SubtaskService.delete_subtask(subtask)
         
-        return JsonResponse({
-            'success': True,
-            'message': 'Subtask deleted successfully'
-        })
+        return JsonResponse(
+            {
+                "success": True,
+                "message": _("Subtask deleted successfully"),
+            }
+        )
     
-    return JsonResponse({'success': False, 'error': 'Invalid method'}, status=405)
+    return JsonResponse({"success": False, "error": _("Invalid method")}, status=405)
 
 
 @login_required
@@ -374,26 +401,29 @@ def subtask_toggle(request, subtask_id):
         subtask = SubtaskService.get_subtask_by_id(subtask_id, request.user)
         
         if not subtask:
-            return JsonResponse({
-                'success': False,
-                'error': 'Subtask not found'
-            }, status=404)
+            return JsonResponse(
+                {
+                    "success": False,
+                    "error": _("Subtask not found"),
+                },
+                status=404,
+            )
         
         subtask, parent_completed = SubtaskService.toggle_subtask(subtask)
         
         response_data = {
-            'success': True,
-            'subtask': SubtaskService.subtask_to_dict(subtask),
-            'parent_completed': parent_completed,
+            "success": True,
+            "subtask": SubtaskService.subtask_to_dict(subtask),
+            "parent_completed": parent_completed,
         }
         
         if parent_completed:
-            response_data['parent_status'] = 'completed'
-            response_data['parent_status_display'] = 'Completed'
+            response_data["parent_status"] = "completed"
+            response_data["parent_status_display"] = _("Completed")
         
         return JsonResponse(response_data)
     
-    return JsonResponse({'success': False, 'error': 'Invalid method'}, status=405)
+    return JsonResponse({"success": False, "error": _("Invalid method")}, status=405)
 
 
 @login_required
@@ -405,16 +435,18 @@ def subtask_reorder(request, task_id):
         task = get_object_or_404(Task, id=task_id, user=request.user)
         
         data = json.loads(request.body)
-        subtask_orders = data.get('orders', [])
+        subtask_orders = data.get("orders", [])
         
         SubtaskService.reorder_subtasks(task, subtask_orders)
         
-        return JsonResponse({
-            'success': True,
-            'message': 'Subtasks reordered successfully'
-        })
+        return JsonResponse(
+            {
+                "success": True,
+                "message": _("Subtasks reordered successfully"),
+            }
+        )
     
-    return JsonResponse({'success': False, 'error': 'Invalid method'}, status=405)
+    return JsonResponse({"success": False, "error": _("Invalid method")}, status=405)
 
 
 # ============================

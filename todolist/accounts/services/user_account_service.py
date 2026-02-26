@@ -1,5 +1,6 @@
 import logging
 from django.contrib.auth import update_session_auth_hash
+from django.utils.translation import gettext as _
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +14,7 @@ class UserAccountService:
             
             return {
                 'success': True,
-                'message': "Change password successfully!",
+                'message': _("Change password successfully!"),
                 'error': None
             }
             
@@ -21,7 +22,7 @@ class UserAccountService:
             logger.error(f"Error changing password for user {request.user.username}: {str(e)}")
             return {
                 'success': False,
-                'message': "An error occurred while changing your password. Please try again.",
+                'message': _("An error occurred while changing your password. Please try again."),
                 'error': str(e)
             }
     
@@ -30,7 +31,7 @@ class UserAccountService:
         if confirm_username.strip() != user.username:
             return {
                 'valid': False,
-                'message': "Username does not match. Please enter the correct username to confirm."
+                'message': _("Username does not match. Please enter the correct username to confirm.")
             }
         
         return {
@@ -57,7 +58,7 @@ class UserAccountService:
                 'success': True,
                 'username': username,
                 'email': email,
-                'message': "Your account has been deleted successfully.",
+                'message': _("Your account has been deleted successfully."),
                 'error': None
             }
             
@@ -67,7 +68,7 @@ class UserAccountService:
                 'success': False,
                 'username': user.username if hasattr(user, 'username') else 'Unknown',
                 'email': user.email if hasattr(user, 'email') else 'Unknown',
-                'message': "An error occurred while deleting your account. Please try again.",
+                'message': _("An error occurred while deleting your account. Please try again."),
                 'error': str(e)
             }
 

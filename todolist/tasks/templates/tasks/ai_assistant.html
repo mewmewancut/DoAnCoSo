@@ -1,4 +1,5 @@
 {% extends 'base_private.html' %}
+{% load i18n %}
 {% block title %}AI Assistant | TaskMaster{% endblock %}
 
 {% block content %}
@@ -724,11 +725,11 @@ document.getElementById('improveForm').addEventListener('submit', async (e) => {
             result.classList.add('show');
             loadAIHistory();
         } else {
-            output.innerHTML = `<div class="text-danger"><strong>Error:</strong> ${data.error}</div>`;
+            output.innerHTML = `<div class="text-danger"><strong>{% trans "Error" %}:</strong> ${data.error}</div>`;
             result.classList.add('show');
         }
     } catch (error) {
-        output.innerHTML = `<div class="text-danger"><strong>Connection Error:</strong> ${error.message}</div>`;
+        output.innerHTML = `<div class="text-danger"><strong>{% trans "Connection Error" %}:</strong> ${error.message}</div>`;
         result.classList.add('show');
     } finally {
         setLoading(btn, false);
@@ -779,11 +780,11 @@ document.getElementById('priorityForm').addEventListener('submit', async (e) => 
             result.classList.add('show');
             loadAIHistory();
         } else {
-            output.innerHTML = `<div class="text-danger"><strong>Error:</strong> ${data.error}</div>`;
+            output.innerHTML = `<div class="text-danger"><strong>{% trans "Error" %}:</strong> ${data.error}</div>`;
             result.classList.add('show');
         }
     } catch (error) {
-        output.innerHTML = `<div class="text-danger"><strong>Connection Error:</strong> ${error.message}</div>`;
+        output.innerHTML = `<div class="text-danger"><strong>{% trans "Connection Error" %}:</strong> ${error.message}</div>`;
         result.classList.add('show');
     } finally {
         setLoading(btn, false);
@@ -849,11 +850,11 @@ document.getElementById('subtasksForm').addEventListener('submit', async (e) => 
             result.classList.add('show');
             loadAIHistory();
         } else {
-            output.innerHTML = `<div class="text-danger"><strong>Error:</strong> ${data.error || 'No subtasks generated'}</div>`;
+            output.innerHTML = `<div class="text-danger"><strong>{% trans "Error" %}:</strong> ${data.error || '{% trans "No subtasks generated" %}'}</div>`;
             result.classList.add('show');
         }
     } catch (error) {
-        output.innerHTML = `<div class="text-danger"><strong>Connection Error:</strong> ${error.message}</div>`;
+        output.innerHTML = `<div class="text-danger"><strong>{% trans "Connection Error" %}:</strong> ${error.message}</div>`;
         result.classList.add('show');
     } finally {
         setLoading(btn, false);
@@ -928,11 +929,11 @@ document.getElementById('coachBtn').addEventListener('click', async () => {
             result.classList.add('show');
             loadAIHistory();
         } else {
-            output.innerHTML = `<div class="text-danger"><strong>Error:</strong> ${data.error}</div>`;
+            output.innerHTML = `<div class="text-danger"><strong>{% trans "Error" %}:</strong> ${data.error}</div>`;
             result.classList.add('show');
         }
     } catch (error) {
-        output.innerHTML = `<div class="text-danger"><strong>Connection Error:</strong> ${error.message}</div>`;
+        output.innerHTML = `<div class="text-danger"><strong>{% trans "Connection Error" %}:</strong> ${error.message}</div>`;
         result.classList.add('show');
     } finally {
         setLoading(btn, false);
@@ -1029,11 +1030,11 @@ document.getElementById('searchForm').addEventListener('submit', async (e) => {
             result.classList.add('show');
             loadAIHistory();
         } else {
-            output.innerHTML = `<div class="text-danger"><strong>Error:</strong> ${data.error}</div>`;
+            output.innerHTML = `<div class="text-danger"><strong>{% trans "Error" %}:</strong> ${data.error}</div>`;
             result.classList.add('show');
         }
     } catch (error) {
-        output.innerHTML = `<div class="text-danger"><strong>Connection Error:</strong> ${error.message}</div>`;
+        output.innerHTML = `<div class="text-danger"><strong>{% trans "Connection Error" %}:</strong> ${error.message}</div>`;
         result.classList.add('show');
     } finally {
         setLoading(btn, false);

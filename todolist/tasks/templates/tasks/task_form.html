@@ -130,48 +130,26 @@
                     
                     <!-- Title -->
                     <div class="mb-4">
-<<<<<<< Updated upstream
-                        <label class="label-premium fw-bold" for="{{ form.title.id_for_label }}">
-                            Task Title <span class="text-danger">*</span>
-                        </label>
-                        {{ form.title }}
-                        {% for error in form.title.errors %}
-                            <div class="form-error">{{ error }}</div>
-                        {% endfor %}
-=======
+
                         <label class="label-premium fw-bold">
                             {% trans "Task Title" %} <span class="text-danger">*</span>
                         </label>
                         <input type="text" name="title" class="form-control form-control-custom" 
                                placeholder="{% trans 'Example: Complete quarterly report...' %}" 
                                value="{{ task.title }}" required>
->>>>>>> Stashed changes
                     </div>
 
                     <!-- Description -->
                     <div class="mb-4">
-<<<<<<< Updated upstream
-                        <label class="label-premium fw-bold" for="{{ form.description.id_for_label }}">Detailed Description</label>
-                        {{ form.description }}
-                        {% for error in form.description.errors %}
-                            <div class="form-error">{{ error }}</div>
-                        {% endfor %}
-=======
                         <label class="label-premium fw-bold">{% trans "Detailed Description" %}</label>
                         <textarea name="description" class="form-control form-control-custom" 
                                   rows="4" placeholder="{% trans 'Add notes or details for this task...' %}">{{ task.description }}</textarea>
->>>>>>> Stashed changes
                     </div>
 
                     <!-- Deadline -->
                     <div class="mb-4">
-<<<<<<< Updated upstream
-                        <label class="label-premium fw-bold" for="{{ form.deadline.id_for_label }}">
-                            <i class="far fa-calendar-alt me-2 text-brand"></i>Deadline
-=======
                         <label class="label-premium fw-bold">
                             <i class="far fa-calendar-alt me-2 text-brand"></i>{% trans "Deadline" %}
->>>>>>> Stashed changes
                         </label>
                         {{ form.deadline }}
                         {% for error in form.deadline.errors %}
@@ -182,24 +160,14 @@
                     <!-- Priority + Status -->
                     <div class="row">
                         <div class="col-md-6 mb-4">
-<<<<<<< Updated upstream
-                            <label class="label-premium fw-bold" for="{{ form.priority.id_for_label }}">
-                                <i class="fas fa-flag me-2 text-brand"></i>Priority
-=======
                             <label class="label-premium fw-bold">
                                 <i class="fas fa-flag me-2 text-brand"></i>{% trans "Priority" %}
->>>>>>> Stashed changes
                             </label>
                             {{ form.priority }}
                         </div>
                         <div class="col-md-6 mb-4">
-<<<<<<< Updated upstream
-                            <label class="label-premium fw-bold" for="{{ form.status.id_for_label }}">
-                                <i class="fas fa-tasks me-2 text-brand"></i>Status
-=======
                             <label class="label-premium fw-bold">
                                 <i class="fas fa-tasks me-2 text-brand"></i>{% trans "Status" %}
->>>>>>> Stashed changes
                             </label>
                             {{ form.status }}
                         </div>
@@ -209,10 +177,10 @@
                     <div class="mb-4">
                         <div class="d-flex align-items-center gap-2 mb-2">
                             <label class="label-premium fw-bold mb-0">
-                                <i class="fas fa-tags me-2 text-brand"></i>Tags
+                                <i class="fas fa-tags me-2 text-brand"></i>{% trans "Tags" %}
                             </label>
                             <button type="button" class="btn btn-sm btn-ai-tag" id="btnAutoTag">
-                                <i class="bi bi-magic"></i> AI Auto-Tag
+                                <i class="bi bi-magic"></i> {% trans "AI Auto-Tag" %}
                             </button>
                         </div>
                         <div class="tag-grid" id="tagGrid">
@@ -225,7 +193,7 @@
                                 </span>
                             </label>
                             {% empty %}
-                            <small class="text-muted">No tags yet. Use AI Auto-Tag to generate some!</small>
+                            <small class="text-muted">{% trans "No tags yet. Use AI Auto-Tag to generate some!" %}</small>
                             {% endfor %}
                         </div>
                         {% for error in form.tags.errors %}

@@ -1,4 +1,5 @@
 import logging
+from django.utils.translation import gettext as _
 from django.contrib.auth import get_user_model
 
 logger = logging.getLogger(__name__)
@@ -18,7 +19,7 @@ class UserRegistrationService:
             return {
                 'success': True,
                 'user': user,
-                'message': (
+                'message': _(
                     "Registration successful! "
                     "You can now log in with your account."
                 ),
@@ -30,7 +31,6 @@ class UserRegistrationService:
             return {
                 'success': False,
                 'user': None,
-                'message': "An error occurred during registration. Please try again later.",
+                'message': _("An error occurred during registration. Please try again later."),
                 'error': str(e),
             }
-

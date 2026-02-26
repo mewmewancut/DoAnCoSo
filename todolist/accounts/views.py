@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import views as auth_views
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.cache import never_cache
+from django.utils.translation import gettext as _
 
 from .forms import RegisterForm, ProfileEditForm, CustomPasswordChangeForm
 from .services import (
@@ -22,7 +23,7 @@ logger = logging.getLogger(__name__)
 @never_cache
 def register(request):
     if request.user.is_authenticated:
-        messages.info(request, "You are already logged in.")
+        messages.info(request, _("You are already logged in."))
         return redirect("tasks:dashboard")
     
     if request.method == "POST":

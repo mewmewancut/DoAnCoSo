@@ -1,3 +1,4 @@
+{% load i18n %}
 <!-- Toast Container for notifications -->
 <div id="toast-container" class="position-fixed" style="top: 20px; right: 20px; z-index: 9999; max-width: 400px;">
     {% if messages %}
@@ -42,13 +43,13 @@
                 <div class="flex-grow-1">
                     <div class="fw-semibold mb-1" style="font-size: 0.9rem;">
                         {% if message.tags == 'error' or message.tags == 'danger' %}
-                            Error
+                            {% trans "Error" %}
                         {% elif message.tags == 'success' %}
-                            Success
+                            {% trans "Success" %}
                         {% elif message.tags == 'warning' %}
-                            Warning
+                            {% trans "Warning" %}
                         {% else %}
-                            Info
+                            {% trans "Info" %}
                         {% endif %}
                     </div>
                     <div style="font-size: 0.85rem; opacity: 0.9;">{{ message }}</div>
@@ -170,10 +171,10 @@ function showToast(message, type = 'success', title = null) {
     };
     
     const titles = {
-        success: 'Success',
-        danger: 'Error',
-        warning: 'Warning',
-        info: 'Info'
+        success: '{% trans "Success" %}',
+        danger: '{% trans "Error" %}',
+        warning: '{% trans "Warning" %}',
+        info: '{% trans "Info" %}'
     };
     
     const toast = document.createElement('div');
@@ -201,7 +202,7 @@ function showToast(message, type = 'success', title = null) {
                 ${icons[type] || icons.info}
             </div>
             <div class="flex-grow-1">
-                <div class="fw-semibold mb-1" style="font-size: 0.9rem;">${title || titles[type] || 'Notification'}</div>
+                <div class="fw-semibold mb-1" style="font-size: 0.9rem;">${title || titles[type] || '{% trans "Notification" %}'}</div>
                 <div style="font-size: 0.85rem; opacity: 0.9;">${message}</div>
             </div>
             <button type="button" class="btn-close btn-close-sm ms-2" onclick="dismissToast(this)" aria-label="Close" style="opacity: 0.5;"></button>

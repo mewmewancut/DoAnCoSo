@@ -49,30 +49,30 @@
     <div class="preview-container shadow-lg">
         <div class="preview-banner">
             <i class="fas fa-file-invoice deco-icon"></i>
-            <h6 class="text-uppercase fw-bold mb-2" style="letter-spacing: 3px;">Document Preview</h6>
-            <h1 class="display-5 fw-bold mb-3">Tasks Report Summary</h1>
-            <p class="mb-4 fs-5 opacity-75">Reviewing tasks from <strong>{{ start }}</strong> to <strong>{{ end }}</strong></p>
+            <h6 class="text-uppercase fw-bold mb-2" style="letter-spacing: 3px;">Xem trước</h6>
+            <h1 class="display-5 fw-bold mb-3">Tóm tắt báo cáo nhiệm vụ</h1>
+            <p class="mb-4 fs-5 opacity-75">Xem xét nhiệm vụ từ <strong>{{ start }}</strong> tới <strong>{{ end }}</strong></p>
             
             <div class="d-flex gap-3 align-items-center flex-wrap">
                 <div class="stat-pill">
-                    <small class="d-block opacity-75">Total Tasks</small>
+                    <small class="d-block opacity-75">Tổng số nhiệm vụ</small>
                     <span class="fw-bold fs-5">{{ tasks|length }}</span>
                 </div>
                 <a href="{% url 'tasks:download_pdf' %}?type={% if 'month' in request.path %}month{% else %}week{% endif %}" class="btn btn-print-now ms-md-auto">
-                    <i class="fas fa-download me-2"></i> DOWNLOAD PDF
+                    <i class="fas fa-download me-2"></i> TẢI XUỐNG PDF
                 </a>
             </div>
         </div>
 
         <div class="bg-white p-4 p-md-5">
-            <h5 class="fw-bold mb-4 text-dark"><i class="fas fa-list-check me-2 text-danger"></i>Included Content:</h5>
+            <h5 class="fw-bold mb-4 text-dark"><i class="fas fa-list-check me-2 text-danger"></i>Nội dung bao gồm:</h5>
             <div class="table-responsive">
                 <table class="table table-custom table-hover">
                     <thead>
                         <tr>
-                            <th class="ps-3">Task Detail</th>
-                            <th>Deadline</th>
-                            <th class="text-center">Status</th>
+                            <th class="ps-3">Chi tiết nhiệm vụ</th>
+                            <th>Hạn chót</th>
+                            <th class="text-center">Trạng thái</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -94,7 +94,7 @@
                             </td>
                         </tr>
                         {% empty %}
-                        <tr><td colspan="3" class="text-center py-5 text-muted">No data found for this period.</td></tr>
+                        <tr><td colspan="3" class="text-center py-5 text-muted">Không có dữ liệu cho khoảng thời gian này.</td></tr>
                         {% endfor %}
                     </tbody>
                 </table>

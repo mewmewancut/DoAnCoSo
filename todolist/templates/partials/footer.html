@@ -1,4 +1,5 @@
-  <footer class="footer">
+{% load i18n %}
+<footer class="footer">
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
@@ -7,48 +8,48 @@
                     </div>
                     <h5>TodoList</h5>
                     <p style="color: #bdc3c7; line-height: 1.7; font-size: 0.95rem;">
-                        Manage your tasks efficiently with TodoList. Stay organized and boost your productivity!
+                        {% trans "Manage your tasks efficiently with TodoList. Stay organized and boost your productivity!" %}
                     </p>
                 </div>
                 
                 <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
-                    <h5>Link</h5>
+                    <h5>{% trans "Links" %}</h5>
                     <ul class="list-unstyled">
                         <li class="mb-2">
                             <a href="{% url 'home' %}">
-                                <i class="bi bi-house me-2"></i>Home
+                                <i class="bi bi-house me-2"></i>{% trans "Home" %}                
                             </a>
                         </li>
                         <li class="mb-2">
                             <a href="{% url 'accounts:login' %}">
-                                <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                                <i class="bi bi-box-arrow-in-right me-2"></i>{% trans "Login" %}
                             </a>
                         </li>
                         <li class="mb-2">
                             <a href="{% url 'accounts:register' %}">
-                                <i class="bi bi-person-plus me-2"></i>Register
+                                <i class="bi bi-person-plus me-2"></i>{% trans "Register" %}
                             </a>
                         </li>
                     </ul>
                 </div>
                 
                 <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
-                    <h5>About</h5>
+                    <h5>{% trans "About" %}</h5>
                     <ul class="list-unstyled">
                         <li class="mb-2" style="color: #bdc3c7;">
-                            <i class="bi bi-book me-2"></i>Đồ án Cơ sở
+                            <i class="bi bi-book me-2"></i>{% trans "Basic Project" %}
                         </li>
                         <li class="mb-2" style="color: #bdc3c7;">
-                            <i class="bi bi-code-slash me-2"></i>Django Framework
+                            <i class="bi bi-code-slash me-2"></i>{% trans "Django Framework" %}
                         </li>
                         <li class="mb-2" style="color: #bdc3c7;">
-                            <i class="bi bi-calendar me-2"></i>Năm học 2024-2025
+                            <i class="bi bi-calendar me-2"></i>{% trans "Semester 2, Academic Year 2025-2026" %}
                         </li>
                     </ul>
                 </div>
                 
                 <div class="col-lg-3 col-md-6">
-                    <h5>Liên hệ</h5>
+                    <h5>{% trans "Contact" %}</h5>
                     <ul class="list-unstyled">
                         <li class="mb-2" style="color: #bdc3c7;">
                             <i class="bi bi-envelope me-2"></i>
@@ -56,24 +57,15 @@
                         </li>
                         <li class="mb-2" style="color: #bdc3c7;">
                             <i class="bi bi-github me-2"></i>
-                            <a href="#" target="_blank">GitHub Repository</a>
+                            <a href="https://github.com/mewmewancut/DoAnCoSo" target="_blank">{% trans "GitHub Repository" %}</a>
                         </li>
                         <li class="mb-2" style="color: #bdc3c7;">
-                            <i class="bi bi-building me-2"></i>Trường Đại học
+                            <i class="bi bi-building me-2"></i>{% trans "Phenikaa University" %}
                         </li>
                     </ul>
                 </div>
             </div>
             
-            <div class="footer-bottom">
-                <p class="mb-0">
-                    &copy; 2024 TodoApp - Đồ án Cơ sở. Được phát triển bởi sinh viên.
-                </p>
-                <p class="mb-0 mt-2" style="font-size: 0.85rem;">
-                    <i class="bi bi-heart-fill text-danger me-1"></i>
-                    Made with Django & Bootstrap
-                </p>
-            </div>
         </div>
     </footer>
 

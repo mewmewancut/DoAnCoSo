@@ -1,5 +1,6 @@
 import logging
 from django.contrib.auth import authenticate, login, logout
+from django.utils.translation import gettext as _
 
 logger = logging.getLogger(__name__)
 
@@ -11,7 +12,7 @@ class UserAuthenticationService:
             return {
                 'success': False,
                 'user': None,
-                'message': "Please enter both email/username and password.",
+                'message': _("Please enter both email/username and password."),
                 'error': 'missing_credentials',
                 'inactive': False
             }
@@ -29,7 +30,7 @@ class UserAuthenticationService:
             return {
                 'success': False,
                 'user': None,
-                'message': "Invalid email/username or password.",
+                'message': _("Invalid email/username or password."),
                 'error': 'invalid_credentials',
                 'inactive': False
             }
@@ -41,7 +42,7 @@ class UserAuthenticationService:
             return {
                 'success': False,
                 'user': user,
-                'message': (
+                'message': _(
                     "Your account has not been activated yet. "
                     "Please check your email for the activation link, "
                     "or contact the administrator."
@@ -57,7 +58,7 @@ class UserAuthenticationService:
         return {
             'success': True,
             'user': user,
-            'message': "Login successful",
+            'message': _("Login successful"),
             'error': None,
             'inactive': False
         }
@@ -73,6 +74,5 @@ class UserAuthenticationService:
         return {
             'success': True,
             'username': username,
-            'message': "You have been logged out successfully!"
+            'message': _("You have been logged out successfully!")
         }
-

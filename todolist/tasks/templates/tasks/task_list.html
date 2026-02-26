@@ -201,7 +201,7 @@
                                 {{ task.title }}
                             </a>
                             {% if task.is_overdue %}
-                                <span class="badge badge-overdue ms-1">OVERDUE</span>
+                                <span class="badge badge-overdue ms-1">{% trans "Overdue" %}</span>
                             {% endif %}
                             {% if task.tags.all %}
                             <div class="mt-1">
@@ -343,16 +343,16 @@ document.querySelectorAll('.status-option').forEach(item => {
                 
                 // Show toast notification
                 if (typeof showToast === 'function') {
-                    showToast(`Task status updated to "${data.task.status_display}"`, 'success');
+                    showToast(`{% trans "Task status updated to" %} "${data.task.status_display}"`, 'success');
                 }
             } else {
                 if (typeof showToast === 'function') {
-                    showToast('Error: ' + data.error, 'danger');
+                    showToast('{% trans "Error" %}: ' + data.error, 'danger');
                 }
             }
         } catch (error) {
             if (typeof showToast === 'function') {
-                showToast('Error: ' + error.message, 'danger');
+                showToast('{% trans "Error" %}: ' + error.message, 'danger');
             }
         }
     });

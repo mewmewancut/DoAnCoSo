@@ -3,6 +3,7 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from django.utils.text import slugify
+from django.utils.translation import gettext_lazy as _
 
 
 class Tag(models.Model):
@@ -45,17 +46,17 @@ class Task(models.Model):
     """
     # Priority choices
     PRIORITY_CHOICES = [
-        ('low', 'Low'),
-        ('medium', 'Medium'),
-        ('high', 'High'),
-    ]
+    ('low', _('Low')),
+    ('medium', _('Medium')),
+    ('high', _('High')),
+]
     
     # Status choices
     STATUS_CHOICES = [
-        ('pending', 'Pending'),
-        ('in_progress', 'In Progress'),
-        ('completed', 'Completed'),
-        ('cancelled', 'Cancelled'),
+        ('pending', _('Pending')),
+        ('in_progress', _('In Progress')),
+        ('completed', _('Completed')),
+        ('cancelled', _('Cancelled')),
     ]
     
     # Fields

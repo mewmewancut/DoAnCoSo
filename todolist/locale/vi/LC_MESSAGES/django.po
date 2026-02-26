@@ -480,14 +480,14 @@ msgstr "Không thể khôi phục sau khi xóa"
 msgid "To confirm, please enter your username:"
 msgstr "Để xác nhận, vui lòng nhập tên đăng nhập của bạn:"
 
-msgid "Enter <strong>{{ username }}</strong> to confirm account deletion"
-msgstr "Nhập <strong>{{ username }}</strong> để xác nhận xóa tài khoản"
+msgid "Enter <strong>%(username)s</strong> to confirm account deletion"
+msgstr "Nhập <strong>%(username)s</strong> để xác nhận xóa tài khoản"
 
 msgid "Last warning:"
 msgstr "Cảnh báo cuối cùng:"
 
-msgid "This action will permanently delete your account <strong>{{ username }}</strong> and all related data. You will not be able to log in or restore data after deletion."
-msgstr "Hành động này sẽ xóa vĩnh viễn tài khoản <strong>{{ username }}</strong> và toàn bộ dữ liệu liên quan. Bạn sẽ không thể đăng nhập hoặc khôi phục dữ liệu sau khi xóa."
+msgid "This action will permanently delete your account <strong>%(username)s</strong> and all related data. You will not be able to log in or restore data after deletion."
+msgstr "Hành động này sẽ xóa vĩnh viễn tài khoản <strong>%(username)s</strong> và toàn bộ dữ liệu liên quan. Bạn sẽ không thể đăng nhập hoặc khôi phục dữ liệu sau khi xóa."
 
 msgid "Delete account permanently"
 msgstr "Xóa tài khoản vĩnh viễn"
@@ -556,3 +556,245 @@ msgstr "Mô tả"
 
 msgid "No detailed description."
 msgstr "Không có mô tả chi tiết."
+
+# Footer
+msgid "Home"
+msgstr "Trang chủ"
+
+msgid "About"
+msgstr "Giới thiệu"
+
+msgid "Contact"
+msgstr "Liên hệ"
+
+msgid "Links"
+msgstr "Liên kết"
+
+msgid "Basic Project"
+msgstr "đồ án cơ sở"
+
+msgid "Semester 2, Academic Year 2025-2026"
+msgstr "Học kỳ 2, Năm học 2025-2026"
+
+msgid "Phenikaa University"
+msgstr "Đại học Phenikaa"
+
+msgid "GitHub Repository"
+msgstr "Kho GitHub"
+
+msgid "Manage your tasks efficiently with TodoList. Stay organized and boost your productivity!"
+msgstr "Quản lý công việc hiệu quả với TodoList. Luôn ngăn nắp và nâng cao năng suất làm việc."
+
+msgid "Language"
+msgstr "Ngôn ngữ"
+
+msgid "Error"
+msgstr "Lỗi"
+
+msgid "Success"
+msgstr "Thành công"
+
+msgid "Warning"
+msgstr "Cảnh báo"
+
+msgid "Info"
+msgstr "Thông tin"
+
+msgid "Notification"
+msgstr "Thông báo"
+
+msgid "You are already logged in."
+msgstr "Bạn đã đăng nhập rồi."
+
+msgid "Registration successful! You can now log in with your account."
+msgstr "Đăng ký thành công! Bạn có thể đăng nhập bằng tài khoản của mình."
+
+msgid "An error occurred during registration. Please try again later."
+msgstr "Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau."
+
+msgid "Please enter both email/username and password."
+msgstr "Vui lòng nhập đầy đủ email/tên đăng nhập và mật khẩu."
+
+msgid "Invalid email/username or password."
+msgstr "Email/tên đăng nhập hoặc mật khẩu không chính xác."
+
+msgid ""
+"Your account has not been activated yet. Please check your email for the "
+"activation link, or contact the administrator."
+msgstr ""
+"Tài khoản của bạn chưa được kích hoạt. Vui lòng kiểm tra email để lấy liên "
+"kết kích hoạt hoặc liên hệ quản trị viên."
+
+msgid "Login successful"
+msgstr "Đăng nhập thành công"
+
+msgid "You have been logged out successfully!"
+msgstr "Bạn đã đăng xuất thành công!"
+
+msgid "Update profile successfully!"
+msgstr "Cập nhật hồ sơ thành công!"
+
+msgid "An error occurred while updating your profile. Please try again."
+msgstr "Đã xảy ra lỗi khi cập nhật hồ sơ. Vui lòng thử lại."
+
+msgid "Change password successfully!"
+msgstr "Đổi mật khẩu thành công!"
+
+msgid "An error occurred while changing your password. Please try again."
+msgstr "Đã xảy ra lỗi khi đổi mật khẩu. Vui lòng thử lại."
+
+msgid "Username does not match. Please enter the correct username to confirm."
+msgstr "Tên đăng nhập không khớp. Vui lòng nhập đúng tên đăng nhập để xác nhận."
+
+msgid "Your account has been deleted successfully."
+msgstr "Tài khoản của bạn đã được xóa thành công."
+
+msgid "An error occurred while deleting your account. Please try again."
+msgstr "Đã xảy ra lỗi khi xóa tài khoản. Vui lòng thử lại."
+
+msgid "Task \"%(title)s\" created successfully!"
+msgstr "Công việc \"%(title)s\" đã được tạo thành công!"
+
+msgid "Task \"%(title)s\" updated successfully!"
+msgstr "Công việc \"%(title)s\" đã được cập nhật thành công!"
+
+msgid "Task \"%(title)s\" deleted successfully!"
+msgstr "Công việc \"%(title)s\" đã được xóa thành công!"
+
+msgid "Invalid status value"
+msgstr "Giá trị trạng thái không hợp lệ"
+
+msgid "Invalid method"
+msgstr "Phương thức không hợp lệ"
+
+msgid "Title is required"
+msgstr "Tiêu đề là bắt buộc"
+
+msgid "Subtask not found"
+msgstr "Không tìm thấy công việc con"
+
+msgid "Subtask deleted successfully"
+msgstr "Công việc con đã được xóa thành công"
+
+msgid "Subtasks reordered successfully"
+msgstr "Thứ tự công việc con đã được sắp xếp lại thành công"
+
+msgid "Task Calendar"
+msgstr "Lịch công việc"
+
+msgid "Manage progress & deadlines visually over time"
+msgstr "Quản lý tiến độ và thời hạn một cách trực quan theo thời gian"
+
+msgid "Add Task"
+msgstr "Thêm công việc"
+
+msgid "List"
+msgstr "Danh sách"
+
+msgid "In progress"
+msgstr "Đang thực hiện"
+
+msgid "Full Name"
+msgstr "Họ và tên"
+
+msgid "Created At"
+msgstr "Tạo lúc"
+
+msgid "Last Login"
+msgstr "Đăng nhập lần cuối"
+
+msgid "Activated"
+msgstr "Đã kích hoạt"
+
+msgid "Edit Profile"
+msgstr "Sửa hồ sơ"
+
+msgid "Change Password"
+msgstr "Đổi mật khẩu"
+
+msgid "Job Statistics"
+msgstr "Thống kê nghề nghiệp"
+
+msgid "Completed Tasks"
+msgstr "Công việc đã hoàn thành"
+
+msgid "Pending Tasks"
+msgstr "Công việc chờ xử lý"
+
+msgid "In Progress Tasks"
+msgstr "Công việc đang thực hiện"
+
+msgid "You have %(overdue_count)s overdue tasks!"
+msgstr "Bạn có %(overdue_count)s công việc quá hạn!"
+
+msgid "Please check and complete them as soon as possible."
+msgstr "Vui lòng kiểm tra và hoàn thành chúng sớm nhất có thể."
+
+msgid "View All Tasks"
+msgstr "Xem tất cả nhiệm vụ"
+
+msgid "Return to Dashboard"
+msgstr "Quay lại Trang tổng quan"
+
+msgid "Update your personal information"
+msgstr "Cập nhật thông tin cá nhân"
+
+msgid "Avatar"
+msgstr "Hình đại diện"
+
+msgid "Email can't change. If you need change email, please contact admin."
+msgstr "Email không thể thay đổi. Nếu bạn cần thay đổi email, vui lòng liên hệ quản trị viên."
+
+msgid "Cancel"
+msgstr "Hủy"
+
+msgid "First name"
+msgstr "Họ"
+
+msgid "Last name"
+msgstr "Tên"
+
+msgid "%(time)s ago"
+msgstr "%(time)s trước"
+
+msgid "Subtasks"
+msgstr "Nhiệm vụ phụ"
+
+msgid "Calendar View"
+msgstr "Xem lịch"
+
+msgid "Generate with AI"
+msgstr "Tạo bằng AI"
+
+msgid "Add Subtask"
+msgstr "Thêm nhiệm vụ phụ"
+
+msgid "Progress"
+msgstr "Tiến độ"
+
+msgid "completed"
+msgstr "đã hoàn thành"
+
+msgid "Back to list"
+msgstr "Quay lại danh sách"
+
+msgid "Tags"
+msgstr "Thẻ"
+
+msgid "No tags yet. Use AI Auto-Tag to generate some!"
+msgstr "Chưa có thẻ nào. Sử dụng AI Auto để tạo ra!"
+
+msgid "Activation link is invalid or has expired."
+msgstr "Liên kết kích hoạt không hợp lệ hoặc đã hết hạn."
+
+msgid "Your account is already activated!"
+msgstr "Tài khoản của bạn đã được kích hoạt!"
+
+msgid "Activation link is invalid or has expired."
+msgstr "Liên kết kích hoạt không hợp lệ hoặc đã hết hạn."
+
+msgid "Account activated successfully! Please log in."
+msgstr "Tài khoản đã được kích hoạt thành công! Vui lòng đăng nhập"
+
+msgid "An error occurred while activating your account. Please try again."
+msgstr "Đã xảy ra lỗi khi kích hoạt tài khoản. Vui lòng thử lại."

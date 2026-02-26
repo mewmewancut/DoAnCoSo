@@ -1,5 +1,6 @@
 {% extends 'base_private.html' %}
-{% block title %}Task Calendar | TaskMaster{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Task Calendar" %} | TaskMaster{% endblock %}
 
 {% block content %}
 <style>
@@ -178,11 +179,11 @@
 <div class="container py-4">
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
         <div>
-            <h1 class="fw-bold mb-0 display-6" style="color: #2d2e2e;">Task Calendar</h1>
-            <p class="text-muted">Manage progress & deadlines visually over time</p>
+            <h1 class="fw-bold mb-0 display-6" style="color: #2d2e2e;">{% trans "Task Calendar" %}</h1>
+            <p class="text-muted">{% trans "Manage progress & deadlines visually over time" %}</p>
         </div>
         <a href="{% url 'tasks:task_create' %}" class="btn btn-brand-add fw-bold px-4 py-2 mt-3 mt-md-0">
-            <i class="fas fa-plus-circle me-1"></i> Add Task
+            <i class="fas fa-plus-circle me-1"></i> {% trans "Add Task" %}
         </a>
     </div>
 
@@ -198,9 +199,9 @@
 document.addEventListener('DOMContentLoaded', function () {
     const calendarEl = document.getElementById('calendar');
 
-    const calendar = new FullCalendar.Calendar(calendarEl, {
+        const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
-        locale: 'en',
+        locale: '{{ CURRENT_LANGUAGE|default:"en" }}',
         timeZone: 'Asia/Ho_Chi_Minh',
         height: 'auto',
 
@@ -212,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         customButtons: {
             calendarBtn: {
-                text: 'Month',
+                text: '{% trans "Calendar View" %}',
                 click: function () {
                     calendar.changeView('dayGridMonth');
                 }
@@ -220,8 +221,8 @@ document.addEventListener('DOMContentLoaded', function () {
         },
 
         buttonText: {
-            today: 'Today',
-            listMonth: 'List'
+        today: '{% trans "Today" %}',
+        listMonth: '{% trans "List" %}'
         },
 
         events: "{% url 'tasks:task_calendar_events' %}",
@@ -232,11 +233,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 const status = info.event.extendedProps.status;
                 if (!status) return;
 
-                const statusConfig = {
-                    overdue: { text: 'Overdue', color: '#dc3545' },
-                    completed: { text: 'Completed', color: '#198754' },
-                    pending: { text: 'Pending', color: '#0d6efd' },
-                    in_progress: { text: 'In progress', color: '#ffc107' }
+        const statusConfig = {
+                    overdue: { text: '{% trans "Overdue" %}', color: '#dc3545' },
+                    completed: { text: '{% trans "Completed" %}', color: '#198754' },
+                    pending: { text: '{% trans "Pending" %}', color: '#0d6efd' },
+                    in_progress: { text: '{% trans "In progress" %}', color: '#ffc107' }
                 };
 
                 const config = statusConfig[status];

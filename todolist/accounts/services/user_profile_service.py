@@ -1,5 +1,8 @@
 import logging
+from django.utils.translation import gettext as _
+
 logger = logging.getLogger(__name__)
+
 
 class UserProfileService:
     @staticmethod
@@ -32,7 +35,7 @@ class UserProfileService:
                 'in_progress_tasks': 0,
                 'overdue_count': 0
             }
-    
+        
     @staticmethod
     def update_profile(form, user):
         try:
@@ -41,7 +44,7 @@ class UserProfileService:
             
             return {
                 'success': True,
-                'message': "Update profile successfully!",
+                'message': _("Update profile successfully!"),
                 'error': None
             }
             
@@ -49,7 +52,7 @@ class UserProfileService:
             logger.error(f"Error updating profile for user {user.username}: {str(e)}")
             return {
                 'success': False,
-                'message': "An error occurred while updating your profile. Please try again.",
+                'message': _("An error occurred while updating your profile. Please try again."),
                 'error': str(e)
             }
 
