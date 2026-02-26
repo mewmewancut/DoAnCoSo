@@ -94,6 +94,8 @@ class AISuggestion(models.Model):
         ('description', 'Description Improvement'),
         ('priority', 'Priority Suggestion'),
         ('subtasks', 'Subtasks Generation'),
+        ('coach', 'Productivity Coaching'),
+        ('search', 'Smart Search'),
     ]
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

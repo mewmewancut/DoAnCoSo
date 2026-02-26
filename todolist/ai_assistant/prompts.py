@@ -85,3 +85,58 @@ GENERATE_SUBTASKS_PROMPT = ChatPromptTemplate.from_messages([
      "- Order subtasks logically (step 1 → 2 → …).\n"
      "- Use the SAME language as the input."),
 ])
+
+
+# ── 4. Productivity Coach (structured JSON output) ──────────────────
+PRODUCTIVITY_COACH_PROMPT = ChatPromptTemplate.from_messages([
+    ("system",
+     "You are an expert productivity coach who analyzes a user's task "
+     "management patterns and provides personalized, actionable advice. "
+     "You must be encouraging but honest."),
+    ("human",
+     "Here is my task management data:\n\n"
+     "Total tasks: {total_tasks}\n"
+     "Completed: {completed_tasks}\n"
+     "Pending: {pending_tasks}\n"
+     "In Progress: {in_progress_tasks}\n"
+     "Overdue: {overdue_tasks}\n"
+     "Completion rate: {completion_rate}%\n"
+     "Average completion time: {avg_completion_days} days\n"
+     "Tasks created this week: {created_this_week}\n"
+     "Tasks completed this week: {completed_this_week}\n"
+     "Priority breakdown — High: {high_priority}, Medium: {medium_priority}, Low: {low_priority}\n\n"
+     "Based on this data, give me a productivity score (0-100) and "
+     "up to 3 personalized tips to improve.\n\n"
+     "Return JSON:\n"
+     '{{"score": 75, "summary": "...", "tips": [{{"category": "TIME_MANAGEMENT|PRIORITIZATION|FOCUS|PLANNING|MOTIVATION", "tip": "...", "reasoning": "..."}}]}}\n\n'
+     "RULES:\n"
+     "- Return ONLY valid JSON, no extra text.\n"
+     "- Score must reflect the data objectively.\n"
+     "- Tips must be specific to the user's patterns, not generic.\n"
+     "- Use the SAME language as any task titles if provided, otherwise English."),
+])
+
+
+# ── 5. Smart Search (structured JSON output) ────────────────────────
+SMART_SEARCH_PROMPT = ChatPromptTemplate.from_messages([
+    ("system",
+     "You are a search query interpreter for a task management app. "
+     "Your job is to convert natural language queries into structured "
+     "search filters. The app has tasks with: title, description, "
+     "status (pending/in_progress/completed/cancelled), "
+     "priority (high/medium/low), and deadline."),
+    ("human",
+     "Convert this search query into structured filters:\n\n"
+     "Query: \"{query}\"\n\n"
+     "Return JSON:\n"
+     '{{"keywords": ["word1", "word2"], "status": ["pending", "in_progress"], '
+     '"priority": ["high"], "overdue": false, "sort_by": "relevance|deadline|priority|created_at"}}\n\n'
+     "RULES:\n"
+     "- Return ONLY valid JSON.\n"
+     "- Only include filters that are clearly implied by the query.\n"
+     "- If the query mentions 'urgent' or 'important', map to priority=['high'].\n"
+     "- If the query mentions 'overdue' or 'late', set overdue=true.\n"
+     "- If the query mentions 'done' or 'finished', map to status=['completed'].\n"
+     "- If the query mentions 'not started' or 'todo', map to status=['pending'].\n"
+     "- Extract actual search keywords from the remaining content."),
+])

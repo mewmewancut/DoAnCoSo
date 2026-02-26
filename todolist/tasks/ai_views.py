@@ -16,6 +16,8 @@ from ai_assistant.chains import (
     improve_description,
     suggest_priority,
     generate_subtasks,
+    productivity_coach,
+    smart_search,
 )
 from .models import AISuggestion, Task
 
@@ -329,4 +331,198 @@ def ai_history_api(request):
         return JsonResponse({
             'success': False,
             'error': 'Failed to load AI history.'
+        }, status=500)
+
+
+@login_required
+@require_http_methods(["POST"])
+def productivity_coach_api(request):
+    """
+    API endpoint for AI productivity coaching based on user's task patterns.
+
+    POST /api/productivity-coach/
+    Body: {} (empty — stats are computed server-side)
+
+    Response: {
+        "success": true,
+        "score": 75,
+        "summary": "...",
+        "tips": [{"category": "...", "tip": "...", "reasoning": "..."}],
+        "stats": { ... raw stats sent to the AI ... }
+    }
+    """
+    try:
+        from .services import StatisticsService
+
+        # Gather user stats
+        overview = StatisticsService.get_overview_stats(request.user)
+        overdue = StatisticsService.get_overdue_stats(request.user)
+        activity = StatisticsService.get_activity_stats(request.user)
+        priority = StatisticsService.get_priority_stats(request.user)
+        avg_days = StatisticsService.get_average_completion_time(request.user)
+
+        stats = {
+            "total_tasks": overview["total_tasks"],
+            "completed_tasks": overview["completed_tasks"],
+            "pending_tasks": overview["pending_tasks"],
+            "in_progress_tasks": overview["in_progress_tasks"],
+            "overdue_tasks": overdue["count"],
+            "completion_rate": overview["completion_rate"],
+            "avg_completion_days": avg_days if avg_days is not None else "N/A",
+            "created_this_week": activity["created_this_week"],
+            "completed_this_week": activity["completed_this_week"],
+            "high_priority": priority["high"],
+            "medium_priority": priority["medium"],
+            "low_priority": priority["low"],
+        }
+
+        # Require at least 1 task to give meaningful coaching
+        if stats["total_tasks"] == 0:
+            return JsonResponse({
+                "success": False,
+                "error": "You need to create some tasks first before getting productivity coaching.",
+            }, status=400)
+
+        # Call AI chain
+        result = productivity_coach(stats)
+
+        # Save to history
+        AISuggestion.objects.create(
+            user=request.user,
+            suggestion_type="coach",
+            input_data=stats,
+            output_data=result,
+        )
+
+        return JsonResponse({
+            "success": True,
+            "score": result["score"],
+            "summary": result["summary"],
+            "tips": result["tips"],
+            "stats": stats,
+        })
+
+    except json.JSONDecodeError:
+        return JsonResponse({
+            "success": False,
+            "error": "Invalid JSON format",
+        }, status=400)
+
+    except Exception as e:
+        logger.exception("productivity_coach_api failed")
+        return JsonResponse({
+            "success": False,
+            "error": str(e),
+        }, status=500)
+
+
+@login_required
+@require_http_methods(["POST"])
+def smart_search_api(request):
+    """
+    AI-powered natural language task search.
+
+    POST /api/smart-search/
+    Body: { "query": "urgent tasks I haven't started" }
+
+    Response: {
+        "success": true,
+        "filters": { ... parsed filters ... },
+        "tasks": [ ... matching tasks ... ],
+        "total": 5
+    }
+    """
+    try:
+        data = json.loads(request.body)
+        query = data.get("query", "").strip()
+
+        if not query:
+            return JsonResponse({
+                "success": False,
+                "error": "Search query is required.",
+            }, status=400)
+
+        # Use AI to interpret the query into structured filters
+        filters = smart_search(query)
+
+        # Build Django ORM query from the filters
+        from django.db.models import Q
+        from django.utils import timezone
+
+        tasks_qs = Task.objects.filter(user=request.user)
+
+        # Apply keyword search
+        if filters.get("keywords"):
+            keyword_q = Q()
+            for kw in filters["keywords"]:
+                keyword_q |= Q(title__icontains=kw) | Q(description__icontains=kw)
+            tasks_qs = tasks_qs.filter(keyword_q)
+
+        # Apply status filter
+        if filters.get("status"):
+            tasks_qs = tasks_qs.filter(status__in=filters["status"])
+
+        # Apply priority filter
+        if filters.get("priority"):
+            tasks_qs = tasks_qs.filter(priority__in=filters["priority"])
+
+        # Apply overdue filter
+        if filters.get("overdue"):
+            tasks_qs = tasks_qs.filter(
+                deadline__lt=timezone.now(),
+            ).exclude(status="completed")
+
+        # Apply sorting
+        sort_map = {
+            "deadline": "deadline",
+            "priority": "-priority",
+            "created_at": "-created_at",
+            "relevance": "-created_at",  # fallback
+        }
+        sort_field = sort_map.get(filters.get("sort_by", "relevance"), "-created_at")
+        tasks_qs = tasks_qs.order_by(sort_field)
+
+        # Serialize results (max 20)
+        task_list = []
+        for task in tasks_qs[:20]:
+            task_list.append({
+                "id": str(task.id),
+                "title": task.title,
+                "description": (task.description or "")[:200],
+                "status": task.status,
+                "status_display": task.get_status_display(),
+                "priority": task.priority,
+                "priority_display": task.get_priority_display(),
+                "deadline": task.deadline.strftime("%Y-%m-%d %H:%M") if task.deadline else None,
+                "is_overdue": task.is_overdue,
+                "created_at": task.created_at.strftime("%Y-%m-%d"),
+            })
+
+        # Save to history
+        AISuggestion.objects.create(
+            user=request.user,
+            suggestion_type="search",
+            input_data={"query": query},
+            output_data={"filters": filters, "result_count": len(task_list)},
+        )
+
+        return JsonResponse({
+            "success": True,
+            "query": query,
+            "filters": filters,
+            "tasks": task_list,
+            "total": len(task_list),
+        })
+
+    except json.JSONDecodeError:
+        return JsonResponse({
+            "success": False,
+            "error": "Invalid JSON format",
+        }, status=400)
+
+    except Exception as e:
+        logger.exception("smart_search_api failed")
+        return JsonResponse({
+            "success": False,
+            "error": str(e),
         }, status=500)

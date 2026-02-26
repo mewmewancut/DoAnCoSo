@@ -36,8 +36,16 @@ from .prompts import (
     IMPROVE_DESCRIPTION_PROMPT,
     SUGGEST_PRIORITY_PROMPT,
     GENERATE_SUBTASKS_PROMPT,
+    PRODUCTIVITY_COACH_PROMPT,
+    SMART_SEARCH_PROMPT,
 )
-from .schemas import ImprovedDescription, PrioritySuggestion, SubtaskList
+from .schemas import (
+    ImprovedDescription,
+    PrioritySuggestion,
+    SubtaskList,
+    ProductivityCoachResponse,
+    SearchFilter,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -172,5 +180,73 @@ def generate_subtasks(
 
     except (json.JSONDecodeError, ValidationError):
         raise Exception("Failed to parse AI response. Please try again.")
+    except Exception as exc:
+        raise Exception(_friendly_error(exc))
+
+
+# ── 4.  Productivity Coach ──────────────────────────────────────────
+
+def productivity_coach(stats: dict) -> dict:
+    """
+    Analyze user's task statistics and return personalized coaching.
+
+    Returns ``{"score": 75, "summary": "...", "tips": [{"category": "...", "tip": "...", "reasoning": "..."}]}``.
+
+    Chain: PRODUCTIVITY_COACH_PROMPT | llm | StrOutputParser → json.loads → Pydantic
+    """
+    try:
+        llm = get_llm()
+        chain = PRODUCTIVITY_COACH_PROMPT | llm | StrOutputParser()
+
+        raw: str = chain.invoke({
+            "total_tasks": str(stats.get("total_tasks", 0)),
+            "completed_tasks": str(stats.get("completed_tasks", 0)),
+            "pending_tasks": str(stats.get("pending_tasks", 0)),
+            "in_progress_tasks": str(stats.get("in_progress_tasks", 0)),
+            "overdue_tasks": str(stats.get("overdue_tasks", 0)),
+            "completion_rate": str(stats.get("completion_rate", 0)),
+            "avg_completion_days": str(stats.get("avg_completion_days", "N/A")),
+            "created_this_week": str(stats.get("created_this_week", 0)),
+            "completed_this_week": str(stats.get("completed_this_week", 0)),
+            "high_priority": str(stats.get("high_priority", 0)),
+            "medium_priority": str(stats.get("medium_priority", 0)),
+            "low_priority": str(stats.get("low_priority", 0)),
+        })
+
+        parsed = _safe_parse_json(raw)
+        validated = ProductivityCoachResponse(**parsed)
+        return validated.model_dump()
+
+    except (json.JSONDecodeError, ValidationError):
+        raise Exception("Failed to parse AI coaching response. Please try again.")
+    except Exception as exc:
+        raise Exception(_friendly_error(exc))
+
+
+# ── 5.  Smart Search ────────────────────────────────────────────────
+
+def smart_search(query: str) -> dict:
+    """
+    Interpret a natural language search query into structured filters.
+
+    Returns ``{"keywords": [...], "status": [...], "priority": [...], "overdue": bool, "sort_by": "..."}``.
+
+    Chain: SMART_SEARCH_PROMPT | llm | StrOutputParser → json.loads → Pydantic
+    """
+    if not query or not query.strip():
+        raise ValueError("Search query cannot be empty.")
+
+    try:
+        llm = get_llm()
+        chain = SMART_SEARCH_PROMPT | llm | StrOutputParser()
+
+        raw: str = chain.invoke({"query": query.strip()})
+
+        parsed = _safe_parse_json(raw)
+        validated = SearchFilter(**parsed)
+        return validated.model_dump()
+
+    except (json.JSONDecodeError, ValidationError):
+        raise Exception("Failed to parse search query. Please try again.")
     except Exception as exc:
         raise Exception(_friendly_error(exc))

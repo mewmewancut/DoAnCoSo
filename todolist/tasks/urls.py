@@ -47,6 +47,8 @@ urlpatterns = [
     path('api/suggest-priority/', ai_views.suggest_priority_api, name='ai_suggest_priority'),
     path('api/generate-subtasks/', ai_views.generate_subtasks_api, name='ai_generate_subtasks'),
     path('api/ai-history/', ai_views.ai_history_api, name='ai_history'),
+    path('api/productivity-coach/', ai_views.productivity_coach_api, name='ai_productivity_coach'),
+    path('api/smart-search/', ai_views.smart_search_api, name='ai_smart_search'),
 
     #PDF
     path('download/week/', views.download_week_preview, name='download_week'),

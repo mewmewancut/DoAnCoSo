@@ -360,6 +360,29 @@
         color: #666;
         text-transform: uppercase;
     }
+
+    /* --- COACH SCORE --- */
+    .coach-score-ring {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    /* --- SEARCH RESULTS --- */
+    .search-filter-pills .badge {
+        font-size: 0.75rem;
+        padding: 5px 10px;
+    }
+
+    /* --- TIME ESTIMATE BADGE --- */
+    .subtask-item .badge {
+        font-size: 0.7rem;
+        white-space: nowrap;
+    }
 </style>
 
 <div class="container py-4">
@@ -383,6 +406,14 @@
             <button class="ai-tab-btn" data-tab="subtasks">
                 <i class="bi bi-diagram-3-fill"></i>
                 <span>Subtasks</span>
+            </button>
+            <button class="ai-tab-btn" data-tab="coach">
+                <i class="bi bi-trophy-fill"></i>
+                <span>Coach</span>
+            </button>
+            <button class="ai-tab-btn" data-tab="search">
+                <i class="bi bi-search"></i>
+                <span>Search</span>
             </button>
         </div>
 
@@ -507,6 +538,58 @@
             </div>
         </div>
 
+        <!-- Tab 4: Productivity Coach -->
+        <div class="ai-tab-content" id="tab-coach">
+            <div class="ai-feature-panel">
+                <div class="ai-panel-header">
+                    <h4><i class="bi bi-trophy-fill me-2"></i>Productivity Coach</h4>
+                    <p>Get personalized productivity insights based on your task patterns</p>
+                </div>
+                <div class="ai-panel-body">
+                    <div class="text-center mb-3">
+                        <p class="text-muted mb-3">AI will analyze your task history and provide a productivity score with personalized tips.</p>
+                        <button type="button" class="ai-submit-btn" id="coachBtn">
+                            <i class="bi bi-lightning-charge-fill"></i>
+                            <span>Analyze My Productivity</span>
+                        </button>
+                    </div>
+                    
+                    <div class="ai-result-area" id="coachResult">
+                        <span class="ai-result-badge">🏆 PRODUCTIVITY REPORT</span>
+                        <div id="coachOutput"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 5: Smart Search -->
+        <div class="ai-tab-content" id="tab-search">
+            <div class="ai-feature-panel">
+                <div class="ai-panel-header">
+                    <h4><i class="bi bi-search me-2"></i>Smart Search</h4>
+                    <p>Search your tasks using natural language — AI understands what you mean</p>
+                </div>
+                <div class="ai-panel-body">
+                    <form id="searchForm">
+                        <div class="ai-form-group">
+                            <label class="ai-form-label">What are you looking for?</label>
+                            <input type="text" class="ai-form-input" id="searchQuery" required
+                                   placeholder='e.g., "urgent tasks I haven&apos;t started" or "completed tasks this week"'>
+                        </div>
+                        <button type="submit" class="ai-submit-btn" id="searchBtn">
+                            <i class="bi bi-search"></i>
+                            <span>Smart Search</span>
+                        </button>
+                    </form>
+                    
+                    <div class="ai-result-area" id="searchResult">
+                        <span class="ai-result-badge">🔍 SEARCH RESULTS</span>
+                        <div id="searchOutput"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Recent AI Activities -->
         <div class="ai-history-card">
             <div class="ai-history-header">
@@ -570,7 +653,9 @@ function setLoading(btn, loading) {
         const icons = {
             'improveBtn': '<i class="bi bi-magic"></i> <span>Enhance with AI</span>',
             'priorityBtn': '<i class="bi bi-lightning-fill"></i> <span>Get Priority Suggestion</span>',
-            'subtasksBtn': '<i class="bi bi-list-check"></i> <span>Generate Subtasks</span>'
+            'subtasksBtn': '<i class="bi bi-list-check"></i> <span>Generate Subtasks</span>',
+            'coachBtn': '<i class="bi bi-lightning-charge-fill"></i> <span>Analyze My Productivity</span>',
+            'searchBtn': '<i class="bi bi-search"></i> <span>Smart Search</span>'
         };
         btn.innerHTML = icons[btn.id] || 'Submit';
     }
@@ -730,13 +815,31 @@ document.getElementById('subtasksForm').addEventListener('submit', async (e) => 
         const data = await response.json();
         
         if (data.success && data.subtasks && data.subtasks.length > 0) {
-            let html = `<div class="mb-3"><span class="badge bg-success">${data.count} subtasks generated</span></div>`;
+            // Use subtask_details (with time estimates) if available, else fall back to subtasks
+            const details = data.subtask_details || data.subtasks.map(s => ({title: s, time_estimate_minutes: null}));
+            const totalMinutes = details.reduce((sum, d) => sum + (d.time_estimate_minutes || 0), 0);
+            const totalHours = Math.floor(totalMinutes / 60);
+            const remainMinutes = totalMinutes % 60;
+            const totalTimeStr = totalHours > 0 
+                ? `${totalHours}h ${remainMinutes > 0 ? remainMinutes + 'm' : ''}` 
+                : `${totalMinutes}m`;
+
+            let html = `<div class="mb-3 d-flex align-items-center gap-2 flex-wrap">
+                <span class="badge bg-success">${data.count} subtasks generated</span>
+                <span class="badge bg-info"><i class="bi bi-clock me-1"></i>Total: ~${totalTimeStr}</span>
+            </div>`;
             html += '<ul class="subtask-list">';
-            data.subtasks.forEach((subtask, i) => {
+            details.forEach((item, i) => {
+                const timeStr = item.time_estimate_minutes 
+                    ? (item.time_estimate_minutes >= 60 
+                        ? `${Math.floor(item.time_estimate_minutes/60)}h${item.time_estimate_minutes%60 > 0 ? ' '+item.time_estimate_minutes%60+'m' : ''}` 
+                        : `${item.time_estimate_minutes}m`)
+                    : '';
                 html += `
                     <li class="subtask-item">
                         <span class="subtask-number">${i + 1}</span>
-                        <span class="subtask-text">${subtask}</span>
+                        <span class="subtask-text">${item.title}</span>
+                        ${timeStr ? `<span class="badge bg-light text-dark border me-2" title="Estimated time"><i class="bi bi-clock"></i> ${timeStr}</span>` : ''}
                         <input type="checkbox" class="subtask-check form-check-input" checked>
                     </li>
                 `;
@@ -747,6 +850,186 @@ document.getElementById('subtasksForm').addEventListener('submit', async (e) => 
             loadAIHistory();
         } else {
             output.innerHTML = `<div class="text-danger"><strong>Error:</strong> ${data.error || 'No subtasks generated'}</div>`;
+            result.classList.add('show');
+        }
+    } catch (error) {
+        output.innerHTML = `<div class="text-danger"><strong>Connection Error:</strong> ${error.message}</div>`;
+        result.classList.add('show');
+    } finally {
+        setLoading(btn, false);
+    }
+});
+
+// 4. Productivity Coach
+document.getElementById('coachBtn').addEventListener('click', async () => {
+    const btn = document.getElementById('coachBtn');
+    const result = document.getElementById('coachResult');
+    const output = document.getElementById('coachOutput');
+    
+    setLoading(btn, true);
+    result.classList.remove('show');
+    
+    try {
+        const response = await fetch('/tasks/api/productivity-coach/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
+            body: JSON.stringify({})
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Score circle
+            const scoreColor = data.score >= 70 ? '#2e7d32' : (data.score >= 40 ? '#f57f17' : '#c62828');
+            let html = `
+                <div class="text-center mb-4">
+                    <div style="width:120px;height:120px;border-radius:50%;border:6px solid ${scoreColor};display:inline-flex;align-items:center;justify-content:center;flex-direction:column;">
+                        <span style="font-size:2.2rem;font-weight:800;color:${scoreColor}">${data.score}</span>
+                        <span style="font-size:0.65rem;text-transform:uppercase;color:#999;font-weight:600">Score</span>
+                    </div>
+                    <p class="mt-3 mb-0 text-muted">${data.summary}</p>
+                </div>
+            `;
+            
+            // Stats overview
+            if (data.stats) {
+                html += `<div class="row g-2 mb-4">
+                    <div class="col-4"><div class="bg-light rounded-3 p-2 text-center"><div class="fw-bold">${data.stats.total_tasks}</div><small class="text-muted">Total</small></div></div>
+                    <div class="col-4"><div class="bg-light rounded-3 p-2 text-center"><div class="fw-bold text-success">${data.stats.completed_tasks}</div><small class="text-muted">Done</small></div></div>
+                    <div class="col-4"><div class="bg-light rounded-3 p-2 text-center"><div class="fw-bold text-danger">${data.stats.overdue_tasks}</div><small class="text-muted">Overdue</small></div></div>
+                </div>`;
+            }
+            
+            // Tips
+            if (data.tips && data.tips.length > 0) {
+                html += '<h6 class="fw-bold mb-3"><i class="bi bi-lightbulb-fill text-warning me-2"></i>Personalized Tips</h6>';
+                const categoryIcons = {
+                    'TIME_MANAGEMENT': '⏰',
+                    'PRIORITIZATION': '🎯',
+                    'FOCUS': '🔍',
+                    'PLANNING': '📅',
+                    'MOTIVATION': '💪'
+                };
+                data.tips.forEach(tip => {
+                    html += `
+                        <div class="bg-white rounded-3 p-3 mb-2 border" style="border-left:4px solid var(--brand-red) !important">
+                            <div class="d-flex align-items-center mb-1">
+                                <span class="me-2">${categoryIcons[tip.category] || '💡'}</span>
+                                <strong class="small text-uppercase" style="color:var(--brand-red)">${tip.category.replace('_',' ')}</strong>
+                            </div>
+                            <p class="mb-1">${tip.tip}</p>
+                            <small class="text-muted"><i class="bi bi-info-circle me-1"></i>${tip.reasoning}</small>
+                        </div>
+                    `;
+                });
+            }
+            
+            output.innerHTML = html;
+            result.classList.add('show');
+            loadAIHistory();
+        } else {
+            output.innerHTML = `<div class="text-danger"><strong>Error:</strong> ${data.error}</div>`;
+            result.classList.add('show');
+        }
+    } catch (error) {
+        output.innerHTML = `<div class="text-danger"><strong>Connection Error:</strong> ${error.message}</div>`;
+        result.classList.add('show');
+    } finally {
+        setLoading(btn, false);
+    }
+});
+
+// 5. Smart Search
+document.getElementById('searchForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('searchBtn');
+    const result = document.getElementById('searchResult');
+    const output = document.getElementById('searchOutput');
+    
+    setLoading(btn, true);
+    result.classList.remove('show');
+    
+    try {
+        const response = await fetch('/tasks/api/smart-search/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
+            body: JSON.stringify({
+                query: document.getElementById('searchQuery').value
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            let html = '';
+            
+            // Show interpreted filters
+            if (data.filters) {
+                html += '<div class="mb-3 d-flex flex-wrap gap-1">';
+                if (data.filters.keywords && data.filters.keywords.length > 0) {
+                    data.filters.keywords.forEach(kw => {
+                        html += `<span class="badge bg-secondary"><i class="bi bi-tag me-1"></i>${kw}</span>`;
+                    });
+                }
+                if (data.filters.status && data.filters.status.length > 0) {
+                    data.filters.status.forEach(s => {
+                        html += `<span class="badge bg-info">${s}</span>`;
+                    });
+                }
+                if (data.filters.priority && data.filters.priority.length > 0) {
+                    data.filters.priority.forEach(p => {
+                        const cls = p === 'high' ? 'bg-danger' : (p === 'medium' ? 'bg-warning text-dark' : 'bg-success');
+                        html += `<span class="badge ${cls}">${p} priority</span>`;
+                    });
+                }
+                if (data.filters.overdue) {
+                    html += `<span class="badge bg-danger"><i class="bi bi-exclamation-triangle me-1"></i>Overdue</span>`;
+                }
+                html += '</div>';
+            }
+            
+            // Show results
+            html += `<p class="text-muted small mb-3"><strong>${data.total}</strong> task${data.total !== 1 ? 's' : ''} found</p>`;
+            
+            if (data.tasks && data.tasks.length > 0) {
+                data.tasks.forEach(task => {
+                    const statusCls = {
+                        'pending': 'bg-secondary',
+                        'in_progress': 'bg-primary',
+                        'completed': 'bg-success',
+                        'cancelled': 'bg-dark'
+                    };
+                    const prioCls = {
+                        'high': 'text-danger',
+                        'medium': 'text-warning',
+                        'low': 'text-success'
+                    };
+                    html += `
+                        <a href="/tasks/${task.id}/" class="text-decoration-none d-block">
+                            <div class="subtask-item" style="cursor:pointer">
+                                <div class="flex-grow-1">
+                                    <div class="fw-semibold text-dark">${task.title}</div>
+                                    <div class="d-flex gap-2 mt-1">
+                                        <span class="badge ${statusCls[task.status] || 'bg-secondary'} badge-sm">${task.status_display}</span>
+                                        <span class="small ${prioCls[task.priority] || ''}">${task.priority_display}</span>
+                                        ${task.deadline ? `<span class="small text-muted"><i class="bi bi-calendar me-1"></i>${task.deadline}</span>` : ''}
+                                        ${task.is_overdue ? '<span class="badge bg-danger badge-sm">Overdue</span>' : ''}
+                                    </div>
+                                </div>
+                                <i class="bi bi-chevron-right text-muted"></i>
+                            </div>
+                        </a>
+                    `;
+                });
+            } else {
+                html += '<div class="text-center text-muted py-3"><i class="bi bi-inbox d-block fs-3 mb-2"></i>No matching tasks found</div>';
+            }
+            
+            output.innerHTML = html;
+            result.classList.add('show');
+            loadAIHistory();
+        } else {
+            output.innerHTML = `<div class="text-danger"><strong>Error:</strong> ${data.error}</div>`;
             result.classList.add('show');
         }
     } catch (error) {
@@ -771,12 +1054,16 @@ async function loadAIHistory() {
                 const typeIcons = {
                     'description': '✨',
                     'priority': '🎯',
-                    'subtasks': '📋'
+                    'subtasks': '📋',
+                    'coach': '🏆',
+                    'search': '🔍'
                 };
                 const typeLabels = {
                     'description': 'Description Enhanced',
                     'priority': 'Priority Suggested',
-                    'subtasks': 'Subtasks Generated'
+                    'subtasks': 'Subtasks Generated',
+                    'coach': 'Productivity Analyzed',
+                    'search': 'Smart Search'
                 };
                 html += `
                     <div class="list-group-item d-flex align-items-center">
