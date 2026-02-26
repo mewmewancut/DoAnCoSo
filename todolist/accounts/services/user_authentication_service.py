@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 logger = logging.getLogger(__name__)
 
 
-class UserAuthenticationService:    
+class UserAuthenticationService:
     @staticmethod
     def authenticate_user(request, identifier, password):
         if not identifier or not password:
@@ -15,39 +15,45 @@ class UserAuthenticationService:
                 'error': 'missing_credentials',
                 'inactive': False
             }
-        
-        # Authenticate user
+
+        # Authenticate user (backend returns inactive users too so we
+        # can show the correct error message)
         user = authenticate(
             request,
             username=identifier,
             password=password,
         )
-        
+
         if not user:
             logger.warning(f"Failed login attempt for: {identifier}")
             return {
                 'success': False,
                 'user': None,
-                'message': "Invalid email/username or password",
+                'message': "Invalid email/username or password.",
                 'error': 'invalid_credentials',
                 'inactive': False
             }
-        
-        # Check if account is active
+
+        # Check if account is active — now reachable because the
+        # custom backend no longer filters out inactive users.
         if not user.is_active:
             logger.warning(f"Login attempt for inactive user: {identifier}")
             return {
                 'success': False,
                 'user': user,
-                'message': "Account not activated! Please check your email to activate your account.",
+                'message': (
+                    "Your account has not been activated yet. "
+                    "Please check your email for the activation link, "
+                    "or contact the administrator."
+                ),
                 'error': 'inactive_account',
                 'inactive': True
             }
-        
+
         # Login successful
-        login(request, user)
+        login(request, user, backend='accounts.backends.EmailOrUsernameBackend')
         logger.info(f"User logged in: {user.username} ({user.email})")
-        
+
         return {
             'success': True,
             'user': user,
