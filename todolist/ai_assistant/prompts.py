@@ -140,3 +140,27 @@ SMART_SEARCH_PROMPT = ChatPromptTemplate.from_messages([
      "- If the query mentions 'not started' or 'todo', map to status=['pending'].\n"
      "- Extract actual search keywords from the remaining content."),
 ])
+
+
+# ── 6. Auto-Tag (structured JSON output) ────────────────────────────
+AUTO_TAG_PROMPT = ChatPromptTemplate.from_messages([
+    ("system",
+     "You are an expert task-management assistant that categorises tasks "
+     "into short, reusable tags. Tags help users filter and group related "
+     "tasks."),
+    ("human",
+     "Task title: {title}\n"
+     "Description: {description}\n\n"
+     "Suggest 1 to 5 short tags (1-2 words each) that best categorise "
+     "this task.  Choose from common categories like: work, personal, "
+     "study, health, finance, shopping, coding, design, meeting, email, "
+     "research, writing, planning, bug-fix, feature, devops, marketing, etc.\n"
+     "You may also invent new tags if none of the above fit.\n\n"
+     "Return JSON:\n"
+     '{{"tags": ["tag1", "tag2"]}}\n\n'
+     "RULES:\n"
+     "- Return ONLY valid JSON, no extra text.\n"
+     "- Tags must be lowercase, hyphen-separated (no spaces).\n"
+     "- Keep tags concise (max 20 characters each).\n"
+     "- Be specific but not overly narrow."),
+])

@@ -18,8 +18,9 @@ from ai_assistant.chains import (
     generate_subtasks,
     productivity_coach,
     smart_search,
+    auto_tag,
 )
-from .models import AISuggestion, Task
+from .models import AISuggestion, Task, Tag
 
 logger = logging.getLogger(__name__)
 
@@ -522,6 +523,87 @@ def smart_search_api(request):
 
     except Exception as e:
         logger.exception("smart_search_api failed")
+        return JsonResponse({
+            "success": False,
+            "error": str(e),
+        }, status=500)
+
+
+@login_required
+@require_http_methods(["POST"])
+def auto_tag_api(request):
+    """
+    AI-powered auto-tagging for tasks.
+
+    POST /api/auto-tag/
+    Body: {
+        "title": "Task title",
+        "description": "Task description (optional)",
+        "task_id": "uuid (optional — if provided, tags are applied to the task)"
+    }
+
+    Response: {
+        "success": true,
+        "tags": [{"name": "...", "color": "...", "id": "..."}],
+        "applied": true
+    }
+    """
+    try:
+        data = json.loads(request.body)
+        title = data.get("title", "").strip()
+        description = data.get("description", "").strip()
+        task_id = data.get("task_id")
+
+        if not title:
+            return JsonResponse({
+                "success": False,
+                "error": "Title is required.",
+            }, status=400)
+
+        # Call AI chain
+        tag_names = auto_tag(title, description)
+
+        # Get-or-create Tag objects
+        tag_objects = []
+        for name in tag_names:
+            tag_obj, _ = Tag.objects.get_or_create(
+                name=name,
+                defaults={"color": "#3498db"},
+            )
+            tag_objects.append(tag_obj)
+
+        applied = False
+
+        # If a task_id is provided, attach tags to the task
+        if task_id:
+            task = Task.objects.filter(id=task_id, user=request.user).first()
+            if task:
+                task.tags.add(*tag_objects)
+                applied = True
+
+        # Save AI suggestion to history
+        AISuggestion.objects.create(
+            user=request.user,
+            task_id=task_id if task_id else None,
+            suggestion_type="tags",
+            input_data={"title": title, "description": description},
+            output_data={"tags": tag_names},
+        )
+
+        return JsonResponse({
+            "success": True,
+            "tags": [{"name": t.name, "color": t.color, "id": str(t.id)} for t in tag_objects],
+            "applied": applied,
+        })
+
+    except json.JSONDecodeError:
+        return JsonResponse({
+            "success": False,
+            "error": "Invalid JSON format",
+        }, status=400)
+
+    except Exception as e:
+        logger.exception("auto_tag_api failed")
         return JsonResponse({
             "success": False,
             "error": str(e),

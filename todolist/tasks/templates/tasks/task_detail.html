@@ -91,6 +91,20 @@
                     </p>
                 </div>
 
+                <!-- Tags -->
+                {% if task.tags.all %}
+                <div class="mb-4">
+                    <h6 class="text-uppercase text-muted fw-bold small">Tags</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for tag in task.tags.all %}
+                        <span class="badge rounded-pill" style="background-color: {{ tag.color }}; font-size: 0.75rem; padding: 5px 12px;">
+                            <i class="bi bi-tag-fill me-1"></i>{{ tag.name }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
                         <div class="border rounded p-3">
@@ -446,9 +460,30 @@ document.querySelectorAll('.subtask-checkbox').forEach(checkbox => {
                 // Update progress bar
                 updateProgressBar();
                 
-                // Show toast notification (uses global showToast from messages.html)
-                if (typeof showToast === 'function') {
-                    showToast(isCompleted ? 'Subtask completed!' : 'Subtask marked as pending', 'success');
+                // Cascade: if all subtasks are done, parent task auto-completes
+                if (data.parent_completed) {
+                    // Update the status button on the page
+                    const statusBtn = document.getElementById('detail-status-btn');
+                    const statusText = document.getElementById('status-text');
+                    if (statusBtn && statusText) {
+                        statusText.textContent = 'Completed';
+                        statusBtn.className = 'btn btn-sm btn-status-detail completed';
+                    }
+                    // Update dropdown active state
+                    document.querySelectorAll('.detail-status-option').forEach(opt => {
+                        opt.classList.remove('active');
+                        if (opt.dataset.status === 'completed') {
+                            opt.classList.add('active');
+                        }
+                    });
+                    if (typeof showToast === 'function') {
+                        showToast('🎉 All subtasks done! Task auto-completed.', 'success');
+                    }
+                } else {
+                    // Show toast notification (uses global showToast from messages.html)
+                    if (typeof showToast === 'function') {
+                        showToast(isCompleted ? 'Subtask completed!' : 'Subtask marked as pending', 'success');
+                    }
                 }
             }
         } catch (error) {

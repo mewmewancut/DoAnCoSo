@@ -2,6 +2,41 @@ import uuid
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+from django.utils.text import slugify
+
+
+class Tag(models.Model):
+    """
+    Tag model for categorising tasks.
+    """
+    COLOR_CHOICES = [
+        ('#c3392b', 'Red'),
+        ('#2ecc71', 'Green'),
+        ('#3498db', 'Blue'),
+        ('#f39c12', 'Orange'),
+        ('#9b59b6', 'Purple'),
+        ('#1abc9c', 'Teal'),
+        ('#e74c3c', 'Crimson'),
+        ('#34495e', 'Dark'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(max_length=60, unique=True, blank=True)
+    color = models.CharField(max_length=7, choices=COLOR_CHOICES, default='#3498db')
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = 'Tag'
+        verbose_name_plural = 'Tags'
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
 
 class Task(models.Model):
@@ -32,6 +67,7 @@ class Task(models.Model):
     )
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
+    tags = models.ManyToManyField(Tag, blank=True, related_name='tasks')
     deadline = models.DateTimeField(blank=True, null=True)
     priority = models.CharField(
         max_length=10,
@@ -96,6 +132,7 @@ class AISuggestion(models.Model):
         ('subtasks', 'Subtasks Generation'),
         ('coach', 'Productivity Coaching'),
         ('search', 'Smart Search'),
+        ('tags', 'Auto Tagging'),
     ]
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

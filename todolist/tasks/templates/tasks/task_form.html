@@ -68,6 +68,46 @@
         from { opacity: 0; transform: translateY(20px); }
         to { opacity: 1; transform: translateY(0); }
     }
+
+    /* Tag badges */
+    .tag-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .tag-grid label { cursor: pointer; }
+    .tag-grid input[type="checkbox"] { display: none; }
+    .tag-badge-select {
+        display: inline-block;
+        padding: 5px 14px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        border: 2px solid #e0e0e0;
+        color: #555;
+        background: #f8f8f8;
+        transition: all 0.2s ease;
+    }
+    .tag-grid input[type="checkbox"]:checked + .tag-badge-select {
+        border-color: #c3392b;
+        background: rgba(195, 57, 43, 0.1);
+        color: #c3392b;
+    }
+
+    /* Auto-tag AI button */
+    .btn-ai-tag {
+        background: linear-gradient(135deg, #9b59b6, #8e44ad);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.75rem;
+        padding: 4px 12px;
+        cursor: pointer;
+    }
+    .btn-ai-tag:hover { opacity: 0.9; color: white; }
+
+    /* Error styling */
+    .form-error { color: #c3392b; font-size: 0.8rem; margin-top: 4px; }
 </style>
 
 <div class="row justify-content-center py-5 fade-up-form">
@@ -84,58 +124,82 @@
             </div>
             
             <div class="card-body p-4 p-lg-5">
-                <form method="post" class="needs-validation">
+                <form method="post" class="needs-validation" novalidate>
                     {% csrf_token %}
                     
+                    <!-- Title -->
                     <div class="mb-4">
-                        <label class="label-premium fw-bold">
+                        <label class="label-premium fw-bold" for="{{ form.title.id_for_label }}">
                             Task Title <span class="text-danger">*</span>
                         </label>
-                        <input type="text" name="title" class="form-control form-control-custom" 
-                               placeholder="Example: Complete quarterly report..." 
-                               value="{{ task.title }}" required>
+                        {{ form.title }}
+                        {% for error in form.title.errors %}
+                            <div class="form-error">{{ error }}</div>
+                        {% endfor %}
                     </div>
 
+                    <!-- Description -->
                     <div class="mb-4">
-                        <label class="label-premium fw-bold">Detailed Description</label>
-                        <textarea name="description" class="form-control form-control-custom" 
-                                  rows="4" placeholder="Add notes or details for this task...">{{ task.description }}</textarea>
+                        <label class="label-premium fw-bold" for="{{ form.description.id_for_label }}">Detailed Description</label>
+                        {{ form.description }}
+                        {% for error in form.description.errors %}
+                            <div class="form-error">{{ error }}</div>
+                        {% endfor %}
                     </div>
 
+                    <!-- Deadline -->
                     <div class="mb-4">
-                        <label class="label-premium fw-bold">
+                        <label class="label-premium fw-bold" for="{{ form.deadline.id_for_label }}">
                             <i class="far fa-calendar-alt me-2 text-brand"></i>Deadline
                         </label>
-                        <input type="datetime-local" name="deadline" class="form-control form-control-custom" 
-                               value="{{ task.deadline|date:'Y-m-d\TH:i' }}">
+                        {{ form.deadline }}
+                        {% for error in form.deadline.errors %}
+                            <div class="form-error">{{ error }}</div>
+                        {% endfor %}
                     </div>
 
+                    <!-- Priority + Status -->
                     <div class="row">
                         <div class="col-md-6 mb-4">
-                            <label class="label-premium fw-bold">
+                            <label class="label-premium fw-bold" for="{{ form.priority.id_for_label }}">
                                 <i class="fas fa-flag me-2 text-brand"></i>Priority
                             </label>
-                            <select name="priority" class="form-select form-control-custom">
-                                {% for val, label in priority_choices %}
-                                <option value="{{ val }}" {% if task.priority == val %}selected{% elif not task and val == 'medium' %}selected{% endif %}>
-                                    {{ label }}
-                                </option>
-                                {% endfor %}
-                            </select>
+                            {{ form.priority }}
                         </div>
-                        
                         <div class="col-md-6 mb-4">
-                            <label class="label-premium fw-bold">
+                            <label class="label-premium fw-bold" for="{{ form.status.id_for_label }}">
                                 <i class="fas fa-tasks me-2 text-brand"></i>Status
                             </label>
-                            <select name="status" class="form-select form-control-custom">
-                                {% for val, label in status_choices %}
-                                <option value="{{ val }}" {% if task.status == val %}selected{% elif not task and val == 'pending' %}selected{% endif %}>
-                                    {{ label }}
-                                </option>
-                                {% endfor %}
-                            </select>
+                            {{ form.status }}
                         </div>
+                    </div>
+
+                    <!-- Tags -->
+                    <div class="mb-4">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <label class="label-premium fw-bold mb-0">
+                                <i class="fas fa-tags me-2 text-brand"></i>Tags
+                            </label>
+                            <button type="button" class="btn btn-sm btn-ai-tag" id="btnAutoTag">
+                                <i class="bi bi-magic"></i> AI Auto-Tag
+                            </button>
+                        </div>
+                        <div class="tag-grid" id="tagGrid">
+                            {% for tag in form.tags.field.queryset %}
+                            <label>
+                                <input type="checkbox" name="tags" value="{{ tag.id }}"
+                                       {% if tag.id in form.tags.value or tag.id|slugify in checked_tag_ids %}checked{% endif %}>
+                                <span class="tag-badge-select" style="border-color: {{ tag.color }};">
+                                    <i class="bi bi-tag-fill" style="color: {{ tag.color }};"></i> {{ tag.name }}
+                                </span>
+                            </label>
+                            {% empty %}
+                            <small class="text-muted">No tags yet. Use AI Auto-Tag to generate some!</small>
+                            {% endfor %}
+                        </div>
+                        {% for error in form.tags.errors %}
+                            <div class="form-error">{{ error }}</div>
+                        {% endfor %}
                     </div>
 
                     <div class="mt-4 d-grid gap-3">
@@ -152,4 +216,92 @@
         </div>
     </div>
 </div>
+
+<script>
+// CSRF helper
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// AI Auto-Tag button
+document.getElementById('btnAutoTag')?.addEventListener('click', async function() {
+    const btn = this;
+    const originalHTML = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Tagging...';
+
+    const titleInput = document.getElementById('id_title');
+    const descInput = document.getElementById('id_description');
+    const title = titleInput ? titleInput.value.trim() : '';
+    const description = descInput ? descInput.value.trim() : '';
+
+    if (!title) {
+        alert('Please enter a task title first.');
+        btn.disabled = false;
+        btn.innerHTML = originalHTML;
+        return;
+    }
+
+    try {
+        const response = await fetch('{% url "tasks:ai_auto_tag" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({ title, description }),
+        });
+
+        const data = await response.json();
+
+        if (data.success && data.tags && data.tags.length > 0) {
+            const tagGrid = document.getElementById('tagGrid');
+
+            // Remove "no tags" message if present
+            const noTags = tagGrid.querySelector('small');
+            if (noTags) noTags.remove();
+
+            data.tags.forEach(tag => {
+                // Check if tag already exists in the grid
+                const existing = tagGrid.querySelector(`input[value="${tag.id}"]`);
+                if (existing) {
+                    existing.checked = true;
+                } else {
+                    // Add new tag checkbox
+                    const label = document.createElement('label');
+                    label.innerHTML = `
+                        <input type="checkbox" name="tags" value="${tag.id}" checked>
+                        <span class="tag-badge-select" style="border-color: ${tag.color};">
+                            <i class="bi bi-tag-fill" style="color: ${tag.color};"></i> ${tag.name}
+                        </span>
+                    `;
+                    tagGrid.appendChild(label);
+                }
+            });
+
+            if (typeof showToast === 'function') {
+                showToast(`AI suggested ${data.tags.length} tag(s)!`, 'success');
+            }
+        } else {
+            alert('AI could not suggest tags: ' + (data.error || 'Unknown error'));
+        }
+    } catch (err) {
+        alert('Error calling AI: ' + err.message);
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = originalHTML;
+});
+</script>
 {% endblock %}

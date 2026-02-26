@@ -159,11 +159,19 @@
                         <option value="today" {% if deadline_filter == 'today' %}selected{% endif %}>Today</option>
                     </select>
                 </div>
+                <div class="col-md-2">
+                    <select name="tag" class="form-select form-select-brand">
+                        <option value="">-- Tag --</option>
+                        {% for tag in all_tags %}
+                        <option value="{{ tag.slug }}" {% if tag_filter == tag.slug %}selected{% endif %}>{{ tag.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
                 <div class="col-md-2 text-center">
                     <button type="submit" class="btn btn-dark btn-sm px-4 rounded-3">Filter</button>
                     <a href="{% url 'tasks:task_list' %}" class="text-muted small ms-2">Clear</a>
                 </div>
-                <div class="col-md-4 text-end">
+                <div class="col-md-2 text-end">
                     <a href="{% url 'tasks:task_create' %}" class="btn-create-brand">
                         <i class="fas fa-plus me-2"></i> CREATE
                     </a>
@@ -193,6 +201,13 @@
                             </a>
                             {% if task.is_overdue %}
                                 <span class="badge badge-overdue ms-1">OVERDUE</span>
+                            {% endif %}
+                            {% if task.tags.all %}
+                            <div class="mt-1">
+                                {% for tag in task.tags.all %}
+                                <span class="badge rounded-pill" style="background-color: {{ tag.color }}; font-size: 0.55rem; padding: 2px 8px;">{{ tag.name }}</span>
+                                {% endfor %}
+                            </div>
                             {% endif %}
                         </td>
                         <td>

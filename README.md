@@ -57,14 +57,14 @@ python manage.py runserver
 
 ## API endpoints (AI)
 
-| Method | Endpoint | Mô tả |
-|--------|----------|--------|
-| POST | `/tasks/api/improve-description/` | Cải thiện mô tả task |
-| POST | `/tasks/api/suggest-priority/` | Đề xuất priority + lý do |
-| POST | `/tasks/api/generate-subtasks/` | Chia nhỏ task thành subtasks (kèm time estimate) |
-| POST | `/tasks/api/productivity-coach/` | Phân tích năng suất + lời khuyên cá nhân |
-| POST | `/tasks/api/smart-search/` | Tìm kiếm task bằng ngôn ngữ tự nhiên |
-| GET  | `/tasks/api/ai-history/` | Lịch sử sử dụng AI |
+| Method | Endpoint                          | Mô tả                                            |
+| ------ | --------------------------------- | ------------------------------------------------ |
+| POST   | `/tasks/api/improve-description/` | Cải thiện mô tả task                             |
+| POST   | `/tasks/api/suggest-priority/`    | Đề xuất priority + lý do                         |
+| POST   | `/tasks/api/generate-subtasks/`   | Chia nhỏ task thành subtasks (kèm time estimate) |
+| POST   | `/tasks/api/productivity-coach/`  | Phân tích năng suất + lời khuyên cá nhân         |
+| POST   | `/tasks/api/smart-search/`        | Tìm kiếm task bằng ngôn ngữ tự nhiên             |
+| GET    | `/tasks/api/ai-history/`          | Lịch sử sử dụng AI                               |
 
 > Các endpoint yêu cầu người dùng đăng nhập (login required).
 

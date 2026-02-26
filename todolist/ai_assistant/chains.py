@@ -38,6 +38,7 @@ from .prompts import (
     GENERATE_SUBTASKS_PROMPT,
     PRODUCTIVITY_COACH_PROMPT,
     SMART_SEARCH_PROMPT,
+    AUTO_TAG_PROMPT,
 )
 from .schemas import (
     ImprovedDescription,
@@ -45,6 +46,7 @@ from .schemas import (
     SubtaskList,
     ProductivityCoachResponse,
     SearchFilter,
+    TagSuggestion,
 )
 
 logger = logging.getLogger(__name__)
@@ -248,5 +250,37 @@ def smart_search(query: str) -> dict:
 
     except (json.JSONDecodeError, ValidationError):
         raise Exception("Failed to parse search query. Please try again.")
+    except Exception as exc:
+        raise Exception(_friendly_error(exc))
+
+
+# ── 6.  Auto-Tag ────────────────────────────────────────────────────
+
+def auto_tag(title: str, description: str = "") -> list[str]:
+    """
+    Suggest tags for a task based on its title and description.
+
+    Returns a list of lowercase, hyphen-separated tag strings.
+
+    Chain: AUTO_TAG_PROMPT | llm | StrOutputParser → json.loads → Pydantic
+    """
+    if not title or not title.strip():
+        raise ValueError("Title cannot be empty.")
+
+    try:
+        llm = get_llm()
+        chain = AUTO_TAG_PROMPT | llm | StrOutputParser()
+
+        raw: str = chain.invoke({
+            "title": title.strip(),
+            "description": (description or "").strip() or "No description provided.",
+        })
+
+        parsed = _safe_parse_json(raw)
+        validated = TagSuggestion(**parsed)
+        return validated.tags
+
+    except (json.JSONDecodeError, ValidationError):
+        raise Exception("Failed to parse AI tag response. Please try again.")
     except Exception as exc:
         raise Exception(_friendly_error(exc))

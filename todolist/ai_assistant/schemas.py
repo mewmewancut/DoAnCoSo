@@ -144,3 +144,21 @@ class SearchFilter(BaseModel):
         if isinstance(v, list):
             return [p.strip().lower() for p in v]
         return v
+
+
+# ── 6. Auto-Tag ─────────────────────────────────────────────────────
+class TagSuggestion(BaseModel):
+    """Structured tag suggestions returned by the auto-tag chain."""
+    tags: List[str] = Field(
+        ...,
+        min_length=1,
+        max_length=5,
+        description="List of 1-5 short tag names for the task.",
+    )
+
+    @field_validator("tags", mode="before")
+    @classmethod
+    def normalize_tags(cls, v):
+        if isinstance(v, list):
+            return [t.strip().lower().replace(" ", "-") for t in v if t.strip()]
+        return v

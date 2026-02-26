@@ -14,7 +14,10 @@ import json
 from xhtml2pdf import pisa
 
 # Models
-from .models import Task, SubTask
+from .models import Task, SubTask, Tag
+
+# Forms
+from .forms import TaskForm
 
 # Services
 from .services import (
@@ -38,6 +41,7 @@ def task_list(request):
     status_filter = request.GET.get("status")
     priority_filter = request.GET.get("priority")
     deadline_filter = request.GET.get("deadline")
+    tag_filter = request.GET.get("tag")
     sort_by = request.GET.get("sort", "-created_at")
     page = request.GET.get("page", 1)
 
@@ -46,16 +50,25 @@ def task_list(request):
         user=request.user, status=status_filter, priority=priority_filter, deadline_filter=deadline_filter
     )
 
+    # Apply tag filter
+    if tag_filter:
+        tasks = tasks.filter(tags__slug=tag_filter)
+
     tasks = TaskService.get_sorted_tasks(tasks, sort_by)
     tasks_page, paginator = TaskService.paginate_tasks(tasks, page)
+
+    # Get all tags for filter dropdown
+    all_tags = Tag.objects.all()
 
     context = {
         "tasks": tasks_page,
         "status_filter": status_filter,
         "priority_filter": priority_filter,
         "deadline_filter": deadline_filter,
+        "tag_filter": tag_filter,
         "sort_by": sort_by,
         "paginator": paginator,
+        "all_tags": all_tags,
     }
     return render(request, "tasks/task_list.html", context)
 
@@ -88,29 +101,21 @@ def task_detail(request, task_id):
 @login_required
 def task_create(request):
     """
-    Create a new task
+    Create a new task using Django ModelForm
     """
     if request.method == "POST":
-        title = request.POST.get("title")
-        description = request.POST.get("description")
-        deadline = request.POST.get("deadline")
-        priority = request.POST.get("priority", "medium")
-        status = request.POST.get("status", "pending")
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.user = request.user
+            task.save()
+            form.save_m2m()  # Save M2M (tags)
+            messages.success(request, f'Task "{task.title}" created successfully!')
+            return redirect("tasks:task_detail", task_id=task.id)
+    else:
+        form = TaskForm()
 
-        # Validate required fields
-        if not title:
-            messages.error(request, "Please enter task title!")
-            return redirect("tasks:task_create")
-
-        # Create task using service
-        task = TaskService.create_task(
-            user=request.user, title=title, description=description, deadline=deadline, priority=priority, status=status
-        )
-
-        messages.success(request, f'Task "{task.title}" created successfully!')
-        return redirect("tasks:task_detail", task_id=task.id)
-
-    context = {"priority_choices": Task.PRIORITY_CHOICES, "status_choices": Task.STATUS_CHOICES}
+    context = {"form": form}
     return render(request, "tasks/task_form.html", context)
 
 
@@ -120,31 +125,20 @@ def task_create(request):
 @login_required
 def task_update(request, task_id):
     """
-    Update an existing task
+    Update an existing task using Django ModelForm
     """
     task = get_object_or_404(Task, id=task_id, user=request.user)
 
     if request.method == "POST":
-        title = request.POST.get("title")
-        description = request.POST.get("description")
-        deadline = request.POST.get("deadline")
-        priority = request.POST.get("priority", "medium")
-        status = request.POST.get("status", "pending")
+        form = TaskForm(request.POST, instance=task)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Task "{task.title}" updated successfully!')
+            return redirect("tasks:task_detail", task_id=task.id)
+    else:
+        form = TaskForm(instance=task)
 
-        # Validate required fields
-        if not title:
-            messages.error(request, "Please enter task title!")
-            return redirect("tasks:task_update", task_id=task.id)
-
-        # Update task using service
-        TaskService.update_task(
-            task=task, title=title, description=description, deadline=deadline, priority=priority, status=status
-        )
-
-        messages.success(request, f'Task "{task.title}" updated successfully!')
-        return redirect("tasks:task_detail", task_id=task.id)
-
-    context = {"task": task, "priority_choices": Task.PRIORITY_CHOICES, "status_choices": Task.STATUS_CHOICES}
+    context = {"task": task, "form": form}
     return render(request, "tasks/task_form.html", context)
 
 
@@ -374,6 +368,7 @@ def subtask_delete(request, subtask_id):
 def subtask_toggle(request, subtask_id):
     """
     Toggle subtask completion status (AJAX endpoint)
+    Supports cascade: auto-completes parent task when all subtasks are done.
     """
     if request.method == 'POST':
         subtask = SubtaskService.get_subtask_by_id(subtask_id, request.user)
@@ -384,12 +379,19 @@ def subtask_toggle(request, subtask_id):
                 'error': 'Subtask not found'
             }, status=404)
         
-        SubtaskService.toggle_subtask(subtask)
+        subtask, parent_completed = SubtaskService.toggle_subtask(subtask)
         
-        return JsonResponse({
+        response_data = {
             'success': True,
-            'subtask': SubtaskService.subtask_to_dict(subtask)
-        })
+            'subtask': SubtaskService.subtask_to_dict(subtask),
+            'parent_completed': parent_completed,
+        }
+        
+        if parent_completed:
+            response_data['parent_status'] = 'completed'
+            response_data['parent_status_display'] = 'Completed'
+        
+        return JsonResponse(response_data)
     
     return JsonResponse({'success': False, 'error': 'Invalid method'}, status=405)
 

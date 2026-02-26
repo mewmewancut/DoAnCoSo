@@ -1,17 +1,25 @@
 from django.contrib import admin
-from .models import Task, AISuggestion, SubTask
+from .models import Task, AISuggestion, SubTask, Tag
+
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ['name', 'slug', 'color']
+    prepopulated_fields = {'slug': ('name',)}
+    search_fields = ['name']
 
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
     list_display = ['title', 'user', 'priority', 'status', 'deadline', 'created_at', 'completed_at']
-    list_filter = ['status', 'priority', 'created_at', 'deadline']
+    list_filter = ['status', 'priority', 'tags', 'created_at', 'deadline']
     search_fields = ['title', 'description', 'user__email']
     readonly_fields = ['id', 'created_at', 'updated_at', 'completed_at']
+    filter_horizontal = ['tags']
     
     fieldsets = (
         ('Basic Information', {
-            'fields': ('id', 'user', 'title', 'description')
+            'fields': ('id', 'user', 'title', 'description', 'tags')
         }),
         ('Task Details', {
             'fields': ('priority', 'status', 'deadline')

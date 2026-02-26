@@ -102,21 +102,37 @@ class SubtaskService:
     @staticmethod
     def toggle_subtask(subtask):
         """
-        Toggle subtask completion status
-        
+        Toggle subtask completion status and check for cascade completion.
+
+        If all sibling subtasks (including this one) are now completed,
+        the parent task is automatically marked as completed too.
+
         Args:
             subtask: SubTask instance
-        
+
         Returns:
-            Updated SubTask instance
+            Tuple of (updated SubTask, parent_completed: bool)
         """
         if subtask.status == 'completed':
             subtask.status = 'pending'
         else:
             subtask.status = 'completed'
-        
+
         subtask.save()
-        return subtask
+
+        # Check cascade: are ALL subtasks of the parent task now completed?
+        parent_completed = False
+        task = subtask.task
+        all_subtasks = task.subtasks.all()
+        total = all_subtasks.count()
+
+        if total > 0 and all(s.status == 'completed' for s in all_subtasks):
+            if task.status != 'completed':
+                task.status = 'completed'
+                task.save()
+                parent_completed = True
+
+        return subtask, parent_completed
     
     @staticmethod
     def delete_subtask(subtask):
