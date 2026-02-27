@@ -50,6 +50,7 @@ urlpatterns = [
     path('api/productivity-coach/', ai_views.productivity_coach_api, name='ai_productivity_coach'),
     path('api/smart-search/', ai_views.smart_search_api, name='ai_smart_search'),
     path('api/auto-tag/', ai_views.auto_tag_api, name='ai_auto_tag'),
+    path('api/ai-create-task/', ai_views.ai_create_task_api, name='ai_create_task'),
 
     #PDF
     path('download/week/', views.download_week_preview, name='download_week'),

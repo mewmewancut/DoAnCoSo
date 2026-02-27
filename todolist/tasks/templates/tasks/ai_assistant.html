@@ -384,6 +384,205 @@
         font-size: 0.7rem;
         white-space: nowrap;
     }
+
+    /* --- WIZARD STEPS --- */
+    .wizard-progress {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 30px;
+        position: relative;
+    }
+    .wizard-progress::before {
+        content: '';
+        position: absolute;
+        top: 18px;
+        left: 40px;
+        right: 40px;
+        height: 3px;
+        background: #eee;
+        z-index: 0;
+    }
+    .wizard-step-dot {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        z-index: 1;
+        cursor: pointer;
+    }
+    .wizard-step-dot .dot {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 3px solid #ddd;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.85rem;
+        color: #999;
+        transition: all 0.3s ease;
+    }
+    .wizard-step-dot.active .dot {
+        border-color: var(--brand-red);
+        background: var(--brand-gradient);
+        color: white;
+    }
+    .wizard-step-dot.done .dot {
+        border-color: #2e7d32;
+        background: #2e7d32;
+        color: white;
+    }
+    .wizard-step-dot .dot-label {
+        font-size: 0.65rem;
+        color: #999;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    .wizard-step-dot.active .dot-label,
+    .wizard-step-dot.done .dot-label {
+        color: #333;
+    }
+    .wizard-pane {
+        display: none;
+    }
+    .wizard-pane.active {
+        display: block;
+        animation: fadeIn 0.3s ease;
+    }
+    .wizard-nav-btns {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 24px;
+        padding-top: 16px;
+        border-top: 1px solid #eee;
+    }
+    .wizard-btn {
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: none;
+    }
+    .wizard-btn.prev {
+        background: #f0f0f0;
+        color: #555;
+    }
+    .wizard-btn.prev:hover { background: #e0e0e0; }
+    .wizard-btn.next {
+        background: var(--brand-gradient);
+        color: white;
+    }
+    .wizard-btn.next:hover {
+        box-shadow: 0 4px 15px rgba(195, 57, 43, 0.3);
+    }
+    .wizard-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    .wizard-ai-btn {
+        padding: 8px 18px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+        color: white;
+        border: none;
+        font-weight: 600;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .wizard-ai-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+    }
+    .wizard-ai-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+    .wizard-tag-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .wizard-tag-pill {
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 2px solid #3498db;
+        background: rgba(52, 152, 219, 0.08);
+        color: #3498db;
+    }
+    .wizard-tag-pill.selected {
+        background: #3498db;
+        color: white;
+    }
+    .wizard-tag-pill .remove-tag {
+        font-size: 1rem;
+        line-height: 1;
+    }
+    .wizard-review-section {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin-bottom: 14px;
+    }
+    .wizard-review-section h6 {
+        font-weight: 700;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: #888;
+        margin-bottom: 8px;
+    }
+    .wizard-editable-subtask {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        background: white;
+        border-radius: 8px;
+        margin-bottom: 6px;
+        border: 1px solid #eee;
+    }
+    .wizard-editable-subtask input[type="checkbox"] {
+        flex-shrink: 0;
+    }
+    .wizard-editable-subtask .subtask-text-input {
+        flex-grow: 1;
+        border: none;
+        background: transparent;
+        font-size: 0.9rem;
+        padding: 4px;
+    }
+    .wizard-editable-subtask .subtask-text-input:focus {
+        outline: none;
+        background: #f8f9fa;
+        border-radius: 4px;
+    }
+    .wizard-editable-subtask .remove-subtask {
+        color: #ccc;
+        cursor: pointer;
+        font-size: 1.1rem;
+        transition: color 0.2s;
+    }
+    .wizard-editable-subtask .remove-subtask:hover {
+        color: #c62828;
+    }
 </style>
 
 <div class="container py-4">
@@ -415,6 +614,10 @@
             <button class="ai-tab-btn" data-tab="search">
                 <i class="bi bi-search"></i>
                 <span>Search</span>
+            </button>
+            <button class="ai-tab-btn" data-tab="wizard">
+                <i class="bi bi-plus-circle-fill"></i>
+                <span>Create</span>
             </button>
         </div>
 
@@ -586,6 +789,162 @@
                     <div class="ai-result-area" id="searchResult">
                         <span class="ai-result-badge">🔍 SEARCH RESULTS</span>
                         <div id="searchOutput"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 6: AI Task Creation Wizard -->
+        <div class="ai-tab-content" id="tab-wizard">
+            <div class="ai-feature-panel">
+                <div class="ai-panel-header">
+                    <h4><i class="bi bi-plus-circle-fill me-2"></i>AI Task Creator</h4>
+                    <p>Create a complete task step-by-step with AI assistance</p>
+                </div>
+                <div class="ai-panel-body">
+                    <!-- Wizard Progress -->
+                    <div class="wizard-progress">
+                        <div class="wizard-step-dot active" data-wstep="1">
+                            <div class="dot">1</div>
+                            <div class="dot-label">Basics</div>
+                        </div>
+                        <div class="wizard-step-dot" data-wstep="2">
+                            <div class="dot">2</div>
+                            <div class="dot-label">Enhance</div>
+                        </div>
+                        <div class="wizard-step-dot" data-wstep="3">
+                            <div class="dot">3</div>
+                            <div class="dot-label">Priority</div>
+                        </div>
+                        <div class="wizard-step-dot" data-wstep="4">
+                            <div class="dot">4</div>
+                            <div class="dot-label">Subtasks</div>
+                        </div>
+                        <div class="wizard-step-dot" data-wstep="5">
+                            <div class="dot">5</div>
+                            <div class="dot-label">Tags</div>
+                        </div>
+                        <div class="wizard-step-dot" data-wstep="6">
+                            <div class="dot">6</div>
+                            <div class="dot-label">Review</div>
+                        </div>
+                    </div>
+
+                    <!-- Step 1: Basic Info -->
+                    <div class="wizard-pane active" id="wiz-step-1">
+                        <h5 class="fw-bold mb-3"><i class="bi bi-pencil me-2 text-muted"></i>Task Basics</h5>
+                        <div class="ai-form-group">
+                            <label class="ai-form-label">Task Title *</label>
+                            <input type="text" class="ai-form-input" id="wizTitle" required
+                                   placeholder="e.g., Redesign company website homepage">
+                        </div>
+                        <div class="ai-form-group">
+                            <label class="ai-form-label">Description (optional — AI will enhance it)</label>
+                            <textarea class="ai-form-input" id="wizDesc" rows="3"
+                                      placeholder="Briefly describe what needs to be done..."></textarea>
+                        </div>
+                        <div class="ai-form-group">
+                            <label class="ai-form-label">Deadline (optional)</label>
+                            <input type="datetime-local" class="ai-form-input" id="wizDeadline">
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Enhance Description -->
+                    <div class="wizard-pane" id="wiz-step-2">
+                        <h5 class="fw-bold mb-3"><i class="bi bi-stars me-2 text-muted"></i>Enhance Description</h5>
+                        <p class="text-muted small mb-3">AI will rewrite your description to be clearer and more actionable.</p>
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <button type="button" class="wizard-ai-btn" id="wizEnhanceBtn">
+                                <i class="bi bi-magic"></i> Enhance with AI
+                            </button>
+                            <span class="text-muted small" id="wizEnhanceStatus"></span>
+                        </div>
+                        <div class="ai-form-group">
+                            <label class="ai-form-label">Enhanced Description</label>
+                            <textarea class="ai-form-input" id="wizEnhancedDesc" rows="5"
+                                      placeholder="Click 'Enhance with AI' or type your own description..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Priority -->
+                    <div class="wizard-pane" id="wiz-step-3">
+                        <h5 class="fw-bold mb-3"><i class="bi bi-flag-fill me-2 text-muted"></i>Set Priority</h5>
+                        <p class="text-muted small mb-3">Let AI suggest the best priority, or choose manually.</p>
+                        <div class="d-flex align-items-center gap-3 mb-4">
+                            <button type="button" class="wizard-ai-btn" id="wizPriorityBtn">
+                                <i class="bi bi-lightning-fill"></i> AI Suggest
+                            </button>
+                            <span class="text-muted small" id="wizPriorityStatus"></span>
+                        </div>
+                        <div id="wizPriorityReason" class="bg-light rounded-3 p-3 mb-3" style="display:none;"></div>
+                        <div class="d-flex gap-3">
+                            <label class="count-option flex-fill text-center" style="cursor:pointer">
+                                <input type="radio" name="wizPriority" value="low" class="d-none">
+                                <div class="count-number" style="color:#2e7d32">🟢</div>
+                                <div class="count-label">Low</div>
+                            </label>
+                            <label class="count-option flex-fill text-center" style="cursor:pointer">
+                                <input type="radio" name="wizPriority" value="medium" class="d-none" checked>
+                                <div class="count-number" style="color:#f57f17">🟡</div>
+                                <div class="count-label">Medium</div>
+                            </label>
+                            <label class="count-option flex-fill text-center" style="cursor:pointer">
+                                <input type="radio" name="wizPriority" value="high" class="d-none">
+                                <div class="count-number" style="color:#c62828">🔴</div>
+                                <div class="count-label">High</div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Subtasks -->
+                    <div class="wizard-pane" id="wiz-step-4">
+                        <h5 class="fw-bold mb-3"><i class="bi bi-diagram-3-fill me-2 text-muted"></i>Subtasks</h5>
+                        <p class="text-muted small mb-3">AI generates actionable subtasks. Edit, remove, or add your own.</p>
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <button type="button" class="wizard-ai-btn" id="wizSubtasksBtn">
+                                <i class="bi bi-list-check"></i> Generate Subtasks
+                            </button>
+                            <span class="text-muted small" id="wizSubtasksStatus"></span>
+                        </div>
+                        <div id="wizSubtasksList"></div>
+                        <button type="button" class="btn btn-sm btn-outline-secondary mt-2" id="wizAddSubtaskBtn">
+                            <i class="bi bi-plus-lg me-1"></i> Add subtask manually
+                        </button>
+                    </div>
+
+                    <!-- Step 5: Tags -->
+                    <div class="wizard-pane" id="wiz-step-5">
+                        <h5 class="fw-bold mb-3"><i class="bi bi-tags-fill me-2 text-muted"></i>Tags</h5>
+                        <p class="text-muted small mb-3">AI suggests relevant tags. Click to toggle, or type a custom tag.</p>
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <button type="button" class="wizard-ai-btn" id="wizTagsBtn">
+                                <i class="bi bi-tag-fill"></i> Auto-Tag with AI
+                            </button>
+                            <span class="text-muted small" id="wizTagsStatus"></span>
+                        </div>
+                        <div id="wizTagsPills" class="wizard-tag-pills mb-3"></div>
+                        <div class="d-flex gap-2">
+                            <input type="text" class="ai-form-input" id="wizCustomTag" placeholder="Add custom tag..." style="flex:1">
+                            <button type="button" class="btn btn-outline-secondary" id="wizAddTagBtn">
+                                <i class="bi bi-plus-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 6: Review & Save -->
+                    <div class="wizard-pane" id="wiz-step-6">
+                        <h5 class="fw-bold mb-3"><i class="bi bi-clipboard-check me-2 text-muted"></i>Review & Save</h5>
+                        <div id="wizReviewContent"></div>
+                    </div>
+
+                    <!-- Wizard Navigation -->
+                    <div class="wizard-nav-btns">
+                        <button type="button" class="wizard-btn prev" id="wizPrevBtn" style="visibility:hidden">
+                            <i class="bi bi-arrow-left"></i> Back
+                        </button>
+                        <button type="button" class="wizard-btn next" id="wizNextBtn">
+                            Next <i class="bi bi-arrow-right"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1041,6 +1400,441 @@ document.getElementById('searchForm').addEventListener('submit', async (e) => {
     }
 });
 
+// ============ AI TASK CREATION WIZARD ============
+const wizState = {
+    step: 1,
+    totalSteps: 6,
+    title: '',
+    description: '',
+    enhancedDescription: '',
+    priority: 'medium',
+    deadline: '',
+    subtasks: [],     // [{title: '', checked: true}]
+    tags: [],         // ['tag1', 'tag2']
+};
+
+function wizGoToStep(n) {
+    if (n < 1 || n > wizState.totalSteps) return;
+    wizState.step = n;
+    // Update panes
+    document.querySelectorAll('.wizard-pane').forEach(p => p.classList.remove('active'));
+    const pane = document.getElementById('wiz-step-' + n);
+    if (pane) pane.classList.add('active');
+    // Update dots
+    document.querySelectorAll('.wizard-step-dot').forEach(d => {
+        const s = parseInt(d.dataset.wstep);
+        d.classList.remove('active', 'done');
+        if (s < n) d.classList.add('done');
+        else if (s === n) d.classList.add('active');
+    });
+    // Nav buttons
+    document.getElementById('wizPrevBtn').style.visibility = n === 1 ? 'hidden' : 'visible';
+    const nextBtn = document.getElementById('wizNextBtn');
+    if (n === wizState.totalSteps) {
+        nextBtn.innerHTML = '<i class="bi bi-check-lg"></i> Create Task';
+        nextBtn.classList.add('next');
+    } else {
+        nextBtn.innerHTML = 'Next <i class="bi bi-arrow-right"></i>';
+    }
+    // Populate review on step 6
+    if (n === 6) wizBuildReview();
+}
+
+// Step dot clicks
+document.querySelectorAll('.wizard-step-dot').forEach(dot => {
+    dot.addEventListener('click', () => {
+        const s = parseInt(dot.dataset.wstep);
+        // Only allow going to visited (done) steps or current+1
+        if (s <= wizState.step || (s === wizState.step + 1 && wizValidateStep(wizState.step))) {
+            wizSaveCurrentStep();
+            wizGoToStep(s);
+        }
+    });
+});
+
+document.getElementById('wizPrevBtn').addEventListener('click', () => {
+    wizSaveCurrentStep();
+    wizGoToStep(wizState.step - 1);
+});
+
+document.getElementById('wizNextBtn').addEventListener('click', async () => {
+    if (!wizValidateStep(wizState.step)) return;
+    wizSaveCurrentStep();
+    if (wizState.step === wizState.totalSteps) {
+        // SAVE the task
+        await wizCreateTask();
+    } else {
+        wizGoToStep(wizState.step + 1);
+    }
+});
+
+function wizValidateStep(step) {
+    if (step === 1) {
+        const title = document.getElementById('wizTitle').value.trim();
+        if (!title) {
+            document.getElementById('wizTitle').focus();
+            document.getElementById('wizTitle').style.borderColor = '#c62828';
+            setTimeout(() => document.getElementById('wizTitle').style.borderColor = '', 2000);
+            return false;
+        }
+    }
+    return true;
+}
+
+function wizSaveCurrentStep() {
+    wizState.title = document.getElementById('wizTitle').value.trim();
+    wizState.description = document.getElementById('wizDesc').value.trim();
+    wizState.deadline = document.getElementById('wizDeadline').value;
+    wizState.enhancedDescription = document.getElementById('wizEnhancedDesc').value.trim();
+    const checkedPriority = document.querySelector('input[name="wizPriority"]:checked');
+    if (checkedPriority) wizState.priority = checkedPriority.value;
+    // Subtasks
+    wizState.subtasks = [];
+    document.querySelectorAll('#wizSubtasksList .wizard-editable-subtask').forEach(el => {
+        const cb = el.querySelector('input[type="checkbox"]');
+        const inp = el.querySelector('.subtask-text-input');
+        if (inp.value.trim()) {
+            wizState.subtasks.push({ title: inp.value.trim(), checked: cb.checked });
+        }
+    });
+    // Tags already managed via addTag/removeTag
+}
+
+// --- Step 2: Enhance ---
+document.getElementById('wizEnhanceBtn').addEventListener('click', async () => {
+    const btn = document.getElementById('wizEnhanceBtn');
+    const status = document.getElementById('wizEnhanceStatus');
+    const title = document.getElementById('wizTitle').value.trim();
+    const desc = document.getElementById('wizDesc').value.trim();
+    if (!title) { status.textContent = 'Enter a title in Step 1 first.'; return; }
+    btn.disabled = true;
+    status.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Enhancing...';
+    try {
+        const res = await fetch('/tasks/api/improve-description/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
+            body: JSON.stringify({ title, description: desc })
+        });
+        const data = await res.json();
+        if (data.success) {
+            document.getElementById('wizEnhancedDesc').value = data.improved_description;
+            status.innerHTML = '<span class="text-success"><i class="bi bi-check-circle"></i> Done!</span>';
+        } else {
+            status.innerHTML = '<span class="text-danger">' + data.error + '</span>';
+        }
+    } catch(e) {
+        status.innerHTML = '<span class="text-danger">Connection error</span>';
+    }
+    btn.disabled = false;
+});
+
+// --- Step 3: Priority ---
+// Radio button highlight
+document.querySelectorAll('input[name="wizPriority"]').forEach(radio => {
+    radio.closest('label').addEventListener('click', () => {
+        document.querySelectorAll('input[name="wizPriority"]').forEach(r => {
+            r.closest('label').classList.remove('selected');
+        });
+        setTimeout(() => {
+            const checked = document.querySelector('input[name="wizPriority"]:checked');
+            if (checked) checked.closest('label').classList.add('selected');
+        }, 10);
+    });
+});
+// Default select medium
+(() => {
+    const med = document.querySelector('input[name="wizPriority"][value="medium"]');
+    if (med) med.closest('label').classList.add('selected');
+})();
+
+document.getElementById('wizPriorityBtn').addEventListener('click', async () => {
+    const btn = document.getElementById('wizPriorityBtn');
+    const status = document.getElementById('wizPriorityStatus');
+    const title = document.getElementById('wizTitle').value.trim();
+    const desc = document.getElementById('wizEnhancedDesc').value.trim() || document.getElementById('wizDesc').value.trim();
+    const deadline = document.getElementById('wizDeadline').value;
+    if (!title) { status.textContent = 'Enter a title first.'; return; }
+    btn.disabled = true;
+    status.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Analyzing...';
+    try {
+        const res = await fetch('/tasks/api/suggest-priority/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
+            body: JSON.stringify({ title, description: desc, deadline })
+        });
+        const data = await res.json();
+        if (data.success) {
+            const pVal = data.priority.toLowerCase();
+            const radio = document.querySelector(`input[name="wizPriority"][value="${pVal}"]`);
+            if (radio) {
+                radio.checked = true;
+                document.querySelectorAll('input[name="wizPriority"]').forEach(r => r.closest('label').classList.remove('selected'));
+                radio.closest('label').classList.add('selected');
+            }
+            const reasonDiv = document.getElementById('wizPriorityReason');
+            reasonDiv.innerHTML = '<small class="text-muted"><strong>AI reasoning:</strong> ' + data.reason + '</small>';
+            reasonDiv.style.display = 'block';
+            status.innerHTML = '<span class="text-success"><i class="bi bi-check-circle"></i> Suggested: ' + data.priority + '</span>';
+        } else {
+            status.innerHTML = '<span class="text-danger">' + data.error + '</span>';
+        }
+    } catch(e) {
+        status.innerHTML = '<span class="text-danger">Connection error</span>';
+    }
+    btn.disabled = false;
+});
+
+// --- Step 4: Subtasks ---
+function wizRenderSubtasks() {
+    const container = document.getElementById('wizSubtasksList');
+    let html = '';
+    wizState.subtasks.forEach((st, i) => {
+        html += `
+            <div class="wizard-editable-subtask">
+                <span class="subtask-number" style="width:24px;height:24px;font-size:0.7rem;margin-right:8px;">${i+1}</span>
+                <input type="checkbox" class="form-check-input" ${st.checked ? 'checked' : ''}>
+                <input type="text" class="subtask-text-input" value="${st.title.replace(/"/g, '&quot;')}">
+                <span class="remove-subtask" onclick="this.parentElement.remove()"><i class="bi bi-x-lg"></i></span>
+            </div>
+        `;
+    });
+    container.innerHTML = html;
+}
+
+document.getElementById('wizSubtasksBtn').addEventListener('click', async () => {
+    const btn = document.getElementById('wizSubtasksBtn');
+    const status = document.getElementById('wizSubtasksStatus');
+    const title = document.getElementById('wizTitle').value.trim();
+    const desc = document.getElementById('wizEnhancedDesc').value.trim() || document.getElementById('wizDesc').value.trim();
+    if (!title) { status.textContent = 'Enter a title first.'; return; }
+    btn.disabled = true;
+    status.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Generating...';
+    try {
+        const res = await fetch('/tasks/api/generate-subtasks/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
+            body: JSON.stringify({ title, description: desc, count: 5 })
+        });
+        const data = await res.json();
+        if (data.success && data.subtasks) {
+            wizState.subtasks = data.subtasks.map(s => ({ title: s, checked: true }));
+            wizRenderSubtasks();
+            status.innerHTML = '<span class="text-success"><i class="bi bi-check-circle"></i> ' + data.count + ' subtasks generated</span>';
+        } else {
+            status.innerHTML = '<span class="text-danger">' + (data.error || 'Failed') + '</span>';
+        }
+    } catch(e) {
+        status.innerHTML = '<span class="text-danger">Connection error</span>';
+    }
+    btn.disabled = false;
+});
+
+document.getElementById('wizAddSubtaskBtn').addEventListener('click', () => {
+    const container = document.getElementById('wizSubtasksList');
+    const num = container.querySelectorAll('.wizard-editable-subtask').length + 1;
+    const div = document.createElement('div');
+    div.className = 'wizard-editable-subtask';
+    div.innerHTML = `
+        <span class="subtask-number" style="width:24px;height:24px;font-size:0.7rem;margin-right:8px;">${num}</span>
+        <input type="checkbox" class="form-check-input" checked>
+        <input type="text" class="subtask-text-input" placeholder="New subtask...">
+        <span class="remove-subtask" onclick="this.parentElement.remove()"><i class="bi bi-x-lg"></i></span>
+    `;
+    container.appendChild(div);
+    div.querySelector('.subtask-text-input').focus();
+});
+
+// --- Step 5: Tags ---
+function wizAddTag(name) {
+    name = name.trim();
+    if (!name || wizState.tags.includes(name)) return;
+    wizState.tags.push(name);
+    wizRenderTags();
+}
+function wizRemoveTag(name) {
+    wizState.tags = wizState.tags.filter(t => t !== name);
+    wizRenderTags();
+}
+function wizRenderTags() {
+    const container = document.getElementById('wizTagsPills');
+    container.innerHTML = wizState.tags.map(t => `
+        <span class="wizard-tag-pill selected" onclick="wizRemoveTag('${t.replace(/'/g, "\\'")}')">
+            ${t} <span class="remove-tag">&times;</span>
+        </span>
+    `).join('');
+}
+
+document.getElementById('wizTagsBtn').addEventListener('click', async () => {
+    const btn = document.getElementById('wizTagsBtn');
+    const status = document.getElementById('wizTagsStatus');
+    const title = document.getElementById('wizTitle').value.trim();
+    const desc = document.getElementById('wizEnhancedDesc').value.trim() || document.getElementById('wizDesc').value.trim();
+    if (!title) { status.textContent = 'Enter a title first.'; return; }
+    btn.disabled = true;
+    status.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Tagging...';
+    try {
+        const res = await fetch('/tasks/api/auto-tag/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
+            body: JSON.stringify({ title, description: desc })
+        });
+        const data = await res.json();
+        if (data.success && data.tags) {
+            data.tags.forEach(t => wizAddTag(t.name));
+            status.innerHTML = '<span class="text-success"><i class="bi bi-check-circle"></i> ' + data.tags.length + ' tags suggested</span>';
+        } else {
+            status.innerHTML = '<span class="text-danger">' + (data.error || 'Failed') + '</span>';
+        }
+    } catch(e) {
+        status.innerHTML = '<span class="text-danger">Connection error</span>';
+    }
+    btn.disabled = false;
+});
+
+document.getElementById('wizAddTagBtn').addEventListener('click', () => {
+    const input = document.getElementById('wizCustomTag');
+    wizAddTag(input.value);
+    input.value = '';
+});
+document.getElementById('wizCustomTag').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        document.getElementById('wizAddTagBtn').click();
+    }
+});
+
+// --- Step 6: Review ---
+function wizBuildReview() {
+    wizSaveCurrentStep();
+    const s = wizState;
+    const desc = s.enhancedDescription || s.description || '<span class="text-muted">No description</span>';
+    const prioColors = { 'low': '#2e7d32', 'medium': '#f57f17', 'high': '#c62828' };
+    const prioEmojis = { 'low': '🟢', 'medium': '🟡', 'high': '🔴' };
+
+    let html = '';
+    // Title
+    html += `<div class="wizard-review-section">
+        <h6><i class="bi bi-type-h1 me-1"></i>Title</h6>
+        <div class="fw-semibold fs-5">${s.title || '<span class="text-muted">No title</span>'}</div>
+    </div>`;
+    // Description
+    html += `<div class="wizard-review-section">
+        <h6><i class="bi bi-text-paragraph me-1"></i>Description</h6>
+        <div class="formatted-output">${formatDescription(desc)}</div>
+    </div>`;
+    // Priority + Deadline
+    html += `<div class="wizard-review-section d-flex gap-4 flex-wrap">
+        <div>
+            <h6><i class="bi bi-flag-fill me-1"></i>Priority</h6>
+            <span style="color:${prioColors[s.priority]};font-weight:700">${prioEmojis[s.priority]} ${s.priority.charAt(0).toUpperCase() + s.priority.slice(1)}</span>
+        </div>
+        <div>
+            <h6><i class="bi bi-calendar-event me-1"></i>Deadline</h6>
+            <span>${s.deadline ? new Date(s.deadline).toLocaleString() : '<span class="text-muted">None</span>'}</span>
+        </div>
+    </div>`;
+    // Subtasks
+    const activeSubtasks = s.subtasks.filter(st => st.checked && st.title);
+    if (activeSubtasks.length > 0) {
+        html += `<div class="wizard-review-section">
+            <h6><i class="bi bi-list-check me-1"></i>Subtasks (${activeSubtasks.length})</h6>
+            <ul class="mb-0" style="padding-left:1.2rem">`;
+        activeSubtasks.forEach(st => { html += `<li>${st.title}</li>`; });
+        html += `</ul></div>`;
+    }
+    // Tags
+    if (s.tags.length > 0) {
+        html += `<div class="wizard-review-section">
+            <h6><i class="bi bi-tags-fill me-1"></i>Tags</h6>
+            <div class="d-flex flex-wrap gap-2">`;
+        s.tags.forEach(t => { html += `<span class="badge bg-primary">${t}</span>`; });
+        html += `</div></div>`;
+    }
+    document.getElementById('wizReviewContent').innerHTML = html;
+}
+
+// --- Create Task ---
+async function wizCreateTask() {
+    const nextBtn = document.getElementById('wizNextBtn');
+    nextBtn.disabled = true;
+    nextBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Creating...';
+    try {
+        const activeSubtasks = wizState.subtasks.filter(st => st.checked && st.title).map(st => st.title);
+        const body = {
+            title: wizState.title,
+            description: wizState.enhancedDescription || wizState.description,
+            priority: wizState.priority,
+            deadline: wizState.deadline,
+            subtasks: activeSubtasks,
+            tags: wizState.tags,
+        };
+        const res = await fetch('/tasks/api/ai-create-task/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
+            body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        if (data.success) {
+            // Show success and redirect
+            document.getElementById('wizReviewContent').innerHTML = `
+                <div class="text-center py-4">
+                    <div style="font-size:3rem">🎉</div>
+                    <h4 class="fw-bold mt-2 mb-1">Task Created!</h4>
+                    <p class="text-muted">Your task "<strong>${wizState.title}</strong>" has been created with ${activeSubtasks.length} subtask(s) and ${wizState.tags.length} tag(s).</p>
+                    <a href="${data.task_url}" class="ai-submit-btn text-decoration-none mt-3">
+                        <i class="bi bi-eye"></i> View Task
+                    </a>
+                    <button type="button" class="wizard-btn prev ms-2" onclick="wizReset()">
+                        <i class="bi bi-plus-lg"></i> Create Another
+                    </button>
+                </div>
+            `;
+            // Hide nav
+            document.getElementById('wizPrevBtn').style.visibility = 'hidden';
+            nextBtn.style.display = 'none';
+            loadAIHistory();
+        } else {
+            alert('Error: ' + data.error);
+            nextBtn.disabled = false;
+            nextBtn.innerHTML = '<i class="bi bi-check-lg"></i> Create Task';
+        }
+    } catch(e) {
+        alert('Connection error: ' + e.message);
+        nextBtn.disabled = false;
+        nextBtn.innerHTML = '<i class="bi bi-check-lg"></i> Create Task';
+    }
+}
+
+function wizReset() {
+    wizState.step = 1;
+    wizState.title = '';
+    wizState.description = '';
+    wizState.enhancedDescription = '';
+    wizState.priority = 'medium';
+    wizState.deadline = '';
+    wizState.subtasks = [];
+    wizState.tags = [];
+    document.getElementById('wizTitle').value = '';
+    document.getElementById('wizDesc').value = '';
+    document.getElementById('wizDeadline').value = '';
+    document.getElementById('wizEnhancedDesc').value = '';
+    document.getElementById('wizSubtasksList').innerHTML = '';
+    document.getElementById('wizTagsPills').innerHTML = '';
+    document.getElementById('wizEnhanceStatus').innerHTML = '';
+    document.getElementById('wizPriorityStatus').innerHTML = '';
+    document.getElementById('wizPriorityReason').style.display = 'none';
+    document.getElementById('wizSubtasksStatus').innerHTML = '';
+    document.getElementById('wizTagsStatus').innerHTML = '';
+    document.querySelectorAll('input[name="wizPriority"]').forEach(r => r.closest('label').classList.remove('selected'));
+    const med = document.querySelector('input[name="wizPriority"][value="medium"]');
+    if (med) { med.checked = true; med.closest('label').classList.add('selected'); }
+    const nextBtn = document.getElementById('wizNextBtn');
+    nextBtn.style.display = '';
+    nextBtn.disabled = false;
+    nextBtn.innerHTML = 'Next <i class="bi bi-arrow-right"></i>';
+    wizGoToStep(1);
+}
+
 // Load AI History
 async function loadAIHistory() {
     const container = document.getElementById('aiHistoryBody');
@@ -1057,14 +1851,18 @@ async function loadAIHistory() {
                     'priority': '🎯',
                     'subtasks': '📋',
                     'coach': '🏆',
-                    'search': '🔍'
+                    'search': '🔍',
+                    'wizard': '🪄',
+                    'tags': '🏷️'
                 };
                 const typeLabels = {
                     'description': 'Description Enhanced',
                     'priority': 'Priority Suggested',
                     'subtasks': 'Subtasks Generated',
                     'coach': 'Productivity Analyzed',
-                    'search': 'Smart Search'
+                    'search': 'Smart Search',
+                    'wizard': 'Task Created (AI Wizard)',
+                    'tags': 'Auto-Tagged'
                 };
                 html += `
                     <div class="list-group-item d-flex align-items-center">

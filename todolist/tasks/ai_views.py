@@ -20,7 +20,7 @@ from ai_assistant.chains import (
     smart_search,
     auto_tag,
 )
-from .models import AISuggestion, Task, Tag
+from .models import AISuggestion, Task, Tag, SubTask
 
 logger = logging.getLogger(__name__)
 
@@ -608,3 +608,108 @@ def auto_tag_api(request):
             "success": False,
             "error": str(e),
         }, status=500)
+
+
+@login_required
+@require_http_methods(["POST"])
+def ai_create_task_api(request):
+    """
+    Create a Task (with optional subtasks and tags) from the AI wizard.
+
+    POST /api/ai-create-task/
+    Body: {
+        "title": "Task title",
+        "description": "Enhanced description",
+        "priority": "low|medium|high",
+        "deadline": "2025-06-30T18:00" (optional),
+        "subtasks": ["Subtask 1", "Subtask 2", ...] (optional),
+        "tags": ["tag1", "tag2", ...] (optional)
+    }
+
+    Response: {
+        "success": true,
+        "task_id": "uuid",
+        "task_url": "/tasks/<uuid>/"
+    }
+    """
+    try:
+        data = json.loads(request.body)
+        title = data.get("title", "").strip()
+        description = data.get("description", "").strip()
+        priority = data.get("priority", "medium").lower()
+        deadline_str = data.get("deadline", "").strip()
+        subtask_titles = data.get("subtasks", [])
+        tag_names = data.get("tags", [])
+
+        if not title:
+            return JsonResponse({"success": False, "error": "Title is required."}, status=400)
+
+        # Validate priority
+        if priority not in ("low", "medium", "high"):
+            priority = "medium"
+
+        # Parse deadline
+        deadline = None
+        if deadline_str:
+            deadline = parse_datetime(deadline_str)
+            if deadline is None:
+                # Try adding seconds for datetime-local inputs
+                from django.utils.dateparse import parse_datetime as _pd
+                deadline = _pd(deadline_str + ":00")
+
+        # Create Task
+        task = Task.objects.create(
+            user=request.user,
+            title=title,
+            description=description,
+            priority=priority,
+            deadline=deadline,
+            status="pending",
+        )
+
+        # Create SubTasks
+        for idx, st_title in enumerate(subtask_titles):
+            st_title = st_title.strip() if isinstance(st_title, str) else str(st_title).strip()
+            if st_title:
+                SubTask.objects.create(
+                    task=task,
+                    title=st_title,
+                    order=idx,
+                )
+
+        # Create / link Tags
+        for name in tag_names:
+            name = name.strip() if isinstance(name, str) else str(name).strip()
+            if name:
+                tag_obj, _ = Tag.objects.get_or_create(
+                    name=name,
+                    defaults={"color": "#3498db"},
+                )
+                task.tags.add(tag_obj)
+
+        # Record in AI history
+        AISuggestion.objects.create(
+            user=request.user,
+            task=task,
+            suggestion_type="wizard",
+            input_data={"title": title},
+            output_data={
+                "description": description,
+                "priority": priority,
+                "subtask_count": len(subtask_titles),
+                "tag_count": len(tag_names),
+            },
+        )
+
+        return JsonResponse({
+            "success": True,
+            "task_id": str(task.id),
+            "task_url": f"/tasks/{task.id}/",
+        })
+
+    except json.JSONDecodeError:
+        return JsonResponse({"success": False, "error": "Invalid JSON format"}, status=400)
+
+    except Exception as e:
+        logger.exception("ai_create_task_api failed")
+        return JsonResponse({"success": False, "error": str(e)}, status=500)
