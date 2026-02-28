@@ -3,7 +3,6 @@
 {% load i18n %}
 
 {% block title %}{% trans "Edit profile" %} - {{ user.username }}{% endblock %}
-{% block title %}{% trans "Edit profile" %} - {{ user.username }}{% endblock %}
 
 {% block content %}
 <style>
@@ -86,7 +85,6 @@
                         <div class="mb-4 text-center">
                             <label class="form-label d-block mb-3">
                                 <i class="bi bi-image me-2"></i>{% trans "Avatar" %}
-                                <i class="bi bi-image me-2"></i>{% trans "Avatar" %}
                             </label>
                             <div class="d-flex flex-column align-items-center">
                                 <div class="mb-3" style="position: relative; display: flex; justify-content: center;">
@@ -122,18 +120,15 @@
                         <div class="mb-4">
                             <label class="form-label">
                                 <i class="bi bi-envelope me-2"></i>{% trans "Email" %}
-                                <i class="bi bi-envelope me-2"></i>{% trans "Email" %}
                             </label>
                             <input type="email" class="form-control" value="{{ user.email }}" disabled style="background-color: #f8f9fa; cursor: not-allowed;">
                             <small class="text-muted mt-2 d-block">
-                                <i class="bi bi-info-circle me-1"></i>{% trans "Email can't change. If you need change email, please contact admin." %}
                                 <i class="bi bi-info-circle me-1"></i>{% trans "Email can't change. If you need change email, please contact admin." %}
                             </small>
                         </div>
                         
                         <div class="mb-4">
                             <label class="form-label">
-                                <i class="bi bi-person me-2"></i>{% trans "Username" %}
                                 <i class="bi bi-person me-2"></i>{% trans "Username" %}
                             </label>
                             {{ form.username }}
@@ -148,7 +143,6 @@
                             <div class="col-md-6 mb-4">
                                 <label class="form-label">
                                     <i class="bi bi-person-badge me-2"></i>{% trans "First name" %}
-                                    <i class="bi bi-person-badge me-2"></i>{% trans "First name" %}
                                 </label>
                                 {{ form.first_name }}
                                 {% if form.first_name.errors %}
@@ -160,7 +154,6 @@
                             
                             <div class="col-md-6 mb-4">
                                 <label class="form-label">
-                                    <i class="bi bi-person-badge me-2"></i>{% trans "Last name" %}
                                     <i class="bi bi-person-badge me-2"></i>{% trans "Last name" %}
                                 </label>
                                 {{ form.last_name }}
@@ -175,10 +168,8 @@
                         <div class="d-flex gap-3 mt-4">
                             <button type="submit" class="btn btn-lg px-5 fw-bold text-white" style="background: linear-gradient(135deg, #c3392b 0%, #8b2820 100%); border-radius: 12px; border: none; box-shadow: 0 4px 15px rgba(195, 57, 43, 0.3);">
                                 <i class="bi bi-check-circle me-2"></i>{% trans "Save" %}
-                                <i class="bi bi-check-circle me-2"></i>{% trans "Save" %}
                             </button>
                             <a href="{% url 'accounts:profile' %}" class="btn btn-lg btn-outline-secondary px-5" style="border-radius: 12px;">
-                                {% trans "Cancel" %}
                                 {% trans "Cancel" %}
                             </a>
                         </div>
