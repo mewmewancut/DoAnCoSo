@@ -10,13 +10,17 @@ class UserProfileService:
         try:
             from tasks.models import Task
             
+            from django.utils import timezone
+
             user_tasks = Task.objects.filter(user=user)
             total_tasks = user_tasks.count()
             completed_tasks = user_tasks.filter(status='completed').count()
             pending_tasks = user_tasks.filter(status='pending').count()
             in_progress_tasks = user_tasks.filter(status='in_progress').count()
-            overdue_tasks = [task for task in user_tasks if task.is_overdue]
-            overdue_count = len(overdue_tasks)
+            overdue_count = user_tasks.filter(
+                deadline__lt=timezone.now(),
+                status__in=['pending', 'in_progress'],
+            ).count()
             
             return {
                 'total_tasks': total_tasks,

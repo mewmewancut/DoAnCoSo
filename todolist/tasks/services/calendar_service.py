@@ -1,208 +1,147 @@
-"""
-Calendar Service - Business logic for calendar views and events
-"""
-from django.utils import timezone
+﻿"""Business logic for calendar views and FullCalendar event generation."""
+
+from __future__ import annotations
+
 from datetime import timedelta
+from typing import Any
+
+from django.utils import timezone
+
 from ..models import Task
 
 
 class CalendarService:
-    """
-    Service class for calendar-related functionality
-    """
-    
+    """Generates event data for FullCalendar and date-ranged task views."""
+
     @staticmethod
-    def get_calendar_events(user):
-        """
-        Get all tasks with deadlines formatted for FullCalendar
-        
-        Returns:
-            List of event dictionaries for FullCalendar
-        """
-        tasks = Task.objects.filter(
-            user=user,
-            deadline__isnull=False
-        )
-        
-        events = []
-        for task in tasks:
-            event = CalendarService._task_to_event(task)
-            events.append(event)
-        
-        return events
-    
+    def get_calendar_events(user) -> list[dict[str, Any]]:
+        """Return all tasks with deadlines formatted for FullCalendar."""
+        tasks = Task.objects.filter(user=user, deadline__isnull=False)
+        return [CalendarService._task_to_event(t) for t in tasks]
+
     @staticmethod
-    def _task_to_event(task):
-        """
-        Convert a task to FullCalendar event format
-        
-        Args:
-            task: Task instance
-        
-        Returns:
-            Dict formatted for FullCalendar
-        """
-        # Determine status and color
+    def _task_to_event(task: Task) -> dict[str, Any]:
         if task.is_overdue:
-            status = 'overdue'
-            color = '#dc3545'  # Red
-        elif task.status == 'completed':
-            status = 'completed'
-            color = '#198754'  # Green
-        elif task.status == 'in_progress':
-            status = 'in_progress'
-            color = '#ffc107'  # Yellow
+            status, color = "overdue", "#dc3545"
+        elif task.status == "completed":
+            status, color = "completed", "#198754"
+        elif task.status == "in_progress":
+            status, color = "in_progress", "#ffc107"
         else:
-            status = 'pending'
-            color = '#0d6efd'  # Blue
-        
+            status, color = "pending", "#0d6efd"
+
         return {
-            'id': str(task.id),
-            'title': task.title,
-            'start': timezone.localtime(task.deadline).isoformat(),
-            'url': f'/tasks/{task.id}/',
-            'color': color,
-            'extendedProps': {
-                'status': status,
-                'status_label': status.replace('_', ' ').title(),
-                'status_color': color,
-                'priority': task.priority,
-                'description': task.description or '',
-            }
+            "id": str(task.id),
+            "title": task.title,
+            "start": timezone.localtime(task.deadline).isoformat(),
+            "url": f"/tasks/{task.id}/",
+            "color": color,
+            "extendedProps": {
+                "status": status,
+                "status_label": status.replace("_", " ").title(),
+                "status_color": color,
+                "priority": task.priority,
+                "description": task.description or "",
+            },
         }
-    
+
     @staticmethod
-    def get_today_data(user):
-        """
-        Get task data for today view
-        
-        Returns:
-            Dict with today's tasks, overdue tasks, and completed today
-        """
+    def get_today_data(user) -> dict[str, Any]:
         now = timezone.now()
         today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
         today_end = today_start + timedelta(days=1)
-        
-        # Tasks due today
-        tasks_today = Task.objects.filter(
-            user=user,
-            deadline__gte=today_start,
-            deadline__lt=today_end
-        ).order_by('deadline')
-        
-        # Overdue tasks
-        overdue_tasks = Task.objects.filter(
-            user=user,
-            deadline__lt=now,
-            status__in=['pending', 'in_progress']
-        ).order_by('deadline')
-        
-        # Completed today
-        completed_today = Task.objects.filter(
-            user=user,
-            completed_at__gte=today_start,
-            completed_at__lt=today_end
-        ).order_by('-completed_at')
-        
+
         return {
-            'tasks_today': tasks_today,
-            'overdue_tasks': overdue_tasks,
-            'completed_today': completed_today,
-            'today_date': now.date(),
+            "tasks_today": Task.objects.filter(
+                user=user, deadline__gte=today_start, deadline__lt=today_end
+            ).order_by("deadline"),
+            "overdue_tasks": Task.objects.filter(
+                user=user, deadline__lt=now, status__in=["pending", "in_progress"]
+            ).order_by("deadline"),
+            "completed_today": Task.objects.filter(
+                user=user, completed_at__gte=today_start, completed_at__lt=today_end
+            ).order_by("-completed_at"),
+            "today_date": now.date(),
         }
-    
+
     @staticmethod
-    def get_weekly_data(user):
-        """
-        Get task data for weekly view
-        
-        Returns:
-            Dict with week info and tasks grouped by day
+    def get_weekly_data(user) -> dict[str, Any]:
+        """Group tasks by day of the current week.
+
+        Evaluates the week queryset once, then partitions in Python to
+        avoid 7 separate DB queries.
         """
         now = timezone.now()
-        week_start = now - timedelta(days=now.weekday())  # Monday
-        week_start = week_start.replace(hour=0, minute=0, second=0, microsecond=0)
+        week_start = (now - timedelta(days=now.weekday())).replace(
+            hour=0, minute=0, second=0, microsecond=0
+        )
         week_end = week_start + timedelta(days=7)
-        
-        # Get tasks for this week
-        tasks_this_week = Task.objects.filter(
-            user=user,
-            deadline__gte=week_start,
-            deadline__lt=week_end
-        ).order_by('deadline')
-        
-        # Group tasks by day
-        days_tasks = {}
+
+        all_tasks = list(
+            Task.objects.filter(
+                user=user, deadline__gte=week_start, deadline__lt=week_end
+            ).order_by("deadline")
+        )
+
+        days_tasks: dict = {}
         for i in range(7):
-            day = week_start + timedelta(days=i)
-            day_end = day + timedelta(days=1)
-            day_tasks = tasks_this_week.filter(
-                deadline__gte=day,
-                deadline__lt=day_end
-            )
-            days_tasks[day.date()] = list(day_tasks)
-        
+            day = (week_start + timedelta(days=i)).date()
+            days_tasks[day] = [
+                t for t in all_tasks
+                if t.deadline and timezone.localtime(t.deadline).date() == day
+            ]
+
+        completed_count = sum(1 for t in all_tasks if t.status == "completed")
+
         return {
-            'week_start': week_start.date(),
-            'week_end': week_end.date(),
-            'days_tasks': days_tasks,
-            'total_tasks': tasks_this_week.count(),
-            'completed_tasks': tasks_this_week.filter(status='completed').count(),
+            "week_start": week_start.date(),
+            "week_end": week_end.date(),
+            "days_tasks": days_tasks,
+            "total_tasks": len(all_tasks),
+            "completed_tasks": completed_count,
         }
-    
+
     @staticmethod
-    def get_monthly_data(user):
-        """
-        Get task data for monthly view
-        
-        Returns:
-            Dict with month info and tasks grouped by week
-        """
+    def get_monthly_data(user) -> dict[str, Any]:
         now = timezone.now()
         month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-        
-        # Calculate next month start
         if month_start.month == 12:
             month_end = month_start.replace(year=month_start.year + 1, month=1)
         else:
             month_end = month_start.replace(month=month_start.month + 1)
-        
-        # Get tasks for this month
+
         tasks_this_month = Task.objects.filter(
-            user=user,
-            deadline__gte=month_start,
-            deadline__lt=month_end
-        ).order_by('deadline')
-        
-        # Group tasks by week
-        weeks_tasks = {}
+            user=user, deadline__gte=month_start, deadline__lt=month_end
+        ).order_by("deadline")
+
+        all_tasks = list(tasks_this_month)
+
+        weeks_tasks: dict = {}
         current_date = month_start
         week_num = 1
-        
         while current_date < month_end:
-            week_end = current_date + timedelta(days=7)
-            week_tasks = tasks_this_month.filter(
-                deadline__gte=current_date,
-                deadline__lt=week_end
-            )
-            weeks_tasks[f'Week {week_num}'] = {
-                'start': current_date.date(),
-                'end': min(week_end, month_end).date(),
-                'tasks': list(week_tasks)
+            wk_end = current_date + timedelta(days=7)
+            wk_tasks = [
+                t for t in all_tasks
+                if t.deadline and current_date <= t.deadline < wk_end
+            ]
+            weeks_tasks[f"Week {week_num}"] = {
+                "start": current_date.date(),
+                "end": min(wk_end, month_end).date(),
+                "tasks": wk_tasks,
             }
-            current_date = week_end
+            current_date = wk_end
             week_num += 1
-        
-        total_tasks = tasks_this_month.count()
-        completed_tasks = tasks_this_month.filter(status='completed').count()
-        progress_percentage = round((completed_tasks / total_tasks * 100)) if total_tasks > 0 else 0
-        
+
+        total = len(all_tasks)
+        completed = sum(1 for t in all_tasks if t.status == "completed")
+        progress = round(completed / total * 100) if total else 0
+
         return {
-            'month_name': month_start.strftime('%B %Y'),
-            'month_start': month_start.date(),
-            'month_end': month_end.date(),
-            'weeks_tasks': weeks_tasks,
-            'total_tasks': total_tasks,
-            'completed_tasks': completed_tasks,
-            'progress_percentage': progress_percentage,
+            "month_start": month_start.date(),
+            "month_end": month_end.date(),
+            "weeks_tasks": weeks_tasks,
+            "total_tasks": total,
+            "completed_tasks": completed,
+            "progress_percentage": progress,
         }

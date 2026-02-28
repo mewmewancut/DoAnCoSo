@@ -134,6 +134,7 @@ class AISuggestion(models.Model):
         ('coach', 'Productivity Coaching'),
         ('search', 'Smart Search'),
         ('tags', 'Auto Tagging'),
+        ('wizard', 'AI Task Wizard'),
     ]
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

@@ -384,7 +384,7 @@ async function generateSubtasksWithAI() {
             }
             
             if (createdCount > 0) {
-                alert('✅ ' + I18N_AI_CREATED_SUBTASKS_PREFIX + ' ' + createdCount + ' ' + I18N_AI_CREATED_SUBTASKS_SUFFIX);
+                alert(I18N_AI_CREATED_SUBTASKS_PREFIX + ' ' + createdCount + ' ' + I18N_AI_CREATED_SUBTASKS_SUFFIX);
                 location.reload();
             }
         } else {
@@ -494,7 +494,7 @@ document.querySelectorAll('.subtask-checkbox').forEach(checkbox => {
                     }
                 });
                 if (typeof showToast === 'function') {
-                    showToast('🎉 ' + I18N_ALL_SUBTASKS_DONE, 'success');
+                    showToast(I18N_ALL_SUBTASKS_DONE, 'success');
                 }
             } else {
                 // Show toast notification (uses global showToast from messages.html)

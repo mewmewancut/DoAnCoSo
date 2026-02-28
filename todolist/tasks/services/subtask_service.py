@@ -1,92 +1,54 @@
-"""
-Subtask Service - Business logic for SubTask operations
-"""
-from django.db.models import Max
+﻿"""Business logic for SubTask operations."""
+
+from __future__ import annotations
+
+from typing import Any
+
+from django.db.models import Max, QuerySet
 from django.utils import timezone
-from ..models import SubTask
+
+from ..models import SubTask, Task
 
 
 class SubtaskService:
-    """
-    Service class for SubTask business logic
-    """
-    
+    """Handles SubTask CRUD, toggle, reorder, and cascade completion."""
+
     @staticmethod
-    def get_subtasks_for_task(task):
-        """Get all subtasks for a specific task"""
+    def get_subtasks_for_task(task: Task) -> QuerySet[SubTask]:
         return task.subtasks.all()
-    
+
     @staticmethod
-    def get_subtask_by_id(subtask_id, user):
-        """Get a specific subtask ensuring it belongs to the user's task"""
+    def get_subtask_by_id(subtask_id, user) -> SubTask | None:
         return SubTask.objects.filter(
-            id=subtask_id, 
-            task__user=user
-        ).select_related('task').first()
-    
+            id=subtask_id, task__user=user
+        ).select_related("task").first()
+
     @staticmethod
-    def create_subtask(task, title, description=''):
-        """
-        Create a new subtask for a task
-        
-        Args:
-            task: Parent Task instance
-            title: Subtask title (required)
-            description: Subtask description
-        
-        Returns:
-            Created SubTask instance
-        """
-        # Get max order for this task to add new subtask at the end
-        max_order = task.subtasks.aggregate(Max('order'))['order__max'] or 0
-        
+    def create_subtask(task: Task, title: str, description: str = "") -> SubTask:
+        max_order = task.subtasks.aggregate(Max("order"))["order__max"] or 0
         return SubTask.objects.create(
-            task=task,
-            title=title,
-            description=description,
-            order=max_order + 1
+            task=task, title=title, description=description, order=max_order + 1
         )
-    
+
     @staticmethod
-    def create_bulk_subtasks(task, subtask_titles):
-        """
-        Create multiple subtasks at once
-        
-        Args:
-            task: Parent Task instance
-            subtask_titles: List of subtask titles
-        
-        Returns:
-            List of created SubTask instances
-        """
-        max_order = task.subtasks.aggregate(Max('order'))['order__max'] or 0
-        
-        subtasks = []
+    def create_bulk_subtasks(task: Task, subtask_titles: list[str]) -> list[SubTask]:
+        max_order = task.subtasks.aggregate(Max("order"))["order__max"] or 0
+        created = []
         for i, title in enumerate(subtask_titles, start=1):
             subtask = SubTask.objects.create(
-                task=task,
-                title=title.strip(),
-                order=max_order + i
+                task=task, title=title.strip(), order=max_order + i
             )
-            subtasks.append(subtask)
-        
-        return subtasks
-    
+            created.append(subtask)
+        return created
+
     @staticmethod
-    def update_subtask(subtask, title=None, description=None, status=None, order=None):
-        """
-        Update a subtask with provided fields
-        
-        Args:
-            subtask: SubTask instance to update
-            title: New title (optional)
-            description: New description (optional)
-            status: New status (optional)
-            order: New order (optional)
-        
-        Returns:
-            Updated SubTask instance
-        """
+    def update_subtask(
+        subtask: SubTask,
+        title: str | None = None,
+        description: str | None = None,
+        status: str | None = None,
+        order: int | None = None,
+    ) -> SubTask:
         if title is not None:
             subtask.title = title.strip()
         if description is not None:
@@ -95,117 +57,78 @@ class SubtaskService:
             subtask.status = status
         if order is not None:
             subtask.order = order
-        
         subtask.save()
+
+        # Cascade check after any status change
+        if status is not None:
+            SubtaskService._check_cascade(subtask.task)
+
         return subtask
-    
+
     @staticmethod
-    def toggle_subtask(subtask):
-        """
-        Toggle subtask completion status and check for cascade completion.
-
-        If all sibling subtasks (including this one) are now completed,
-        the parent task is automatically marked as completed too.
-
-        Args:
-            subtask: SubTask instance
-
-        Returns:
-            Tuple of (updated SubTask, parent_completed: bool)
-        """
-        if subtask.status == 'completed':
-            subtask.status = 'pending'
-        else:
-            subtask.status = 'completed'
-
+    def toggle_subtask(subtask: SubTask) -> tuple[SubTask, bool]:
+        """Toggle between completed / pending and run cascade check."""
+        subtask.status = "pending" if subtask.status == "completed" else "completed"
         subtask.save()
+        parent_completed = SubtaskService._check_cascade(subtask.task)
+        return subtask, parent_completed
 
-        # Check cascade: are ALL subtasks of the parent task now completed?
-        parent_completed = False
-        task = subtask.task
+    @staticmethod
+    def _check_cascade(task: Task) -> bool:
+        """Mark parent task completed if every subtask is done.
+
+        Returns True when the parent was just transitioned to completed.
+        """
         all_subtasks = task.subtasks.all()
         total = all_subtasks.count()
-
-        if total > 0 and all(s.status == 'completed' for s in all_subtasks):
-            if task.status != 'completed':
-                task.status = 'completed'
+        if total == 0:
+            return False
+        if all(s.status == "completed" for s in all_subtasks):
+            if task.status != "completed":
+                task.status = "completed"
                 task.save()
-                parent_completed = True
+                return True
+        return False
 
-        return subtask, parent_completed
-    
     @staticmethod
-    def delete_subtask(subtask):
-        """Delete a subtask"""
+    def delete_subtask(subtask: SubTask) -> None:
         subtask.delete()
-    
+
     @staticmethod
-    def reorder_subtasks(task, orders):
-        """
-        Reorder subtasks for a task (used for drag & drop)
-        
-        Args:
-            task: Parent Task instance
-            orders: List of dicts with 'id' and 'order' keys
-        """
+    def reorder_subtasks(task: Task, orders: list[dict[str, Any]]) -> None:
         for item in orders:
-            subtask_id = item.get('id')
-            new_order = item.get('order')
-            
+            subtask_id = item.get("id")
+            new_order = item.get("order")
             if subtask_id and new_order is not None:
-                SubTask.objects.filter(
-                    id=subtask_id,
-                    task=task
-                ).update(order=new_order)
-    
+                SubTask.objects.filter(id=subtask_id, task=task).update(order=new_order)
+
     @staticmethod
-    def get_subtask_stats(task):
-        """
-        Get statistics about subtasks for a task
-        
-        Returns:
-            Dict with total, completed, pending, in_progress counts
-        """
+    def get_subtask_stats(task: Task) -> dict[str, Any]:
         subtasks = task.subtasks.all()
         total = subtasks.count()
-        completed = subtasks.filter(status='completed').count()
-        pending = subtasks.filter(status='pending').count()
-        in_progress = subtasks.filter(status='in_progress').count()
-        
+        completed = subtasks.filter(status="completed").count()
+        pending = subtasks.filter(status="pending").count()
+        in_progress = subtasks.filter(status="in_progress").count()
         return {
-            'total': total,
-            'completed': completed,
-            'pending': pending,
-            'in_progress': in_progress,
-            'completion_rate': round((completed / total * 100), 1) if total > 0 else 0
+            "total": total,
+            "completed": completed,
+            "pending": pending,
+            "in_progress": in_progress,
+            "completion_rate": round(completed / total * 100, 1) if total else 0,
         }
-    
+
     @staticmethod
-    def subtask_to_dict(subtask, include_timestamps=True):
-        """
-        Convert a subtask to dictionary for JSON response
-        
-        Args:
-            subtask: SubTask instance
-            include_timestamps: Whether to include timestamp fields
-        
-        Returns:
-            Dict representation of subtask
-        """
-        data = {
-            'id': str(subtask.id),
-            'title': subtask.title,
-            'description': subtask.description,
-            'status': subtask.status,
-            'order': subtask.order,
-            'is_completed': subtask.is_completed,
+    def subtask_to_dict(subtask: SubTask, include_timestamps: bool = True) -> dict[str, Any]:
+        data: dict[str, Any] = {
+            "id": str(subtask.id),
+            "title": subtask.title,
+            "description": subtask.description,
+            "status": subtask.status,
+            "order": subtask.order,
+            "is_completed": subtask.is_completed,
         }
-        
         if include_timestamps:
-            data['created_at'] = subtask.created_at.strftime('%Y-%m-%d %H:%M:%S')
-            data['completed_at'] = (
-                subtask.completed_at.strftime('%Y-%m-%d %H:%M:%S') 
-                if subtask.completed_at else None
-            )
-        
+            data["created_at"] = subtask.created_at.isoformat() if subtask.created_at else None
+            data["updated_at"] = subtask.updated_at.isoformat() if subtask.updated_at else None
+            data["completed_at"] = subtask.completed_at.isoformat() if subtask.completed_at else None
         return data

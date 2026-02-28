@@ -647,7 +647,7 @@
                     </form>
                     
                     <div class="ai-result-area" id="improveResult">
-                        <span class="ai-result-badge">✨ AI ENHANCED</span>
+                        <span class="ai-result-badge"><i class="bi bi-stars"></i> AI ENHANCED</span>
                         <div id="improveOutput"></div>
                     </div>
                 </div>
@@ -684,7 +684,7 @@
                     </form>
                     
                     <div class="ai-result-area" id="priorityResult">
-                        <span class="ai-result-badge">🎯 AI ANALYSIS</span>
+                        <span class="ai-result-badge"><i class="bi bi-bullseye"></i> AI ANALYSIS</span>
                         <div id="priorityOutput"></div>
                     </div>
                 </div>
@@ -735,7 +735,7 @@
                     </form>
                     
                     <div class="ai-result-area" id="subtasksResult">
-                        <span class="ai-result-badge">📋 AI GENERATED</span>
+                        <span class="ai-result-badge"><i class="bi bi-list-check"></i> AI GENERATED</span>
                         <div id="subtasksOutput"></div>
                     </div>
                 </div>
@@ -759,7 +759,7 @@
                     </div>
                     
                     <div class="ai-result-area" id="coachResult">
-                        <span class="ai-result-badge">🏆 PRODUCTIVITY REPORT</span>
+                        <span class="ai-result-badge"><i class="bi bi-trophy"></i> PRODUCTIVITY REPORT</span>
                         <div id="coachOutput"></div>
                     </div>
                 </div>
@@ -787,7 +787,7 @@
                     </form>
                     
                     <div class="ai-result-area" id="searchResult">
-                        <span class="ai-result-badge">🔍 SEARCH RESULTS</span>
+                        <span class="ai-result-badge"><i class="bi bi-search"></i> SEARCH RESULTS</span>
                         <div id="searchOutput"></div>
                     </div>
                 </div>
@@ -880,17 +880,17 @@
                         <div class="d-flex gap-3">
                             <label class="count-option flex-fill text-center" style="cursor:pointer">
                                 <input type="radio" name="wizPriority" value="low" class="d-none">
-                                <div class="count-number" style="color:#2e7d32">🟢</div>
+                                <div class="count-number" style="color:#2e7d32"><i class="bi bi-circle-fill"></i></div>
                                 <div class="count-label">Low</div>
                             </label>
                             <label class="count-option flex-fill text-center" style="cursor:pointer">
                                 <input type="radio" name="wizPriority" value="medium" class="d-none" checked>
-                                <div class="count-number" style="color:#f57f17">🟡</div>
+                                <div class="count-number" style="color:#f57f17"><i class="bi bi-circle-fill"></i></div>
                                 <div class="count-label">Medium</div>
                             </label>
                             <label class="count-option flex-fill text-center" style="cursor:pointer">
                                 <input type="radio" name="wizPriority" value="high" class="d-none">
-                                <div class="count-number" style="color:#c62828">🔴</div>
+                                <div class="count-number" style="color:#c62828"><i class="bi bi-circle-fill"></i></div>
                                 <div class="count-label">High</div>
                             </label>
                         </div>
@@ -1120,15 +1120,15 @@ document.getElementById('priorityForm').addEventListener('submit', async (e) => 
         
         if (data.success) {
             const priorityInfo = {
-                'HIGH': { emoji: '🔴', class: 'high', label: 'High Priority' },
-                'MEDIUM': { emoji: '🟡', class: 'medium', label: 'Medium Priority' },
-                'LOW': { emoji: '🟢', class: 'low', label: 'Low Priority' }
+                'HIGH': { icon: '<i class="bi bi-circle-fill text-danger"></i>', class: 'high', label: 'High Priority' },
+                'MEDIUM': { icon: '<i class="bi bi-circle-fill text-warning"></i>', class: 'medium', label: 'Medium Priority' },
+                'LOW': { icon: '<i class="bi bi-circle-fill text-success"></i>', class: 'low', label: 'Low Priority' }
             };
             const p = priorityInfo[data.priority] || priorityInfo['MEDIUM'];
             
             output.innerHTML = `
                 <div class="priority-display">
-                    <div class="priority-emoji">${p.emoji}</div>
+                    <div class="priority-emoji">${p.icon}</div>
                     <div class="priority-badge ${p.class}">${data.priority}</div>
                 </div>
                 <div class="bg-light rounded-3 p-3 mt-3">
@@ -1264,17 +1264,17 @@ document.getElementById('coachBtn').addEventListener('click', async () => {
             if (data.tips && data.tips.length > 0) {
                 html += '<h6 class="fw-bold mb-3"><i class="bi bi-lightbulb-fill text-warning me-2"></i>Personalized Tips</h6>';
                 const categoryIcons = {
-                    'TIME_MANAGEMENT': '⏰',
-                    'PRIORITIZATION': '🎯',
-                    'FOCUS': '🔍',
-                    'PLANNING': '📅',
-                    'MOTIVATION': '💪'
+                    'TIME_MANAGEMENT': '<i class="bi bi-clock"></i>',
+                    'PRIORITIZATION': '<i class="bi bi-bullseye"></i>',
+                    'FOCUS': '<i class="bi bi-eye"></i>',
+                    'PLANNING': '<i class="bi bi-calendar-check"></i>',
+                    'MOTIVATION': '<i class="bi bi-lightning-charge"></i>'
                 };
                 data.tips.forEach(tip => {
                     html += `
                         <div class="bg-white rounded-3 p-3 mb-2 border" style="border-left:4px solid var(--brand-red) !important">
                             <div class="d-flex align-items-center mb-1">
-                                <span class="me-2">${categoryIcons[tip.category] || '💡'}</span>
+                                <span class="me-2">${categoryIcons[tip.category] || '<i class="bi bi-lightbulb"></i>'}</span>
                                 <strong class="small text-uppercase" style="color:var(--brand-red)">${tip.category.replace('_',' ')}</strong>
                             </div>
                             <p class="mb-1">${tip.tip}</p>
@@ -1709,7 +1709,7 @@ function wizBuildReview() {
     const s = wizState;
     const desc = s.enhancedDescription || s.description || '<span class="text-muted">No description</span>';
     const prioColors = { 'low': '#2e7d32', 'medium': '#f57f17', 'high': '#c62828' };
-    const prioEmojis = { 'low': '🟢', 'medium': '🟡', 'high': '🔴' };
+    const prioIcons = { 'low': '<i class="bi bi-circle-fill" style="color:#2e7d32"></i>', 'medium': '<i class="bi bi-circle-fill" style="color:#f57f17"></i>', 'high': '<i class="bi bi-circle-fill" style="color:#c62828"></i>' };
 
     let html = '';
     // Title
@@ -1726,7 +1726,7 @@ function wizBuildReview() {
     html += `<div class="wizard-review-section d-flex gap-4 flex-wrap">
         <div>
             <h6><i class="bi bi-flag-fill me-1"></i>Priority</h6>
-            <span style="color:${prioColors[s.priority]};font-weight:700">${prioEmojis[s.priority]} ${s.priority.charAt(0).toUpperCase() + s.priority.slice(1)}</span>
+            <span style="color:${prioColors[s.priority]};font-weight:700">${prioIcons[s.priority]} ${s.priority.charAt(0).toUpperCase() + s.priority.slice(1)}</span>
         </div>
         <div>
             <h6><i class="bi bi-calendar-event me-1"></i>Deadline</h6>
@@ -1778,7 +1778,7 @@ async function wizCreateTask() {
             // Show success and redirect
             document.getElementById('wizReviewContent').innerHTML = `
                 <div class="text-center py-4">
-                    <div style="font-size:3rem">🎉</div>
+                    <div style="font-size:3rem"><i class="bi bi-check-circle-fill text-success"></i></div>
                     <h4 class="fw-bold mt-2 mb-1">Task Created!</h4>
                     <p class="text-muted">Your task "<strong>${wizState.title}</strong>" has been created with ${activeSubtasks.length} subtask(s) and ${wizState.tags.length} tag(s).</p>
                     <a href="${data.task_url}" class="ai-submit-btn text-decoration-none mt-3">
@@ -1847,13 +1847,13 @@ async function loadAIHistory() {
             let html = '<div class="list-group list-group-flush">';
             data.history.forEach(item => {
                 const typeIcons = {
-                    'description': '✨',
-                    'priority': '🎯',
-                    'subtasks': '📋',
-                    'coach': '🏆',
-                    'search': '🔍',
-                    'wizard': '🪄',
-                    'tags': '🏷️'
+                    'description': '<i class="bi bi-stars"></i>',
+                    'priority': '<i class="bi bi-flag-fill"></i>',
+                    'subtasks': '<i class="bi bi-list-check"></i>',
+                    'coach': '<i class="bi bi-trophy-fill"></i>',
+                    'search': '<i class="bi bi-search"></i>',
+                    'wizard': '<i class="bi bi-plus-circle-fill"></i>',
+                    'tags': '<i class="bi bi-tags-fill"></i>'
                 };
                 const typeLabels = {
                     'description': 'Description Enhanced',
@@ -1866,7 +1866,7 @@ async function loadAIHistory() {
                 };
                 html += `
                     <div class="list-group-item d-flex align-items-center">
-                        <span class="me-3 fs-5">${typeIcons[item.type] || '🤖'}</span>
+                        <span class="me-3 fs-5">${typeIcons[item.type] || '<i class="bi bi-robot"></i>'}</span>
                         <div class="flex-grow-1">
                             <div class="fw-semibold">${typeLabels[item.type] || item.type}</div>
                             <small class="text-muted">${item.title} • ${item.created_at}</small>

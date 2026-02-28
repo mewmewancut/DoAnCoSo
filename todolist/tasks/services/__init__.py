@@ -1,5 +1,3 @@
-# Services package for tasks app
-# This package contains business logic separated from views
 
 from .task_service import TaskService
 from .subtask_service import SubtaskService

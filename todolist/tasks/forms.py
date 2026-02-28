@@ -1,11 +1,10 @@
-"""
-Django ModelForms for Task and SubTask models.
+"""Django ModelForms for Task and SubTask models."""
 
-Replaces manual ``request.POST.get()`` parsing in views with
-validated, reusable form classes.
-"""
 from django import forms
-from .models import Task, SubTask, Tag
+from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
+
+from .models import SubTask, Tag, Task
 
 
 class TaskForm(forms.ModelForm):
@@ -59,13 +58,22 @@ class TaskForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Allow deadline input to accept datetime-local format
-        self.fields['deadline'].input_formats = [
-            '%Y-%m-%dT%H:%M',
-            '%Y-%m-%dT%H:%M:%S',
-            '%Y-%m-%d %H:%M:%S',
-            '%Y-%m-%d %H:%M',
+        self.fields["deadline"].input_formats = [
+            "%Y-%m-%dT%H:%M",
+            "%Y-%m-%dT%H:%M:%S",
+            "%Y-%m-%d %H:%M:%S",
+            "%Y-%m-%d %H:%M",
         ]
+
+    def clean_deadline(self):
+        """Reject deadlines that are in the past (new tasks only)."""
+        deadline = self.cleaned_data.get("deadline")
+        if deadline and not self.instance.pk and deadline < timezone.now():
+            raise forms.ValidationError(
+                _("The deadline cannot be in the past."),
+                code="deadline_in_past",
+            )
+        return deadline
 
 
 class SubTaskForm(forms.ModelForm):
