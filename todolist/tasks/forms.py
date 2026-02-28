@@ -1,10 +1,10 @@
-"""Django ModelForms for Task and SubTask models."""
+"""Django ModelForm for the Task model."""
 
 from django import forms
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from .models import SubTask, Tag, Task
+from .models import Tag, Task
 
 
 class TaskForm(forms.ModelForm):
@@ -68,30 +68,10 @@ class TaskForm(forms.ModelForm):
     def clean_deadline(self):
         """Reject deadlines that are in the past (new tasks only)."""
         deadline = self.cleaned_data.get("deadline")
-        if deadline and not self.instance.pk and deadline < timezone.now():
+        is_new = self.instance._state.adding
+        if deadline and is_new and deadline < timezone.now():
             raise forms.ValidationError(
                 _("The deadline cannot be in the past."),
                 code="deadline_in_past",
             )
         return deadline
-
-
-class SubTaskForm(forms.ModelForm):
-    """
-    ModelForm for SubTask creation / editing.
-    """
-
-    class Meta:
-        model = SubTask
-        fields = ['title', 'description']
-        widgets = {
-            'title': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Subtask title',
-            }),
-            'description': forms.Textarea(attrs={
-                'class': 'form-control',
-                'rows': 2,
-                'placeholder': 'Description (optional)',
-            }),
-        }

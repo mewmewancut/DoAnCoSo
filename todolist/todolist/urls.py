@@ -16,7 +16,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.views.i18n import set_language as django_set_language
 from .views import home, set_language
 
 urlpatterns = [
@@ -26,3 +25,7 @@ urlpatterns = [
     path('i18n/setlang/', set_language, name='set_language'),  # Custom language switching
     path('', home, name='home'),
 ]
+
+# Custom error handlers
+handler404 = 'todolist.views.custom_404'
+handler500 = 'todolist.views.custom_500'
