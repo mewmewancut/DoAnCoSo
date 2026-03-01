@@ -78,19 +78,20 @@
         /* Sidebar Container */
 .sidebar {
     background-color: #fdfaf9;
-    border-right: 1px solid #f0eceb;
     width: 260px;
     height: 100%;
+    border-right: 1px solid #f0eceb;
 
-    position: absolute;   
-    left: 0;
-    top: 0;
-
-    transition: transform 0.3s ease;
-    overflow-y: auto;
+    flex-shrink: 0;
 
     display: flex;
     flex-direction: column;
+
+    transition: width 0.3s ease;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
     z-index: 1000;
 }
 
@@ -173,7 +174,7 @@
 }
 .private-layout {
     height: calc(100vh - 64px);
-    overflow: hidden;
+    overflow: visible;
 }
 .public-layout {
     min-height: calc(100vh - 64px);
@@ -185,15 +186,14 @@
     height: 100%;
     overflow-y: auto;
     min-width: 0;
-    padding-left: 260px; 
-    transition: all 0.3s ease;
-}
-.sidebar-collapsed .sidebar {
-    transform: translateX(-100%);
+    margin-left: 260px;
+    transition: margin-left 0.3s ease;
+    background: #fff;
+    
 }
 
 .sidebar-collapsed .content-area {
-    padding-left: 0;   
+    margin-left: 0;
 }
 
 
@@ -221,7 +221,9 @@
     left: 8px;
 }
 
-
+.sidebar-collapsed .sidebar {
+    transform: translateX(-100%);
+}
 
 .sidebar-toggle i {
     font-size: 14px;
@@ -242,11 +244,17 @@
 /* ===== APP LAYOUT ===== */
 .app-layout {
     display: flex;
-    position: relative;
     height: calc(100vh - 64px);
-    width: 100vw;
-    overflow: hidden;
+    width: 100%;
+    position: relative;
 }
 
+
+.dashboard-wrapper {
+    max-width: 1560px;
+    margin: 0 auto;
+    padding: 24px 32px;
+    width: 100%;
+}
 
     </style>

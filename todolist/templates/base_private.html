@@ -18,23 +18,22 @@
 <body>
 {% include "partials/navbar_private.html" %}
 {% include "partials/messages.html" %}
-<div class="container-fluid private-layout">
+<div class="container-fluid  private-layout">
                 <div class="app-layout">
 
                 {% include "partials/sidebar.html" %}
 
                 <main class="content-area">
-                    <div id="preview-area" class="mt-4">
-                        {% block content %}{% endblock %}
+                    <div class="dashboard-wrapper">
+                            <div id="preview-area" class="mt-4">
+                                   {% block content %}{% endblock %}
+                            </div>
                     </div>
                 </main>
 
                 </div>
 </div>
 {% include "partials/scripts.html" %}
-
-</body>
-</html>
 
 <script>
 function toggleDownloadMenu() {
@@ -138,4 +137,8 @@ function toggleSidebar() {
 }
 </script>
 
+
+
+</body>
+</html>
 

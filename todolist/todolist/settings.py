@@ -221,3 +221,5 @@ GROQ_API_KEY = config('GROQ_API_KEY', default='')
 # Media files configuration (Cloudinary sẽ xử lý)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+

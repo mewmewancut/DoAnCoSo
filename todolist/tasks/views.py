@@ -9,7 +9,11 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.utils.translation import gettext as _
-from xhtml2pdf import pisa
+from django.http import HttpResponse
+from weasyprint import HTML
+from django.templatetags.static import static
+from django.conf import settings
+import os
 
 from .forms import TaskForm
 from .models import SubTask, Tag, Task
@@ -326,22 +330,29 @@ def download_month_preview(request):
     return render(request, "tasks/download/preview_month.html", data)
 
 
-@login_required
 def download_pdf(request):
-    """Generate and download a PDF report."""
+    """Generate and download a PDF report using WeasyPrint."""
     pdf_type = request.GET.get("type", "week")
     data = PDFService.get_pdf_data(request.user, pdf_type)
 
-    html = render_to_string(data["template"], {
-        "tasks": data["tasks"],
-        "start": data["start"],
-        "end": data["end"],
-        "user": request.user,
-    })
+    html_string = render_to_string(
+        data["template"],
+        {
+            "tasks": data["tasks"],
+            "start": data["start"],
+            "end": data["end"],
+            "user": request.user,
+        },
+    )
 
-    result = BytesIO()
-    pisa.CreatePDF(html, dest=result)
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = (
+        f'attachment; filename="{data["filename"]}"'
+    )
 
-    response = HttpResponse(result.getvalue(), content_type="application/pdf")
-    response["Content-Disposition"] = f'attachment; filename="{data["filename"]}"'
+    HTML(
+        string=html_string,
+        base_url=request.build_absolute_uri()  
+    ).write_pdf(response)
+
     return response

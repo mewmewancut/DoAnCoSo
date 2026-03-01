@@ -1,14 +1,24 @@
 <style>
+    /* Cấu hình phông chữ hỗ trợ tiếng Việt cho PDF */
+    @font-face {
+        font-family: 'Noto Sans';
+        src: url("/static/fonts/NotoSans-Regular.ttf") format("truetype");
+    }
+
     /* Thiết lập chuẩn in A4 */
-    @page { size: A4; margin: 1.5cm; }
+    @page { 
+        size: A4; 
+        margin: 1.5cm; 
+    }
+
     body { 
-        font-family: 'DejaVu Sans', sans-serif; 
+        font-family: 'Noto Sans', 'DejaVu Sans', sans-serif; 
         color: #333; 
         line-height: 1.6; 
         margin: 0; 
     }
 
-    /* --- PROFESSIONAL HEADER --- */
+    /* --- ĐẦU TRANG CHUYÊN NGHIỆP --- */
     .report-header { 
         border-bottom: 3px solid #c3392b; 
         padding-bottom: 15px; 
@@ -22,7 +32,7 @@
         margin: 0;
     }
 
-    /* --- PLANNER TABLE --- */
+    /* --- BẢNG KẾ HOẠCH CÔNG VIỆC --- */
     .planner-table { 
         width: 100%; 
         border-collapse: collapse; 
@@ -45,14 +55,14 @@
         vertical-align: middle; 
     }
 
-    /* --- CỘT CHECK RIÊNG BIỆT [ ] --- */
+    /* --- Ô TÍCH THỦ CÔNG [ ] --- */
     .manual-checkbox {
         width: 20px;
         height: 20px;
-        border: 2px solid #444; /* Viền sậm rõ nét khi in */
+        border: 2px solid #444; 
         border-radius: 4px;
         background-color: #fff;
-        margin: 0 auto; /* Căn giữa trong ô */
+        margin: 0 auto;
     }
 
     .task-title { 
@@ -85,14 +95,14 @@
     <table width="100%">
         <tr>
             <td>
-                <div class="brand-name">TaskMaster Planner</div>
+                <div class="brand-name">Kế hoạch TaskMaster</div>
                 <div style="font-size: 12px; color: #666; margin-top: 5px;">
-                    Schedule: <strong>{{ start }}</strong> &mdash; <strong>{{ end }}</strong>
+                    Thời gian: <strong>{{ start|date:"d/m/Y" }}</strong> &mdash; <strong>{{ end|date:"d/m/Y" }}</strong>
                 </div>
             </td>
             <td align="right" valign="bottom">
                 <div style="font-size: 10px; color: #888;">
-                    Printed on: {% now "d/m/Y" %}
+                    Ngày in: {% now "d/m/Y" %} lúc {% now "H:i" %}
                 </div>
             </td>
         </tr>
@@ -102,14 +112,18 @@
 <table class="planner-table">
     <thead>
         <tr>
-            <th width="10%" style="text-align: center;">DONE</th>
-            <th width="60%">TASK DETAILS</th>
-            <th width="30%">DEADLINE</th>
+            <th width="5%" style="text-align: center;">STT</th>
+            <th width="10%" style="text-align: center;">XONG</th>
+            <th width="55%">CHI TIẾT CÔNG VIỆC</th>
+            <th width="30%">HẠN CHÓT (GIỜ VN)</th>
         </tr>
     </thead>
     <tbody>
         {% for task in tasks %}
         <tr>
+            <td align="center" style="font-size: 11px; color: #999;">
+                {{ forloop.counter }}
+            </td>
             <td align="center">
                 <div class="manual-checkbox"></div>
             </td>
@@ -124,8 +138,14 @@
             <td>
                 <div class="task-time">
                     <strong>{{ task.deadline|date:"d/m/Y" }}</strong><br>
-                    <small style="color: #888;">{{ task.deadline|date:"H:i" }}</small>
+                    <span style="color: #c3392b; font-weight: bold;">{{ task.deadline|date:"H:i" }}</span>
                 </div>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" align="center" style="padding: 50px; color: #999;">
+                Không có công việc nào trong danh sách.
             </td>
         </tr>
         {% endfor %}
@@ -133,5 +153,5 @@
 </table>
 
 <div class="footer-note">
-    Note: Tick the [ ] box once you've completed the task manually. Stay productive!
+    Ghi chú: Thời gian được hiển thị theo múi giờ Việt Nam (GMT+7). Hãy tích vào ô [ ] khi bạn hoàn thành nhé!
 </div>
