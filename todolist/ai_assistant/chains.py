@@ -1,4 +1,4 @@
-"""
+﻿"""
 LCEL chains — the public API of the ai_assistant app.
 
 Each function builds a LangChain Expression Language (LCEL) chain:
@@ -69,12 +69,12 @@ def _friendly_error(exc: Exception) -> str:
     """Map common LLM errors to user-facing messages."""
     msg = str(exc).lower()
     if "api key" in msg or "authentication" in msg or "unauthorized" in msg:
-        return "API key error. Please check your LLM configuration."
+        return "Lỗi API key. Vui lòng kiểm tra cấu hình LLM."
     if "rate limit" in msg or "quota" in msg:
-        return "Rate limit exceeded — please try again in a moment."
+        return "Vượt giới hạn tốc độ — vui lòng thử lại sau giây lát."
     if "timeout" in msg:
-        return "Request timed out — please try again."
-    return f"AI service error: {exc}"
+        return "Yêu cầu quá thời gian — vui lòng thử lại."
+    return f"Lỗi dịch vụ AI: {exc}"
 
 
 # ── 1.  Improve Description ─────────────────────────────────────────
@@ -87,7 +87,7 @@ def improve_description(title: str, description: str = "") -> str:
     Post-validation: must be ≥ 10 chars (via Pydantic schema).
     """
     if not title or not title.strip():
-        raise ValueError("Title cannot be empty.")
+        raise ValueError("Tiêu đề không được để trống.")
 
     try:
         llm = get_llm()
@@ -95,7 +95,7 @@ def improve_description(title: str, description: str = "") -> str:
 
         raw: str = chain.invoke({
             "title": title.strip(),
-            "description": description.strip() or "No description provided.",
+            "description": description.strip() or "Không có mô tả.",
         })
 
         # Validate length via Pydantic (reuses the schema contract)
@@ -103,7 +103,7 @@ def improve_description(title: str, description: str = "") -> str:
         return validated.improved_description
 
     except ValidationError:
-        raise ValueError("AI returned a response that was too short. Please try again.")
+        raise ValueError("AI trả về kết quả quá ngắn. Vui lòng thử lại.")
     except Exception as exc:
         raise Exception(_friendly_error(exc))
 
@@ -121,10 +121,10 @@ def suggest_priority(
     Chain: SUGGEST_PRIORITY_PROMPT | llm | StrOutputParser → json.loads → Pydantic
     """
     if not title or not title.strip():
-        raise ValueError("Title cannot be empty.")
+        raise ValueError("Tiêu đề không được để trống.")
 
     deadline_str = (
-        deadline.strftime("%Y-%m-%d %H:%M") if deadline else "No deadline"
+        deadline.strftime("%Y-%m-%d %H:%M") if deadline else "Không có hạn chót"
     )
 
     try:
@@ -133,7 +133,7 @@ def suggest_priority(
 
         raw: str = chain.invoke({
             "title": title.strip(),
-            "description": description.strip() or "No description provided.",
+            "description": description.strip() or "Không có mô tả.",
             "deadline": deadline_str,
         })
 
@@ -142,7 +142,7 @@ def suggest_priority(
         return validated.model_dump()
 
     except (json.JSONDecodeError, ValidationError):
-        raise Exception("Failed to parse AI response. Please try again.")
+        raise Exception("Không thể xử lý phản hồi AI. Vui lòng thử lại.")
     except Exception as exc:
         raise Exception(_friendly_error(exc))
 
@@ -160,7 +160,7 @@ def generate_subtasks(
     Chain: GENERATE_SUBTASKS_PROMPT | llm | StrOutputParser → json.loads → Pydantic
     """
     if not title or not title.strip():
-        raise ValueError("Title cannot be empty.")
+        raise ValueError("Tiêu đề không được để trống.")
 
     count = max(3, min(10, int(count)))
 
@@ -170,7 +170,7 @@ def generate_subtasks(
 
         raw: str = chain.invoke({
             "title": title.strip(),
-            "description": description.strip() or "No description provided.",
+            "description": description.strip() or "Không có mô tả.",
             "count": str(count),
         })
 
@@ -181,7 +181,7 @@ def generate_subtasks(
         return [item.model_dump() for item in validated.subtasks[:count]]
 
     except (json.JSONDecodeError, ValidationError):
-        raise Exception("Failed to parse AI response. Please try again.")
+        raise Exception("Không thể xử lý phản hồi AI. Vui lòng thử lại.")
     except Exception as exc:
         raise Exception(_friendly_error(exc))
 
@@ -220,7 +220,7 @@ def productivity_coach(stats: dict) -> dict:
         return validated.model_dump()
 
     except (json.JSONDecodeError, ValidationError):
-        raise Exception("Failed to parse AI coaching response. Please try again.")
+        raise Exception("Không thể xử lý phản hồi huấn luyện AI. Vui lòng thử lại.")
     except Exception as exc:
         raise Exception(_friendly_error(exc))
 
@@ -236,7 +236,7 @@ def smart_search(query: str) -> dict:
     Chain: SMART_SEARCH_PROMPT | llm | StrOutputParser → json.loads → Pydantic
     """
     if not query or not query.strip():
-        raise ValueError("Search query cannot be empty.")
+        raise ValueError("Truy vấn tìm kiếm không được để trống.")
 
     try:
         llm = get_llm()
@@ -249,7 +249,7 @@ def smart_search(query: str) -> dict:
         return validated.model_dump()
 
     except (json.JSONDecodeError, ValidationError):
-        raise Exception("Failed to parse search query. Please try again.")
+        raise Exception("Không thể xử lý truy vấn tìm kiếm. Vui lòng thử lại.")
     except Exception as exc:
         raise Exception(_friendly_error(exc))
 
@@ -265,7 +265,7 @@ def auto_tag(title: str, description: str = "") -> list[str]:
     Chain: AUTO_TAG_PROMPT | llm | StrOutputParser → json.loads → Pydantic
     """
     if not title or not title.strip():
-        raise ValueError("Title cannot be empty.")
+        raise ValueError("Tiêu đề không được để trống.")
 
     try:
         llm = get_llm()
@@ -273,7 +273,7 @@ def auto_tag(title: str, description: str = "") -> list[str]:
 
         raw: str = chain.invoke({
             "title": title.strip(),
-            "description": (description or "").strip() or "No description provided.",
+            "description": (description or "").strip() or "Không có mô tả.",
         })
 
         parsed = _safe_parse_json(raw)
@@ -281,6 +281,6 @@ def auto_tag(title: str, description: str = "") -> list[str]:
         return validated.tags
 
     except (json.JSONDecodeError, ValidationError):
-        raise Exception("Failed to parse AI tag response. Please try again.")
+        raise Exception("Không thể xử lý phản hồi gắn nhãn AI. Vui lòng thử lại.")
     except Exception as exc:
         raise Exception(_friendly_error(exc))

@@ -1,4 +1,4 @@
-"""
+﻿"""
 AI API views for TodoList application.
 
 These endpoints delegate all AI logic to the ``ai_assistant`` app
@@ -54,7 +54,7 @@ def improve_description_api(request):
         if not title:
             return JsonResponse({
                 'success': False,
-                'error': 'Title is required'
+                'error': 'Tiêu đề là bắt buộc'
             }, status=400)
         
         # Call AI chain (LCEL + Pydantic validated)
@@ -79,7 +79,7 @@ def improve_description_api(request):
     except json.JSONDecodeError:
         return JsonResponse({
             'success': False,
-            'error': 'Invalid JSON format'
+            'error': 'Định dạng JSON không hợp lệ'
         }, status=400)
         
     except Exception as e:
@@ -121,7 +121,7 @@ def suggest_priority_api(request):
         if not title:
             return JsonResponse({
                 'success': False,
-                'error': 'Title is required'
+                'error': 'Tiêu đề là bắt buộc'
             }, status=400)
         
         # Parse deadline
@@ -132,7 +132,7 @@ def suggest_priority_api(request):
             except ValueError:
                 return JsonResponse({
                     'success': False,
-                    'error': 'Invalid deadline format. Use ISO format (YYYY-MM-DDTHH:MM:SS)'
+                    'error': 'Định dạng hạn chót không hợp lệ. Sử dụng định dạng ISO (YYYY-MM-DDTHH:MM:SS)'
                 }, status=400)
         
         # Call AI chain (LCEL + Pydantic validated)
@@ -164,7 +164,7 @@ def suggest_priority_api(request):
     except json.JSONDecodeError:
         return JsonResponse({
             'success': False,
-            'error': 'Invalid JSON format'
+            'error': 'Định dạng JSON không hợp lệ'
         }, status=400)
         
     except Exception as e:
@@ -213,7 +213,7 @@ def generate_subtasks_api(request):
         if not title:
             return JsonResponse({
                 'success': False,
-                'error': 'Title is required'
+                'error': 'Tiêu đề là bắt buộc'
             }, status=400)
         
         # Call AI chain (LCEL + Pydantic validated — returns list of dicts with time_estimate)
@@ -242,7 +242,7 @@ def generate_subtasks_api(request):
     except json.JSONDecodeError:
         return JsonResponse({
             'success': False,
-            'error': 'Invalid JSON format'
+            'error': 'Định dạng JSON không hợp lệ'
         }, status=400)
         
     except Exception as e:
@@ -299,13 +299,13 @@ def ai_history_api(request):
         history = []
         for suggestion in suggestions:
             # Get title from input_data
-            title = suggestion.input_data.get('title', 'Unknown')
+            title = suggestion.input_data.get('title', 'Không rõ')
             if len(title) > 50:
                 title = title[:50] + '...'
             
             # Format timestamp
             try:
-                time_ago = timesince(suggestion.created_at, timezone.now()) + ' ago'
+                time_ago = timesince(suggestion.created_at, timezone.now()) + ' trước'
             except:
                 time_ago = suggestion.created_at.strftime('%Y-%m-%d %H:%M')
             
@@ -331,7 +331,7 @@ def ai_history_api(request):
         logger.exception("ai_history_api failed")
         return JsonResponse({
             'success': False,
-            'error': 'Failed to load AI history.'
+            'error': 'Không thể tải lịch sử AI.'
         }, status=500)
 
 
@@ -381,7 +381,7 @@ def productivity_coach_api(request):
         if stats["total_tasks"] == 0:
             return JsonResponse({
                 "success": False,
-                "error": "You need to create some tasks first before getting productivity coaching.",
+                "error": "Bạn cần tạo một số công việc trước khi nhận huấn luyện năng suất.",
             }, status=400)
 
         # Call AI chain
@@ -406,7 +406,7 @@ def productivity_coach_api(request):
     except json.JSONDecodeError:
         return JsonResponse({
             "success": False,
-            "error": "Invalid JSON format",
+            "error": "Định dạng JSON không hợp lệ",
         }, status=400)
 
     except Exception as e:
@@ -440,7 +440,7 @@ def smart_search_api(request):
         if not query:
             return JsonResponse({
                 "success": False,
-                "error": "Search query is required.",
+                "error": "Cần nhập truy vấn tìm kiếm.",
             }, status=400)
 
         # Use AI to interpret the query into structured filters
@@ -518,7 +518,7 @@ def smart_search_api(request):
     except json.JSONDecodeError:
         return JsonResponse({
             "success": False,
-            "error": "Invalid JSON format",
+            "error": "Định dạng JSON không hợp lệ",
         }, status=400)
 
     except Exception as e:
@@ -557,7 +557,7 @@ def auto_tag_api(request):
         if not title:
             return JsonResponse({
                 "success": False,
-                "error": "Title is required.",
+                "error": "Tiêu đề là bắt buộc.",
             }, status=400)
 
         # Call AI chain
@@ -599,7 +599,7 @@ def auto_tag_api(request):
     except json.JSONDecodeError:
         return JsonResponse({
             "success": False,
-            "error": "Invalid JSON format",
+            "error": "Định dạng JSON không hợp lệ",
         }, status=400)
 
     except Exception as e:
@@ -642,7 +642,7 @@ def ai_create_task_api(request):
         tag_names = data.get("tags", [])
 
         if not title:
-            return JsonResponse({"success": False, "error": "Title is required."}, status=400)
+            return JsonResponse({"success": False, "error": "Tiêu đề là bắt buộc."}, status=400)
 
         # Validate priority
         if priority not in ("low", "medium", "high"):
@@ -708,7 +708,7 @@ def ai_create_task_api(request):
         })
 
     except json.JSONDecodeError:
-        return JsonResponse({"success": False, "error": "Invalid JSON format"}, status=400)
+        return JsonResponse({"success": False, "error": "Định dạng JSON không hợp lệ"}, status=400)
 
     except Exception as e:
         logger.exception("ai_create_task_api failed")

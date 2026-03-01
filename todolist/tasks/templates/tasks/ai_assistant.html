@@ -1,6 +1,6 @@
-{% extends 'base_private.html' %}
+﻿{% extends 'base_private.html' %}
 {% load i18n %}
-{% block title %}AI Assistant | TaskMaster{% endblock %}
+{% block title %}Trợ lý AI | TaskMaster{% endblock %}
 
 {% block content %}
 <style>
@@ -589,35 +589,35 @@
     <div class="ai-container">
         <!-- Header -->
         <div class="mb-4">
-            <h2 class="fw-bold text-dark mb-1"> AI Assistant</h2>
-            <p class="text-muted mb-0">Optimize your workflow with intelligent suggestions</p>
+            <h2 class="fw-bold text-dark mb-1"> Trợ lý AI</h2>
+            <p class="text-muted mb-0">Tối ưu hóa quy trình làm việc với gợi ý thông minh</p>
         </div>
 
         <!-- Tab Navigation -->
         <div class="ai-tabs">
             <button class="ai-tab-btn active" data-tab="improve">
                 <i class="bi bi-pencil-square"></i>
-                <span>Enhance</span>
+                <span>Cải thiện</span>
             </button>
             <button class="ai-tab-btn" data-tab="priority">
                 <i class="bi bi-flag-fill"></i>
-                <span>Priority</span>
+                <span>Ưu tiên</span>
             </button>
             <button class="ai-tab-btn" data-tab="subtasks">
                 <i class="bi bi-diagram-3-fill"></i>
-                <span>Subtasks</span>
+                <span>Công việc con</span>
             </button>
             <button class="ai-tab-btn" data-tab="coach">
                 <i class="bi bi-trophy-fill"></i>
-                <span>Coach</span>
+                <span>Huấn luyện</span>
             </button>
             <button class="ai-tab-btn" data-tab="search">
                 <i class="bi bi-search"></i>
-                <span>Search</span>
+                <span>Tìm kiếm</span>
             </button>
             <button class="ai-tab-btn" data-tab="wizard">
                 <i class="bi bi-plus-circle-fill"></i>
-                <span>Create</span>
+                <span>Tạo mới</span>
             </button>
         </div>
 
@@ -625,29 +625,29 @@
         <div class="ai-tab-content active" id="tab-improve">
             <div class="ai-feature-panel">
                 <div class="ai-panel-header">
-                    <h4><i class="bi bi-stars me-2"></i>Enhance Task Description</h4>
-                    <p>Let AI rewrite your task to be clearer and more actionable</p>
+                    <h4><i class="bi bi-stars me-2"></i>Cải thiện mô tả công việc</h4>
+                    <p>AI viết lại mô tả rõ ràng và dễ thực hiện hơn</p>
                 </div>
                 <div class="ai-panel-body">
                     <form id="improveForm">
                         <div class="ai-form-group">
-                            <label class="ai-form-label">Task Title *</label>
+                            <label class="ai-form-label">Tiêu đề công việc *</label>
                             <input type="text" class="ai-form-input" id="improveTitle" required 
-                                   placeholder="e.g., Complete the quarterly report">
+                                   placeholder="VD: Hoàn thành báo cáo quý">
                         </div>
                         <div class="ai-form-group">
-                            <label class="ai-form-label">Current Description (Optional)</label>
+                            <label class="ai-form-label">Mô tả hiện tại (Tùy chọn)</label>
                             <textarea class="ai-form-input" id="improveDesc" rows="3" 
-                                      placeholder="Describe your task briefly..."></textarea>
+                                      placeholder="Mô tả ngắn gọn công việc của bạn..."></textarea>
                         </div>
                         <button type="submit" class="ai-submit-btn" id="improveBtn">
                             <i class="bi bi-magic"></i>
-                            <span>Enhance with AI</span>
+                            <span>Cải thiện với AI</span>
                         </button>
                     </form>
                     
                     <div class="ai-result-area" id="improveResult">
-                        <span class="ai-result-badge"><i class="bi bi-stars"></i> AI ENHANCED</span>
+                        <span class="ai-result-badge"><i class="bi bi-stars"></i> AI ĐÃ CẢI THIỆN</span>
                         <div id="improveOutput"></div>
                     </div>
                 </div>
@@ -658,33 +658,33 @@
         <div class="ai-tab-content" id="tab-priority">
             <div class="ai-feature-panel">
                 <div class="ai-panel-header">
-                    <h4><i class="bi bi-lightning-fill me-2"></i>Suggest Priority</h4>
-                    <p>AI analyzes your task to recommend the optimal priority level</p>
+                    <h4><i class="bi bi-lightning-fill me-2"></i>Gợi ý Ưu tiên</h4>
+                    <p>AI phân tích công việc để đề xuất mức ưu tiên tối ưu</p>
                 </div>
                 <div class="ai-panel-body">
                     <form id="priorityForm">
                         <div class="ai-form-group">
-                            <label class="ai-form-label">Task Title *</label>
+                            <label class="ai-form-label">Tiêu đề công việc *</label>
                             <input type="text" class="ai-form-input" id="priorityTitle" required 
-                                   placeholder="e.g., Fix critical bug in production">
+                                   placeholder="VD: Sửa lỗi nghiêm trọng trên production">
                         </div>
                         <div class="ai-form-group">
-                            <label class="ai-form-label">Description</label>
+                            <label class="ai-form-label">Mô tả</label>
                             <textarea class="ai-form-input" id="priorityDesc" rows="3"
-                                      placeholder="More context helps AI give better suggestions..."></textarea>
+                                      placeholder="Cung cấp thêm ngữ cảnh giúp AI gợi ý tốt hơn..."></textarea>
                         </div>
                         <div class="ai-form-group">
-                            <label class="ai-form-label">Deadline</label>
+                            <label class="ai-form-label">Hạn chót</label>
                             <input type="datetime-local" class="ai-form-input" id="priorityDeadline">
                         </div>
                         <button type="submit" class="ai-submit-btn" id="priorityBtn">
                             <i class="bi bi-lightning-fill"></i>
-                            <span>Get Priority Suggestion</span>
+                            <span>Lấy gợi ý ưu tiên</span>
                         </button>
                     </form>
                     
                     <div class="ai-result-area" id="priorityResult">
-                        <span class="ai-result-badge"><i class="bi bi-bullseye"></i> AI ANALYSIS</span>
+                        <span class="ai-result-badge"><i class="bi bi-bullseye"></i> PHÂN TÍCH AI</span>
                         <div id="priorityOutput"></div>
                     </div>
                 </div>
@@ -695,47 +695,47 @@
         <div class="ai-tab-content" id="tab-subtasks">
             <div class="ai-feature-panel">
                 <div class="ai-panel-header">
-                    <h4><i class="bi bi-diagram-3-fill me-2"></i>Generate Subtasks</h4>
-                    <p>Break down complex tasks into manageable steps automatically</p>
+                    <h4><i class="bi bi-diagram-3-fill me-2"></i>Tạo công việc con</h4>
+                    <p>Chia nhỏ công việc phức tạp thành các bước dễ quản lý</p>
                 </div>
                 <div class="ai-panel-body">
                     <form id="subtasksForm">
                         <div class="ai-form-group">
-                            <label class="ai-form-label">Task Title *</label>
+                            <label class="ai-form-label">Tiêu đề công việc *</label>
                             <input type="text" class="ai-form-input" id="subtasksTitle" required 
-                                   placeholder="e.g., Launch new marketing campaign">
+                                   placeholder="VD: Triển khai chiến dịch marketing mới">
                         </div>
                         <div class="ai-form-group">
-                            <label class="ai-form-label">Description / Context</label>
+                            <label class="ai-form-label">Mô tả / Ngữ cảnh</label>
                             <textarea class="ai-form-input" id="subtasksDesc" rows="3"
-                                      placeholder="Provide more details for better subtask generation..."></textarea>
+                                      placeholder="Cung cấp thêm chi tiết để tạo công việc con tốt hơn..."></textarea>
                         </div>
                         <div class="ai-form-group">
-                            <label class="ai-form-label">Number of Subtasks</label>
+                            <label class="ai-form-label">Số lượng công việc con</label>
                             <div class="subtask-count-options">
                                 <div class="count-option" data-count="3">
                                     <div class="count-number">3</div>
-                                    <div class="count-label">Quick</div>
+                                    <div class="count-label">Nhanh</div>
                                 </div>
                                 <div class="count-option selected" data-count="5">
                                     <div class="count-number">5</div>
-                                    <div class="count-label">Standard</div>
+                                    <div class="count-label">Tiêu chuẩn</div>
                                 </div>
                                 <div class="count-option" data-count="8">
                                     <div class="count-number">8</div>
-                                    <div class="count-label">Detailed</div>
+                                    <div class="count-label">Chi tiết</div>
                                 </div>
                             </div>
                             <input type="hidden" id="subtaskCount" value="5">
                         </div>
                         <button type="submit" class="ai-submit-btn" id="subtasksBtn">
                             <i class="bi bi-list-check"></i>
-                            <span>Generate Subtasks</span>
+                            <span>Tạo công việc con</span>
                         </button>
                     </form>
                     
                     <div class="ai-result-area" id="subtasksResult">
-                        <span class="ai-result-badge"><i class="bi bi-list-check"></i> AI GENERATED</span>
+                        <span class="ai-result-badge"><i class="bi bi-list-check"></i> AI ĐÃ TẠO</span>
                         <div id="subtasksOutput"></div>
                     </div>
                 </div>
@@ -746,20 +746,20 @@
         <div class="ai-tab-content" id="tab-coach">
             <div class="ai-feature-panel">
                 <div class="ai-panel-header">
-                    <h4><i class="bi bi-trophy-fill me-2"></i>Productivity Coach</h4>
-                    <p>Get personalized productivity insights based on your task patterns</p>
+                    <h4><i class="bi bi-trophy-fill me-2"></i>Huấn luyện năng suất</h4>
+                    <p>Nhận phân tích năng suất cá nhân dựa trên dữ liệu công việc</p>
                 </div>
                 <div class="ai-panel-body">
                     <div class="text-center mb-3">
-                        <p class="text-muted mb-3">AI will analyze your task history and provide a productivity score with personalized tips.</p>
+                        <p class="text-muted mb-3">AI sẽ phân tích lịch sử công việc và đưa ra điểm năng suất cùng lời khuyên cá nhân.</p>
                         <button type="button" class="ai-submit-btn" id="coachBtn">
                             <i class="bi bi-lightning-charge-fill"></i>
-                            <span>Analyze My Productivity</span>
+                            <span>Phân tích năng suất</span>
                         </button>
                     </div>
                     
                     <div class="ai-result-area" id="coachResult">
-                        <span class="ai-result-badge"><i class="bi bi-trophy"></i> PRODUCTIVITY REPORT</span>
+                        <span class="ai-result-badge"><i class="bi bi-trophy"></i> BÁO CÁO NĂNG SUẤT</span>
                         <div id="coachOutput"></div>
                     </div>
                 </div>
@@ -770,24 +770,24 @@
         <div class="ai-tab-content" id="tab-search">
             <div class="ai-feature-panel">
                 <div class="ai-panel-header">
-                    <h4><i class="bi bi-search me-2"></i>Smart Search</h4>
-                    <p>Search your tasks using natural language — AI understands what you mean</p>
+                    <h4><i class="bi bi-search me-2"></i>Tìm kiếm thông minh</h4>
+                    <p>Tìm kiếm công việc bằng ngôn ngữ tự nhiên — AI hiểu ý bạn</p>
                 </div>
                 <div class="ai-panel-body">
                     <form id="searchForm">
                         <div class="ai-form-group">
-                            <label class="ai-form-label">What are you looking for?</label>
+                            <label class="ai-form-label">Bạn đang tìm gì?</label>
                             <input type="text" class="ai-form-input" id="searchQuery" required
-                                   placeholder='e.g., "urgent tasks I haven&apos;t started" or "completed tasks this week"'>
+                                   placeholder='VD: "công việc gấp chưa làm" hoặc "công việc hoàn thành tuần này"'>
                         </div>
                         <button type="submit" class="ai-submit-btn" id="searchBtn">
                             <i class="bi bi-search"></i>
-                            <span>Smart Search</span>
+                            <span>Tìm kiếm thông minh</span>
                         </button>
                     </form>
                     
                     <div class="ai-result-area" id="searchResult">
-                        <span class="ai-result-badge"><i class="bi bi-search"></i> SEARCH RESULTS</span>
+                        <span class="ai-result-badge"><i class="bi bi-search"></i> KẾT QUẢ TÌM KIẾM</span>
                         <div id="searchOutput"></div>
                     </div>
                 </div>
@@ -798,81 +798,81 @@
         <div class="ai-tab-content" id="tab-wizard">
             <div class="ai-feature-panel">
                 <div class="ai-panel-header">
-                    <h4><i class="bi bi-plus-circle-fill me-2"></i>AI Task Creator</h4>
-                    <p>Create a complete task step-by-step with AI assistance</p>
+                    <h4><i class="bi bi-plus-circle-fill me-2"></i>Tạo công việc với AI</h4>
+                    <p>Tạo công việc hoàn chỉnh từng bước với sự hỗ trợ của AI</p>
                 </div>
                 <div class="ai-panel-body">
                     <!-- Wizard Progress -->
                     <div class="wizard-progress">
                         <div class="wizard-step-dot active" data-wstep="1">
                             <div class="dot">1</div>
-                            <div class="dot-label">Basics</div>
+                            <div class="dot-label">Cơ bản</div>
                         </div>
                         <div class="wizard-step-dot" data-wstep="2">
                             <div class="dot">2</div>
-                            <div class="dot-label">Enhance</div>
+                            <div class="dot-label">Cải thiện</div>
                         </div>
                         <div class="wizard-step-dot" data-wstep="3">
                             <div class="dot">3</div>
-                            <div class="dot-label">Priority</div>
+                            <div class="dot-label">Ưu tiên</div>
                         </div>
                         <div class="wizard-step-dot" data-wstep="4">
                             <div class="dot">4</div>
-                            <div class="dot-label">Subtasks</div>
+                            <div class="dot-label">Công việc con</div>
                         </div>
                         <div class="wizard-step-dot" data-wstep="5">
                             <div class="dot">5</div>
-                            <div class="dot-label">Tags</div>
+                            <div class="dot-label">Nhãn</div>
                         </div>
                         <div class="wizard-step-dot" data-wstep="6">
                             <div class="dot">6</div>
-                            <div class="dot-label">Review</div>
+                            <div class="dot-label">Xem lại</div>
                         </div>
                     </div>
 
                     <!-- Step 1: Basic Info -->
                     <div class="wizard-pane active" id="wiz-step-1">
-                        <h5 class="fw-bold mb-3"><i class="bi bi-pencil me-2 text-muted"></i>Task Basics</h5>
+                        <h5 class="fw-bold mb-3"><i class="bi bi-pencil me-2 text-muted"></i>Thông tin cơ bản</h5>
                         <div class="ai-form-group">
-                            <label class="ai-form-label">Task Title *</label>
+                            <label class="ai-form-label">Tiêu đề công việc *</label>
                             <input type="text" class="ai-form-input" id="wizTitle" required
-                                   placeholder="e.g., Redesign company website homepage">
+                                   placeholder="VD: Thiết kế lại trang chủ website công ty">
                         </div>
                         <div class="ai-form-group">
-                            <label class="ai-form-label">Description (optional — AI will enhance it)</label>
+                            <label class="ai-form-label">Mô tả (tùy chọn — AI sẽ cải thiện)</label>
                             <textarea class="ai-form-input" id="wizDesc" rows="3"
-                                      placeholder="Briefly describe what needs to be done..."></textarea>
+                                      placeholder="Mô tả ngắn gọn những gì cần làm..."></textarea>
                         </div>
                         <div class="ai-form-group">
-                            <label class="ai-form-label">Deadline (optional)</label>
+                            <label class="ai-form-label">Hạn chót (tùy chọn)</label>
                             <input type="datetime-local" class="ai-form-input" id="wizDeadline">
                         </div>
                     </div>
 
                     <!-- Step 2: Enhance Description -->
                     <div class="wizard-pane" id="wiz-step-2">
-                        <h5 class="fw-bold mb-3"><i class="bi bi-stars me-2 text-muted"></i>Enhance Description</h5>
-                        <p class="text-muted small mb-3">AI will rewrite your description to be clearer and more actionable.</p>
+                        <h5 class="fw-bold mb-3"><i class="bi bi-stars me-2 text-muted"></i>Cải thiện mô tả</h5>
+                        <p class="text-muted small mb-3">AI sẽ viết lại mô tả rõ ràng và dễ thực hiện hơn.</p>
                         <div class="d-flex align-items-center gap-3 mb-3">
                             <button type="button" class="wizard-ai-btn" id="wizEnhanceBtn">
-                                <i class="bi bi-magic"></i> Enhance with AI
+                                <i class="bi bi-magic"></i> Cải thiện với AI
                             </button>
                             <span class="text-muted small" id="wizEnhanceStatus"></span>
                         </div>
                         <div class="ai-form-group">
-                            <label class="ai-form-label">Enhanced Description</label>
+                            <label class="ai-form-label">Mô tả đã cải thiện</label>
                             <textarea class="ai-form-input" id="wizEnhancedDesc" rows="5"
-                                      placeholder="Click 'Enhance with AI' or type your own description..."></textarea>
+                                      placeholder="Nhấn 'Cải thiện với AI' hoặc nhập mô tả của bạn..."></textarea>
                         </div>
                     </div>
 
                     <!-- Step 3: Priority -->
                     <div class="wizard-pane" id="wiz-step-3">
-                        <h5 class="fw-bold mb-3"><i class="bi bi-flag-fill me-2 text-muted"></i>Set Priority</h5>
-                        <p class="text-muted small mb-3">Let AI suggest the best priority, or choose manually.</p>
+                        <h5 class="fw-bold mb-3"><i class="bi bi-flag-fill me-2 text-muted"></i>Đặt Ưu tiên</h5>
+                        <p class="text-muted small mb-3">AI gợi ý mức ưu tiên phù hợp, hoặc chọn thủ công.</p>
                         <div class="d-flex align-items-center gap-3 mb-4">
                             <button type="button" class="wizard-ai-btn" id="wizPriorityBtn">
-                                <i class="bi bi-lightning-fill"></i> AI Suggest
+                                <i class="bi bi-lightning-fill"></i> AI gợi ý
                             </button>
                             <span class="text-muted small" id="wizPriorityStatus"></span>
                         </div>
@@ -881,50 +881,50 @@
                             <label class="count-option flex-fill text-center" style="cursor:pointer">
                                 <input type="radio" name="wizPriority" value="low" class="d-none">
                                 <div class="count-number" style="color:#2e7d32"><i class="bi bi-circle-fill"></i></div>
-                                <div class="count-label">Low</div>
+                                <div class="count-label">Thấp</div>
                             </label>
                             <label class="count-option flex-fill text-center" style="cursor:pointer">
                                 <input type="radio" name="wizPriority" value="medium" class="d-none" checked>
                                 <div class="count-number" style="color:#f57f17"><i class="bi bi-circle-fill"></i></div>
-                                <div class="count-label">Medium</div>
+                                <div class="count-label">Trung bình</div>
                             </label>
                             <label class="count-option flex-fill text-center" style="cursor:pointer">
                                 <input type="radio" name="wizPriority" value="high" class="d-none">
                                 <div class="count-number" style="color:#c62828"><i class="bi bi-circle-fill"></i></div>
-                                <div class="count-label">High</div>
+                                <div class="count-label">Cao</div>
                             </label>
                         </div>
                     </div>
 
                     <!-- Step 4: Subtasks -->
                     <div class="wizard-pane" id="wiz-step-4">
-                        <h5 class="fw-bold mb-3"><i class="bi bi-diagram-3-fill me-2 text-muted"></i>Subtasks</h5>
-                        <p class="text-muted small mb-3">AI generates actionable subtasks. Edit, remove, or add your own.</p>
+                        <h5 class="fw-bold mb-3"><i class="bi bi-diagram-3-fill me-2 text-muted"></i>Công việc con</h5>
+                        <p class="text-muted small mb-3">AI tạo các công việc con. Bạn có thể chỉnh sửa, xóa hoặc thêm mới.</p>
                         <div class="d-flex align-items-center gap-3 mb-3">
                             <button type="button" class="wizard-ai-btn" id="wizSubtasksBtn">
-                                <i class="bi bi-list-check"></i> Generate Subtasks
+                                <i class="bi bi-list-check"></i> Tạo công việc con
                             </button>
                             <span class="text-muted small" id="wizSubtasksStatus"></span>
                         </div>
                         <div id="wizSubtasksList"></div>
                         <button type="button" class="btn btn-sm btn-outline-secondary mt-2" id="wizAddSubtaskBtn">
-                            <i class="bi bi-plus-lg me-1"></i> Add subtask manually
+                            <i class="bi bi-plus-lg me-1"></i> Thêm công việc con
                         </button>
                     </div>
 
                     <!-- Step 5: Tags -->
                     <div class="wizard-pane" id="wiz-step-5">
-                        <h5 class="fw-bold mb-3"><i class="bi bi-tags-fill me-2 text-muted"></i>Tags</h5>
-                        <p class="text-muted small mb-3">AI suggests relevant tags. Click to toggle, or type a custom tag.</p>
+                        <h5 class="fw-bold mb-3"><i class="bi bi-tags-fill me-2 text-muted"></i>Nhãn</h5>
+                        <p class="text-muted small mb-3">AI gợi ý nhãn phù hợp. Nhấn để chọn/bỏ, hoặc nhập nhãn tùy chỉnh.</p>
                         <div class="d-flex align-items-center gap-3 mb-3">
                             <button type="button" class="wizard-ai-btn" id="wizTagsBtn">
-                                <i class="bi bi-tag-fill"></i> Auto-Tag with AI
+                                <i class="bi bi-tag-fill"></i> Tự động gắn nhãn
                             </button>
                             <span class="text-muted small" id="wizTagsStatus"></span>
                         </div>
                         <div id="wizTagsPills" class="wizard-tag-pills mb-3"></div>
                         <div class="d-flex gap-2">
-                            <input type="text" class="ai-form-input" id="wizCustomTag" placeholder="Add custom tag..." style="flex:1">
+                            <input type="text" class="ai-form-input" id="wizCustomTag" placeholder="Thêm nhãn tùy chỉnh..." style="flex:1">
                             <button type="button" class="btn btn-outline-secondary" id="wizAddTagBtn">
                                 <i class="bi bi-plus-lg"></i>
                             </button>
@@ -933,17 +933,17 @@
 
                     <!-- Step 6: Review & Save -->
                     <div class="wizard-pane" id="wiz-step-6">
-                        <h5 class="fw-bold mb-3"><i class="bi bi-clipboard-check me-2 text-muted"></i>Review & Save</h5>
+                        <h5 class="fw-bold mb-3"><i class="bi bi-clipboard-check me-2 text-muted"></i>Xem lại & Lưu</h5>
                         <div id="wizReviewContent"></div>
                     </div>
 
                     <!-- Wizard Navigation -->
                     <div class="wizard-nav-btns">
                         <button type="button" class="wizard-btn prev" id="wizPrevBtn" style="visibility:hidden">
-                            <i class="bi bi-arrow-left"></i> Back
+                            <i class="bi bi-arrow-left"></i> Quay lại
                         </button>
                         <button type="button" class="wizard-btn next" id="wizNextBtn">
-                            Next <i class="bi bi-arrow-right"></i>
+                            Tiếp theo <i class="bi bi-arrow-right"></i>
                         </button>
                     </div>
                 </div>
@@ -953,7 +953,7 @@
         <!-- Recent AI Activities -->
         <div class="ai-history-card">
             <div class="ai-history-header">
-                <h5><i class="bi bi-clock-history text-muted"></i> Recent AI Activities</h5>
+                <h5><i class="bi bi-clock-history text-muted"></i> Hoạt động AI gần đây</h5>
             </div>
             <div class="ai-history-body" id="aiHistoryBody">
                 <!-- Will be populated by JavaScript -->
@@ -1007,15 +1007,15 @@ document.querySelectorAll('.count-option').forEach(option => {
 function setLoading(btn, loading) {
     if (loading) {
         btn.disabled = true;
-        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Processing...';
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Đang xử lý...';
     } else {
         btn.disabled = false;
         const icons = {
-            'improveBtn': '<i class="bi bi-magic"></i> <span>Enhance with AI</span>',
-            'priorityBtn': '<i class="bi bi-lightning-fill"></i> <span>Get Priority Suggestion</span>',
-            'subtasksBtn': '<i class="bi bi-list-check"></i> <span>Generate Subtasks</span>',
-            'coachBtn': '<i class="bi bi-lightning-charge-fill"></i> <span>Analyze My Productivity</span>',
-            'searchBtn': '<i class="bi bi-search"></i> <span>Smart Search</span>'
+            'improveBtn': '<i class="bi bi-magic"></i> <span>Cải thiện với AI</span>',
+            'priorityBtn': '<i class="bi bi-lightning-fill"></i> <span>Lấy gợi ý ưu tiên</span>',
+            'subtasksBtn': '<i class="bi bi-list-check"></i> <span>Tạo công việc con</span>',
+            'coachBtn': '<i class="bi bi-lightning-charge-fill"></i> <span>Phân tích năng suất</span>',
+            'searchBtn': '<i class="bi bi-search"></i> <span>Tìm kiếm thông minh</span>'
         };
         btn.innerHTML = icons[btn.id] || 'Submit';
     }
@@ -1044,7 +1044,7 @@ function copyToClipboard(text) {
     const unescaped = text.replace(/\\n/g, '\n').replace(/\\'/g, "'").replace(/\\"/g, '"');
     navigator.clipboard.writeText(unescaped).then(() => {
         if (typeof showToast === 'function') {
-            showToast('Copied to clipboard!', 'success');
+            showToast('Đã sao chép!', 'success');
         }
     });
 }
@@ -1077,18 +1077,18 @@ document.getElementById('improveForm').addEventListener('submit', async (e) => {
                 <div class="formatted-output">${formatDescription(data.improved_description)}</div>
                 <div class="ai-action-btns">
                     <button class="ai-action-btn copy" onclick="copyToClipboard('${escapedText}')">
-                        <i class="bi bi-clipboard"></i> Copy to Clipboard
+                        <i class="bi bi-clipboard"></i> Sao chép
                     </button>
                 </div>
             `;
             result.classList.add('show');
             loadAIHistory();
         } else {
-            output.innerHTML = `<div class="text-danger"><strong>{% trans "Error" %}:</strong> ${data.error}</div>`;
+            output.innerHTML = `<div class="text-danger"><strong>Lỗi:</strong> ${data.error}</div>`;
             result.classList.add('show');
         }
     } catch (error) {
-        output.innerHTML = `<div class="text-danger"><strong>{% trans "Connection Error" %}:</strong> ${error.message}</div>`;
+        output.innerHTML = `<div class="text-danger"><strong>Lỗi kết nối:</strong> ${error.message}</div>`;
         result.classList.add('show');
     } finally {
         setLoading(btn, false);
@@ -1120,9 +1120,9 @@ document.getElementById('priorityForm').addEventListener('submit', async (e) => 
         
         if (data.success) {
             const priorityInfo = {
-                'HIGH': { icon: '<i class="bi bi-circle-fill text-danger"></i>', class: 'high', label: 'High Priority' },
-                'MEDIUM': { icon: '<i class="bi bi-circle-fill text-warning"></i>', class: 'medium', label: 'Medium Priority' },
-                'LOW': { icon: '<i class="bi bi-circle-fill text-success"></i>', class: 'low', label: 'Low Priority' }
+                'HIGH': { icon: '<i class="bi bi-circle-fill text-danger"></i>', class: 'high', label: 'Ưu tiên Cao' },
+                'MEDIUM': { icon: '<i class="bi bi-circle-fill text-warning"></i>', class: 'medium', label: 'Ưu tiên Trung bình' },
+                'LOW': { icon: '<i class="bi bi-circle-fill text-success"></i>', class: 'low', label: 'Ưu tiên Thấp' }
             };
             const p = priorityInfo[data.priority] || priorityInfo['MEDIUM'];
             
@@ -1132,18 +1132,18 @@ document.getElementById('priorityForm').addEventListener('submit', async (e) => 
                     <div class="priority-badge ${p.class}">${data.priority}</div>
                 </div>
                 <div class="bg-light rounded-3 p-3 mt-3">
-                    <strong class="text-muted small">AI Analysis:</strong>
+                    <strong class="text-muted small">Phân tích AI:</strong>
                     <p class="mb-0 mt-2">${data.reason}</p>
                 </div>
             `;
             result.classList.add('show');
             loadAIHistory();
         } else {
-            output.innerHTML = `<div class="text-danger"><strong>{% trans "Error" %}:</strong> ${data.error}</div>`;
+            output.innerHTML = `<div class="text-danger"><strong>Lỗi:</strong> ${data.error}</div>`;
             result.classList.add('show');
         }
     } catch (error) {
-        output.innerHTML = `<div class="text-danger"><strong>{% trans "Connection Error" %}:</strong> ${error.message}</div>`;
+        output.innerHTML = `<div class="text-danger"><strong>Lỗi kết nối:</strong> ${error.message}</div>`;
         result.classList.add('show');
     } finally {
         setLoading(btn, false);
@@ -1185,8 +1185,8 @@ document.getElementById('subtasksForm').addEventListener('submit', async (e) => 
                 : `${totalMinutes}m`;
 
             let html = `<div class="mb-3 d-flex align-items-center gap-2 flex-wrap">
-                <span class="badge bg-success">${data.count} subtasks generated</span>
-                <span class="badge bg-info"><i class="bi bi-clock me-1"></i>Total: ~${totalTimeStr}</span>
+                <span class="badge bg-success">${data.count} công việc con đã tạo</span>
+                <span class="badge bg-info"><i class="bi bi-clock me-1"></i>Tổng: ~${totalTimeStr}</span>
             </div>`;
             html += '<ul class="subtask-list">';
             details.forEach((item, i) => {
@@ -1199,7 +1199,7 @@ document.getElementById('subtasksForm').addEventListener('submit', async (e) => 
                     <li class="subtask-item">
                         <span class="subtask-number">${i + 1}</span>
                         <span class="subtask-text">${item.title}</span>
-                        ${timeStr ? `<span class="badge bg-light text-dark border me-2" title="Estimated time"><i class="bi bi-clock"></i> ${timeStr}</span>` : ''}
+                        ${timeStr ? `<span class="badge bg-light text-dark border me-2" title="Thời gian ước tính"><i class="bi bi-clock"></i> ${timeStr}</span>` : ''}
                         <input type="checkbox" class="subtask-check form-check-input" checked>
                     </li>
                 `;
@@ -1209,11 +1209,11 @@ document.getElementById('subtasksForm').addEventListener('submit', async (e) => 
             result.classList.add('show');
             loadAIHistory();
         } else {
-            output.innerHTML = `<div class="text-danger"><strong>{% trans "Error" %}:</strong> ${data.error || '{% trans "No subtasks generated" %}'}</div>`;
+            output.innerHTML = `<div class="text-danger"><strong>Lỗi:</strong> ${data.error || 'Không tạo được công việc con'}</div>`;
             result.classList.add('show');
         }
     } catch (error) {
-        output.innerHTML = `<div class="text-danger"><strong>{% trans "Connection Error" %}:</strong> ${error.message}</div>`;
+        output.innerHTML = `<div class="text-danger"><strong>Lỗi kết nối:</strong> ${error.message}</div>`;
         result.classList.add('show');
     } finally {
         setLoading(btn, false);
@@ -1245,7 +1245,7 @@ document.getElementById('coachBtn').addEventListener('click', async () => {
                 <div class="text-center mb-4">
                     <div style="width:120px;height:120px;border-radius:50%;border:6px solid ${scoreColor};display:inline-flex;align-items:center;justify-content:center;flex-direction:column;">
                         <span style="font-size:2.2rem;font-weight:800;color:${scoreColor}">${data.score}</span>
-                        <span style="font-size:0.65rem;text-transform:uppercase;color:#999;font-weight:600">Score</span>
+                        <span style="font-size:0.65rem;text-transform:uppercase;color:#999;font-weight:600">Điểm</span>
                     </div>
                     <p class="mt-3 mb-0 text-muted">${data.summary}</p>
                 </div>
@@ -1254,15 +1254,15 @@ document.getElementById('coachBtn').addEventListener('click', async () => {
             // Stats overview
             if (data.stats) {
                 html += `<div class="row g-2 mb-4">
-                    <div class="col-4"><div class="bg-light rounded-3 p-2 text-center"><div class="fw-bold">${data.stats.total_tasks}</div><small class="text-muted">Total</small></div></div>
-                    <div class="col-4"><div class="bg-light rounded-3 p-2 text-center"><div class="fw-bold text-success">${data.stats.completed_tasks}</div><small class="text-muted">Done</small></div></div>
-                    <div class="col-4"><div class="bg-light rounded-3 p-2 text-center"><div class="fw-bold text-danger">${data.stats.overdue_tasks}</div><small class="text-muted">Overdue</small></div></div>
+                    <div class="col-4"><div class="bg-light rounded-3 p-2 text-center"><div class="fw-bold">${data.stats.total_tasks}</div><small class="text-muted">Tổng</small></div></div>
+                    <div class="col-4"><div class="bg-light rounded-3 p-2 text-center"><div class="fw-bold text-success">${data.stats.completed_tasks}</div><small class="text-muted">Hoàn thành</small></div></div>
+                    <div class="col-4"><div class="bg-light rounded-3 p-2 text-center"><div class="fw-bold text-danger">${data.stats.overdue_tasks}</div><small class="text-muted">Quá hạn</small></div></div>
                 </div>`;
             }
             
             // Tips
             if (data.tips && data.tips.length > 0) {
-                html += '<h6 class="fw-bold mb-3"><i class="bi bi-lightbulb-fill text-warning me-2"></i>Personalized Tips</h6>';
+                html += '<h6 class="fw-bold mb-3"><i class="bi bi-lightbulb-fill text-warning me-2"></i>Lời khuyên cá nhân</h6>';
                 const categoryIcons = {
                     'TIME_MANAGEMENT': '<i class="bi bi-clock"></i>',
                     'PRIORITIZATION': '<i class="bi bi-bullseye"></i>',
@@ -1288,11 +1288,11 @@ document.getElementById('coachBtn').addEventListener('click', async () => {
             result.classList.add('show');
             loadAIHistory();
         } else {
-            output.innerHTML = `<div class="text-danger"><strong>{% trans "Error" %}:</strong> ${data.error}</div>`;
+            output.innerHTML = `<div class="text-danger"><strong>Lỗi:</strong> ${data.error}</div>`;
             result.classList.add('show');
         }
     } catch (error) {
-        output.innerHTML = `<div class="text-danger"><strong>{% trans "Connection Error" %}:</strong> ${error.message}</div>`;
+        output.innerHTML = `<div class="text-danger"><strong>Lỗi kết nối:</strong> ${error.message}</div>`;
         result.classList.add('show');
     } finally {
         setLoading(btn, false);
@@ -1339,17 +1339,17 @@ document.getElementById('searchForm').addEventListener('submit', async (e) => {
                 if (data.filters.priority && data.filters.priority.length > 0) {
                     data.filters.priority.forEach(p => {
                         const cls = p === 'high' ? 'bg-danger' : (p === 'medium' ? 'bg-warning text-dark' : 'bg-success');
-                        html += `<span class="badge ${cls}">${p} priority</span>`;
+                        html += `<span class="badge ${cls}">ưu tiên ${p}</span>`;
                     });
                 }
                 if (data.filters.overdue) {
-                    html += `<span class="badge bg-danger"><i class="bi bi-exclamation-triangle me-1"></i>Overdue</span>`;
+                    html += `<span class="badge bg-danger"><i class="bi bi-exclamation-triangle me-1"></i>Quá hạn</span>`;
                 }
                 html += '</div>';
             }
             
             // Show results
-            html += `<p class="text-muted small mb-3"><strong>${data.total}</strong> task${data.total !== 1 ? 's' : ''} found</p>`;
+            html += `<p class="text-muted small mb-3"><strong>${data.total}</strong> công việc được tìm thấy</p>`;
             
             if (data.tasks && data.tasks.length > 0) {
                 data.tasks.forEach(task => {
@@ -1373,7 +1373,7 @@ document.getElementById('searchForm').addEventListener('submit', async (e) => {
                                         <span class="badge ${statusCls[task.status] || 'bg-secondary'} badge-sm">${task.status_display}</span>
                                         <span class="small ${prioCls[task.priority] || ''}">${task.priority_display}</span>
                                         ${task.deadline ? `<span class="small text-muted"><i class="bi bi-calendar me-1"></i>${task.deadline}</span>` : ''}
-                                        ${task.is_overdue ? '<span class="badge bg-danger badge-sm">Overdue</span>' : ''}
+                                        ${task.is_overdue ? '<span class="badge bg-danger badge-sm">Quá hạn</span>' : ''}
                                     </div>
                                 </div>
                                 <i class="bi bi-chevron-right text-muted"></i>
@@ -1382,18 +1382,18 @@ document.getElementById('searchForm').addEventListener('submit', async (e) => {
                     `;
                 });
             } else {
-                html += '<div class="text-center text-muted py-3"><i class="bi bi-inbox d-block fs-3 mb-2"></i>No matching tasks found</div>';
+                html += '<div class="text-center text-muted py-3"><i class="bi bi-inbox d-block fs-3 mb-2"></i>Không tìm thấy công việc phù hợp</div>';
             }
             
             output.innerHTML = html;
             result.classList.add('show');
             loadAIHistory();
         } else {
-            output.innerHTML = `<div class="text-danger"><strong>{% trans "Error" %}:</strong> ${data.error}</div>`;
+            output.innerHTML = `<div class="text-danger"><strong>Lỗi:</strong> ${data.error}</div>`;
             result.classList.add('show');
         }
     } catch (error) {
-        output.innerHTML = `<div class="text-danger"><strong>{% trans "Connection Error" %}:</strong> ${error.message}</div>`;
+        output.innerHTML = `<div class="text-danger"><strong>Lỗi kết nối:</strong> ${error.message}</div>`;
         result.classList.add('show');
     } finally {
         setLoading(btn, false);
@@ -1434,7 +1434,7 @@ function wizGoToStep(n) {
         nextBtn.innerHTML = '<i class="bi bi-check-lg"></i> Create Task';
         nextBtn.classList.add('next');
     } else {
-        nextBtn.innerHTML = 'Next <i class="bi bi-arrow-right"></i>';
+        nextBtn.innerHTML = 'Tiếp theo <i class="bi bi-arrow-right"></i>';
     }
     // Populate review on step 6
     if (n === 6) wizBuildReview();
@@ -1506,9 +1506,9 @@ document.getElementById('wizEnhanceBtn').addEventListener('click', async () => {
     const status = document.getElementById('wizEnhanceStatus');
     const title = document.getElementById('wizTitle').value.trim();
     const desc = document.getElementById('wizDesc').value.trim();
-    if (!title) { status.textContent = 'Enter a title in Step 1 first.'; return; }
+    if (!title) { status.textContent = 'Nhập tiêu đề ở Bước 1 trước.'; return; }
     btn.disabled = true;
-    status.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Enhancing...';
+    status.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Đang cải thiện...';
     try {
         const res = await fetch('/tasks/api/improve-description/', {
             method: 'POST',
@@ -1518,12 +1518,12 @@ document.getElementById('wizEnhanceBtn').addEventListener('click', async () => {
         const data = await res.json();
         if (data.success) {
             document.getElementById('wizEnhancedDesc').value = data.improved_description;
-            status.innerHTML = '<span class="text-success"><i class="bi bi-check-circle"></i> Done!</span>';
+            status.innerHTML = '<span class="text-success"><i class="bi bi-check-circle"></i> Hoàn tất!</span>';
         } else {
             status.innerHTML = '<span class="text-danger">' + data.error + '</span>';
         }
     } catch(e) {
-        status.innerHTML = '<span class="text-danger">Connection error</span>';
+        status.innerHTML = '<span class="text-danger">Lỗi kết nối</span>';
     }
     btn.disabled = false;
 });
@@ -1553,9 +1553,9 @@ document.getElementById('wizPriorityBtn').addEventListener('click', async () => 
     const title = document.getElementById('wizTitle').value.trim();
     const desc = document.getElementById('wizEnhancedDesc').value.trim() || document.getElementById('wizDesc').value.trim();
     const deadline = document.getElementById('wizDeadline').value;
-    if (!title) { status.textContent = 'Enter a title first.'; return; }
+    if (!title) { status.textContent = 'Nhập tiêu đề trước.'; return; }
     btn.disabled = true;
-    status.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Analyzing...';
+    status.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Đang phân tích...';
     try {
         const res = await fetch('/tasks/api/suggest-priority/', {
             method: 'POST',
@@ -1572,14 +1572,14 @@ document.getElementById('wizPriorityBtn').addEventListener('click', async () => 
                 radio.closest('label').classList.add('selected');
             }
             const reasonDiv = document.getElementById('wizPriorityReason');
-            reasonDiv.innerHTML = '<small class="text-muted"><strong>AI reasoning:</strong> ' + data.reason + '</small>';
+            reasonDiv.innerHTML = '<small class="text-muted"><strong>Lý do AI:</strong> ' + data.reason + '</small>';
             reasonDiv.style.display = 'block';
-            status.innerHTML = '<span class="text-success"><i class="bi bi-check-circle"></i> Suggested: ' + data.priority + '</span>';
+            status.innerHTML = '<span class="text-success"><i class="bi bi-check-circle"></i> Gợi ý: ' + data.priority + '</span>';
         } else {
             status.innerHTML = '<span class="text-danger">' + data.error + '</span>';
         }
     } catch(e) {
-        status.innerHTML = '<span class="text-danger">Connection error</span>';
+        status.innerHTML = '<span class="text-danger">Lỗi kết nối</span>';
     }
     btn.disabled = false;
 });
@@ -1606,9 +1606,9 @@ document.getElementById('wizSubtasksBtn').addEventListener('click', async () => 
     const status = document.getElementById('wizSubtasksStatus');
     const title = document.getElementById('wizTitle').value.trim();
     const desc = document.getElementById('wizEnhancedDesc').value.trim() || document.getElementById('wizDesc').value.trim();
-    if (!title) { status.textContent = 'Enter a title first.'; return; }
+    if (!title) { status.textContent = 'Nhập tiêu đề trước.'; return; }
     btn.disabled = true;
-    status.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Generating...';
+    status.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Đang tạo...';
     try {
         const res = await fetch('/tasks/api/generate-subtasks/', {
             method: 'POST',
@@ -1619,12 +1619,12 @@ document.getElementById('wizSubtasksBtn').addEventListener('click', async () => 
         if (data.success && data.subtasks) {
             wizState.subtasks = data.subtasks.map(s => ({ title: s, checked: true }));
             wizRenderSubtasks();
-            status.innerHTML = '<span class="text-success"><i class="bi bi-check-circle"></i> ' + data.count + ' subtasks generated</span>';
+            status.innerHTML = '<span class="text-success"><i class="bi bi-check-circle"></i> ' + data.count + ' công việc con đã tạo</span>';
         } else {
-            status.innerHTML = '<span class="text-danger">' + (data.error || 'Failed') + '</span>';
+            status.innerHTML = '<span class="text-danger">' + (data.error || 'Thất bại') + '</span>';
         }
     } catch(e) {
-        status.innerHTML = '<span class="text-danger">Connection error</span>';
+        status.innerHTML = '<span class="text-danger">Lỗi kết nối</span>';
     }
     btn.disabled = false;
 });
@@ -1637,7 +1637,7 @@ document.getElementById('wizAddSubtaskBtn').addEventListener('click', () => {
     div.innerHTML = `
         <span class="subtask-number" style="width:24px;height:24px;font-size:0.7rem;margin-right:8px;">${num}</span>
         <input type="checkbox" class="form-check-input" checked>
-        <input type="text" class="subtask-text-input" placeholder="New subtask...">
+        <input type="text" class="subtask-text-input" placeholder="Công việc con mới...">
         <span class="remove-subtask" onclick="this.parentElement.remove()"><i class="bi bi-x-lg"></i></span>
     `;
     container.appendChild(div);
@@ -1669,9 +1669,9 @@ document.getElementById('wizTagsBtn').addEventListener('click', async () => {
     const status = document.getElementById('wizTagsStatus');
     const title = document.getElementById('wizTitle').value.trim();
     const desc = document.getElementById('wizEnhancedDesc').value.trim() || document.getElementById('wizDesc').value.trim();
-    if (!title) { status.textContent = 'Enter a title first.'; return; }
+    if (!title) { status.textContent = 'Nhập tiêu đề trước.'; return; }
     btn.disabled = true;
-    status.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Tagging...';
+    status.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Đang gắn nhãn...';
     try {
         const res = await fetch('/tasks/api/auto-tag/', {
             method: 'POST',
@@ -1681,12 +1681,12 @@ document.getElementById('wizTagsBtn').addEventListener('click', async () => {
         const data = await res.json();
         if (data.success && data.tags) {
             data.tags.forEach(t => wizAddTag(t.name));
-            status.innerHTML = '<span class="text-success"><i class="bi bi-check-circle"></i> ' + data.tags.length + ' tags suggested</span>';
+            status.innerHTML = '<span class="text-success"><i class="bi bi-check-circle"></i> ' + data.tags.length + ' nhãn được gợi ý</span>';
         } else {
-            status.innerHTML = '<span class="text-danger">' + (data.error || 'Failed') + '</span>';
+            status.innerHTML = '<span class="text-danger">' + (data.error || 'Thất bại') + '</span>';
         }
     } catch(e) {
-        status.innerHTML = '<span class="text-danger">Connection error</span>';
+        status.innerHTML = '<span class="text-danger">Lỗi kết nối</span>';
     }
     btn.disabled = false;
 });
@@ -1707,37 +1707,37 @@ document.getElementById('wizCustomTag').addEventListener('keydown', (e) => {
 function wizBuildReview() {
     wizSaveCurrentStep();
     const s = wizState;
-    const desc = s.enhancedDescription || s.description || '<span class="text-muted">No description</span>';
+    const desc = s.enhancedDescription || s.description || '<span class="text-muted">Không có mô tả</span>';
     const prioColors = { 'low': '#2e7d32', 'medium': '#f57f17', 'high': '#c62828' };
     const prioIcons = { 'low': '<i class="bi bi-circle-fill" style="color:#2e7d32"></i>', 'medium': '<i class="bi bi-circle-fill" style="color:#f57f17"></i>', 'high': '<i class="bi bi-circle-fill" style="color:#c62828"></i>' };
 
     let html = '';
     // Title
     html += `<div class="wizard-review-section">
-        <h6><i class="bi bi-type-h1 me-1"></i>Title</h6>
-        <div class="fw-semibold fs-5">${s.title || '<span class="text-muted">No title</span>'}</div>
+        <h6><i class="bi bi-type-h1 me-1"></i>Tiêu đề</h6>
+        <div class="fw-semibold fs-5">${s.title || '<span class="text-muted">Chưa có tiêu đề</span>'}</div>
     </div>`;
     // Description
     html += `<div class="wizard-review-section">
-        <h6><i class="bi bi-text-paragraph me-1"></i>Description</h6>
+        <h6><i class="bi bi-text-paragraph me-1"></i>Mô tả</h6>
         <div class="formatted-output">${formatDescription(desc)}</div>
     </div>`;
     // Priority + Deadline
     html += `<div class="wizard-review-section d-flex gap-4 flex-wrap">
         <div>
-            <h6><i class="bi bi-flag-fill me-1"></i>Priority</h6>
+            <h6><i class="bi bi-flag-fill me-1"></i>Ưu tiên</h6>
             <span style="color:${prioColors[s.priority]};font-weight:700">${prioIcons[s.priority]} ${s.priority.charAt(0).toUpperCase() + s.priority.slice(1)}</span>
         </div>
         <div>
-            <h6><i class="bi bi-calendar-event me-1"></i>Deadline</h6>
-            <span>${s.deadline ? new Date(s.deadline).toLocaleString() : '<span class="text-muted">None</span>'}</span>
+            <h6><i class="bi bi-calendar-event me-1"></i>Hạn chót</h6>
+            <span>${s.deadline ? new Date(s.deadline).toLocaleString() : '<span class="text-muted">Không có</span>'}</span>
         </div>
     </div>`;
     // Subtasks
     const activeSubtasks = s.subtasks.filter(st => st.checked && st.title);
     if (activeSubtasks.length > 0) {
         html += `<div class="wizard-review-section">
-            <h6><i class="bi bi-list-check me-1"></i>Subtasks (${activeSubtasks.length})</h6>
+            <h6><i class="bi bi-list-check me-1"></i>Công việc con (${activeSubtasks.length})</h6>
             <ul class="mb-0" style="padding-left:1.2rem">`;
         activeSubtasks.forEach(st => { html += `<li>${st.title}</li>`; });
         html += `</ul></div>`;
@@ -1745,7 +1745,7 @@ function wizBuildReview() {
     // Tags
     if (s.tags.length > 0) {
         html += `<div class="wizard-review-section">
-            <h6><i class="bi bi-tags-fill me-1"></i>Tags</h6>
+            <h6><i class="bi bi-tags-fill me-1"></i>Nhãn</h6>
             <div class="d-flex flex-wrap gap-2">`;
         s.tags.forEach(t => { html += `<span class="badge bg-primary">${t}</span>`; });
         html += `</div></div>`;
@@ -1757,7 +1757,7 @@ function wizBuildReview() {
 async function wizCreateTask() {
     const nextBtn = document.getElementById('wizNextBtn');
     nextBtn.disabled = true;
-    nextBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Creating...';
+    nextBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Đang tạo...';
     try {
         const activeSubtasks = wizState.subtasks.filter(st => st.checked && st.title).map(st => st.title);
         const body = {
@@ -1779,13 +1779,13 @@ async function wizCreateTask() {
             document.getElementById('wizReviewContent').innerHTML = `
                 <div class="text-center py-4">
                     <div style="font-size:3rem"><i class="bi bi-check-circle-fill text-success"></i></div>
-                    <h4 class="fw-bold mt-2 mb-1">Task Created!</h4>
-                    <p class="text-muted">Your task "<strong>${wizState.title}</strong>" has been created with ${activeSubtasks.length} subtask(s) and ${wizState.tags.length} tag(s).</p>
+                    <h4 class="fw-bold mt-2 mb-1">Đã tạo công việc!</h4>
+                    <p class="text-muted">Công việc "<strong>${wizState.title}</strong>" đã được tạo với ${activeSubtasks.length} công việc con và ${wizState.tags.length} nhãn.</p>
                     <a href="${data.task_url}" class="ai-submit-btn text-decoration-none mt-3">
-                        <i class="bi bi-eye"></i> View Task
+                        <i class="bi bi-eye"></i> Xem công việc
                     </a>
                     <button type="button" class="wizard-btn prev ms-2" onclick="wizReset()">
-                        <i class="bi bi-plus-lg"></i> Create Another
+                        <i class="bi bi-plus-lg"></i> Tạo thêm
                     </button>
                 </div>
             `;
@@ -1794,14 +1794,14 @@ async function wizCreateTask() {
             nextBtn.style.display = 'none';
             loadAIHistory();
         } else {
-            alert('Error: ' + data.error);
+            alert('Lỗi: ' + data.error);
             nextBtn.disabled = false;
-            nextBtn.innerHTML = '<i class="bi bi-check-lg"></i> Create Task';
+            nextBtn.innerHTML = '<i class="bi bi-check-lg"></i> Tạo công việc';
         }
     } catch(e) {
-        alert('Connection error: ' + e.message);
+        alert('Lỗi kết nối: ' + e.message);
         nextBtn.disabled = false;
-        nextBtn.innerHTML = '<i class="bi bi-check-lg"></i> Create Task';
+        nextBtn.innerHTML = '<i class="bi bi-check-lg"></i> Tạo công việc';
     }
 }
 
@@ -1856,13 +1856,13 @@ async function loadAIHistory() {
                     'tags': '<i class="bi bi-tags-fill"></i>'
                 };
                 const typeLabels = {
-                    'description': 'Description Enhanced',
-                    'priority': 'Priority Suggested',
-                    'subtasks': 'Subtasks Generated',
-                    'coach': 'Productivity Analyzed',
-                    'search': 'Smart Search',
-                    'wizard': 'Task Created (AI Wizard)',
-                    'tags': 'Auto-Tagged'
+                    'description': 'Đã cải thiện mô tả',
+                    'priority': 'Đã gợi ý ưu tiên',
+                    'subtasks': 'Đã tạo công việc con',
+                    'coach': 'Đã phân tích năng suất',
+                    'search': 'Tìm kiếm thông minh',
+                    'wizard': 'Đã tạo công việc (AI)',
+                    'tags': 'Đã gắn nhãn tự động'
                 };
                 html += `
                     <div class="list-group-item d-flex align-items-center">
@@ -1880,7 +1880,7 @@ async function loadAIHistory() {
             container.innerHTML = `
                 <div class="ai-history-empty">
                     <i class="bi bi-robot d-block"></i>
-                    <p class="mb-0">No AI activities yet. Start using the features above!</p>
+                    <p class="mb-0">Chưa có hoạt động AI nào. Bắt đầu sử dụng các tính năng ở trên!</p>
                 </div>
             `;
         }
@@ -1888,7 +1888,7 @@ async function loadAIHistory() {
         container.innerHTML = `
             <div class="ai-history-empty">
                 <i class="bi bi-robot d-block"></i>
-                <p class="mb-0">Use the AI features above and your history will appear here.</p>
+                <p class="mb-0">Sử dụng các tính năng AI ở trên và lịch sử sẽ xuất hiện tại đây.</p>
             </div>
         `;
     }
