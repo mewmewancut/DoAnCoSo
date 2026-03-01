@@ -52,8 +52,12 @@
         background: white;
         border-radius: 20px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-        overflow: hidden;
+        overflow: visible;
     }
+    
+    .dropdown-menu {
+    z-index: 2000;
+}
 
     .table thead th {
         color: #8b8b8b;
@@ -130,6 +134,8 @@
     /* Badge & Row Style */
     .task-row:hover { background-color: rgba(195, 57, 43, 0.01) !important; }
     .badge-overdue { background-color: var(--brand-red); font-size: 0.6rem; }
+
+
 </style>
 
 <div class="container py-4">
@@ -182,7 +188,7 @@
     </div>
 
     <div class="task-table-container shadow-sm">
-        <div class="table-responsive">
+        <div >
             <table class="table table-hover align-middle mb-0">
                 <thead>
                     <tr>
