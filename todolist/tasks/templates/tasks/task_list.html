@@ -222,46 +222,49 @@
                                 {{ task.get_priority_display }}
                             </span>
                         </td>
-                        <td>
-                            <!-- Quick Status Dropdown -->
-                            <div class="dropdown">
-                                <button class="btn-status-quick {{ task.status }}" 
-                                        type="button" 
-                                        data-bs-toggle="dropdown" 
-                                        data-task-id="{{ task.id }}"
-                                        aria-expanded="false">
-                                    {{ task.get_status_display }}
-                                    <i class="bi bi-chevron-down ms-1" style="font-size: 0.6rem;"></i>
-                                </button>
-                                <ul class="dropdown-menu status-dropdown">
-                                    <li>
-                                        <a class="dropdown-item status-option {% if task.status == 'pending' %}active{% endif %}" 
-                                           href="#" data-status="pending" data-task-id="{{ task.id }}">
-                                            <i class="bi bi-clock text-primary"></i> {% trans "Pending" %}
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item status-option {% if task.status == 'in_progress' %}active{% endif %}" 
-                                           href="#" data-status="in_progress" data-task-id="{{ task.id }}">
-                                            <i class="bi bi-arrow-repeat text-warning"></i> {% trans "In Progress" %}
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item status-option {% if task.status == 'completed' %}active{% endif %}" 
-                                           href="#" data-status="completed" data-task-id="{{ task.id }}">
-                                            <i class="bi bi-check-circle text-success"></i> {% trans "Completed" %}
-                                        </a>
-                                    </li>
-                                    <li><hr class="dropdown-divider my-1"></li>
-                                    <li>
-                                        <a class="dropdown-item status-option {% if task.status == 'cancelled' %}active{% endif %}" 
-                                           href="#" data-status="cancelled" data-task-id="{{ task.id }}">
-                                            <i class="bi bi-x-circle text-danger"></i> {% trans "Cancelled" %}
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn-status-quick {{ task.status }}" 
+                                            type="button" 
+                                            data-bs-toggle="dropdown" 
+                                            data-task-id="{{ task.id }}"
+                                            aria-expanded="false">
+                                        {{ task.get_status_display }}
+                                        <i class="bi bi-chevron-down ms-1" style="font-size: 0.6rem;"></i>
+                                    </button>
+                                    <ul class="dropdown-menu status-dropdown">
+                                        <li>
+                                            <a class="dropdown-item status-option {% if task.status == 'pending' %}active{% endif %}" 
+                                            href="#" data-status="pending" data-task-id="{{ task.id }}" 
+                                            data-url="{% url 'tasks:task_quick_status' task.id %}">
+                                                <i class="bi bi-clock text-primary"></i> {% trans "Pending" %}
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item status-option {% if task.status == 'in_progress' %}active{% endif %}" 
+                                            href="#" data-status="in_progress" data-task-id="{{ task.id }}"
+                                            data-url="{% url 'tasks:task_quick_status' task.id %}">
+                                                <i class="bi bi-arrow-repeat text-warning"></i> {% trans "In Progress" %}
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item status-option {% if task.status == 'completed' %}active{% endif %}" 
+                                            href="#" data-status="completed" data-task-id="{{ task.id }}"
+                                            data-url="{% url 'tasks:task_quick_status' task.id %}">
+                                                <i class="bi bi-check-circle text-success"></i> {% trans "Completed" %}
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider my-1"></li>
+                                        <li>
+                                            <a class="dropdown-item status-option {% if task.status == 'cancelled' %}active{% endif %}" 
+                                            href="#" data-status="cancelled" data-task-id="{{ task.id }}"
+                                            data-url="{% url 'tasks:task_quick_status' task.id %}">
+                                                <i class="bi bi-x-circle text-danger"></i> {% trans "Cancelled" %}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
                         <td class="text-center">
                             <div class="d-inline-flex">
                                 <a href="{% url 'tasks:task_detail' task.id %}" class="btn-action-small btn-view-sm" title="{% trans 'View' %}">
@@ -289,80 +292,74 @@
         </div>
     </div>
 </div>
-{% endblock %}
 
-{% block extra_js %}
 <script>
-// CSRF Token helper
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
             }
         }
+        return cookieValue;
     }
-    return cookieValue;
-}
 
-// Quick status change handler
-document.querySelectorAll('.status-option').forEach(item => {
-    item.addEventListener('click', async function(e) {
-        e.preventDefault();
-        
-        const taskId = this.dataset.taskId;
-        const newStatus = this.dataset.status;
+    // Dùng sự kiện ở cấp document để đảm bảo luôn bắt được click
+    document.addEventListener('click', async function(e) {
+        const option = e.target.closest('.status-option');
+        if (!option) return;
+
+        e.preventDefault(); // Chặn việc sinh ra dấu # trên URL
+
+        const taskId = option.dataset.taskId;
+        const newStatus = option.dataset.status;
+        const url = option.dataset.url; // URL lấy từ data-url bạn đã thêm
         const button = document.querySelector(`button[data-task-id="${taskId}"]`);
-        
+        const csrfToken = getCookie('csrftoken');
+
+        if (!url) {
+            alert("Lỗi: Không tìm thấy đường dẫn URL.");
+            return;
+        }
+
         try {
-            const response = await fetch(`/tasks/${taskId}/quick-status/`, {
+            const response = await fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken')
+                    'X-CSRFToken': csrfToken
                 },
                 body: JSON.stringify({ status: newStatus })
             });
             
             const data = await response.json();
             
-            if (data.success) {
-                // Update button text and class
-                button.textContent = data.task.status_display;
+            if (response.ok && data.success) {
+                // Cập nhật text và icon cho nút bấm
                 button.innerHTML = data.task.status_display + ' <i class="bi bi-chevron-down ms-1" style="font-size: 0.6rem;"></i>';
-                
-                // Update button class
                 button.className = 'btn-status-quick ' + newStatus;
                 
-                // Update active state in dropdown
+                // Cập nhật trạng thái in đậm (active) trong menu con
                 const dropdown = button.nextElementSibling;
                 dropdown.querySelectorAll('.status-option').forEach(opt => {
                     opt.classList.remove('active');
-                    if (opt.dataset.status === newStatus) {
-                        opt.classList.add('active');
-                    }
                 });
-                
-                // Show toast notification
-                if (typeof showToast === 'function') {
-                    showToast(`{% trans "Task status updated to" %} "${data.task.status_display}"`, 'success');
-                }
+                option.classList.add('active');
             } else {
-                if (typeof showToast === 'function') {
-                    showToast('{% trans "Error" %}: ' + data.error, 'danger');
-                }
+                alert('Lỗi server: ' + (data.error || 'Không thể đổi trạng thái.'));
             }
         } catch (error) {
-            if (typeof showToast === 'function') {
-                showToast('{% trans "Error" %}: ' + error.message, 'danger');
-            }
+            alert('Lỗi trình duyệt/kết nối: ' + error.message);
         }
     });
-});
 </script>
+
 {% endblock %}
+
+
 
