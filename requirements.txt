@@ -9,5 +9,4 @@ langchain-groq==1.1.1
 openai==2.15.0
 cloudinary==1.44.1
 django-cloudinary-storage==0.3.0
-xhtml2pdf==0.2.17
-xhtml2pdf
+weasyprint==68.1

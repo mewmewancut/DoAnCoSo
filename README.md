@@ -44,16 +44,16 @@ Một ứng dụng TodoList phát triển bằng Django, tích hợp các tính 
 
 ## Công nghệ
 
-| Layer     | Công nghệ                                                |
-|-----------|----------------------------------------------------------|
-| Backend   | Python 3.14, Django 6.0.1                                |
-| AI        | LangChain LCEL + Pydantic v2 (Gemini / Groq / OpenAI)   |
-| Frontend  | Bootstrap 5, Bootstrap Icons, FullCalendar.js            |
-| Database  | SQLite (dev), PostgreSQL (prod)                          |
-| Storage   | Cloudinary (avatar images)                               |
-| Secrets   | python-decouple (`.env`)                                 |
-| PDF       | xhtml2pdf                                                |
-| Testing   | Django TestCase — 87 unit tests                          |
+| Layer    | Công nghệ                                             |
+| -------- | ----------------------------------------------------- |
+| Backend  | Python 3.14, Django 6.0.1                             |
+| AI       | LangChain LCEL + Pydantic v2 (Gemini / Groq / OpenAI) |
+| Frontend | Bootstrap 5, Bootstrap Icons, FullCalendar.js         |
+| Database | SQLite (dev), PostgreSQL (prod)                       |
+| Storage  | Cloudinary (avatar images)                            |
+| Secrets  | python-decouple (`.env`)                              |
+| PDF      | weasyprint                                            |
+| Testing  | Django TestCase — 87 unit tests                       |
 
 ## Cấu trúc dự án (chính)
 
@@ -86,16 +86,16 @@ DoAnCoSo/
 
 ## Screenshots
 
-| Trang | Mô tả |
-|-------|-------|
-| Home  | Landing page với giới thiệu tính năng và CTA |
-| Dashboard | Tổng quan task: thống kê, biểu đồ tiến độ |
-| Task List | Danh sách task với filter, sort, phân trang |
+| Trang        | Mô tả                                                     |
+| ------------ | --------------------------------------------------------- |
+| Home         | Landing page với giới thiệu tính năng và CTA              |
+| Dashboard    | Tổng quan task: thống kê, biểu đồ tiến độ                 |
+| Task List    | Danh sách task với filter, sort, phân trang               |
 | AI Assistant | 6 tab: Improve, Priority, Subtasks, Coach, Search, Wizard |
-| Calendar | Lịch FullCalendar hiển thị deadline task |
-| Profile | Thông tin cá nhân, avatar, thống kê hoạt động |
+| Calendar     | Lịch FullCalendar hiển thị deadline task                  |
+| Profile      | Thông tin cá nhân, avatar, thống kê hoạt động             |
 
-> *Chụp screenshot khi chạy `python manage.py runserver` và thêm ảnh vào thư mục `docs/screenshots/`.*
+> _Chụp screenshot khi chạy `python manage.py runserver` và thêm ảnh vào thư mục `docs/screenshots/`._
 
 ## Cài đặt & Chạy (local)
 
@@ -163,16 +163,16 @@ python manage.py test tasks accounts --verbosity=2
 
 ## Unit Tests
 
-| Module    | Loại test                    | Số lượng |
-|-----------|------------------------------|----------|
-| tasks     | Model tests (Task, SubTask, Tag, AISuggestion) | 15 |
-| tasks     | Form tests (TaskForm validation) | 6 |
-| tasks     | View tests (auth, CRUD, filter, AJAX) | 18 |
-| tasks     | Service tests (TaskService, SubtaskService) | 13 |
-| accounts  | Model tests (User)           | 8 |
-| accounts  | Form tests (Register, ProfileEdit) | 6 |
-| accounts  | View tests (login, register, profile) | 11 |
-| **Tổng**  |                              | **87** |
+| Module   | Loại test                                      | Số lượng |
+| -------- | ---------------------------------------------- | -------- |
+| tasks    | Model tests (Task, SubTask, Tag, AISuggestion) | 15       |
+| tasks    | Form tests (TaskForm validation)               | 6        |
+| tasks    | View tests (auth, CRUD, filter, AJAX)          | 18       |
+| tasks    | Service tests (TaskService, SubtaskService)    | 13       |
+| accounts | Model tests (User)                             | 8        |
+| accounts | Form tests (Register, ProfileEdit)             | 6        |
+| accounts | View tests (login, register, profile)          | 11       |
+| **Tổng** |                                                | **87**   |
 
 ## Contributor & Liên hệ
 

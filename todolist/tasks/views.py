@@ -1,6 +1,5 @@
 ﻿"""Views for the Tasks app  delegates business logic to the service layer."""
 
-from io import BytesIO
 import json
 
 from django.contrib import messages
@@ -9,11 +8,6 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.utils.translation import gettext as _
-from django.http import HttpResponse
-from weasyprint import HTML
-from django.templatetags.static import static
-from django.conf import settings
-import os
 
 from .forms import TaskForm
 from .models import SubTask, Tag, Task
@@ -332,6 +326,8 @@ def download_month_preview(request):
 
 def download_pdf(request):
     """Generate and download a PDF report using WeasyPrint."""
+    from weasyprint import HTML  # lazy import — requires GTK3 on Windows
+
     pdf_type = request.GET.get("type", "week")
     data = PDFService.get_pdf_data(request.user, pdf_type)
 
@@ -352,7 +348,7 @@ def download_pdf(request):
 
     HTML(
         string=html_string,
-        base_url=request.build_absolute_uri()  
+        base_url=request.build_absolute_uri()
     ).write_pdf(response)
 
     return response
