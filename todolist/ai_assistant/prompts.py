@@ -37,10 +37,13 @@ IMPROVE_DESCRIPTION_PROMPT = ChatPromptTemplate.from_messages([
      "1. **Mục tiêu** – cần đạt được điều gì.\n"
      "2. **Các bước** – hành động cụ thể để hoàn thành.\n"
      "3. **Kết quả mong đợi** – làm sao biết công việc đã hoàn thành.\n\n"
-     "QUY TẮC:\n"
+     "QUY TẮC ĐỊNH DẠNG:\n"
      "- Chỉ trả về mô tả đã cải thiện — không bình luận thêm.\n"
      "- LUÔN trả lời bằng tiếng Việt.\n"
-     "- Ngắn gọn nhưng đầy đủ (100-300 từ)."),
+     "- Ngắn gọn nhưng đầy đủ (100-300 từ).\n"
+     "- KHÔNG thêm khoảng trắng ở đầu dòng.\n"
+     "- Đánh số tuần tự: 1. 2. 3. (không lặp lại số 1).\n"
+     "- Dùng **text** cho chữ in đậm."),
 ])
 
 
@@ -126,24 +129,32 @@ SMART_SEARCH_PROMPT = ChatPromptTemplate.from_messages([
     ("system",
      "Bạn là trình thông dịch truy vấn tìm kiếm cho ứng dụng quản lý công việc. "
      "Công việc của bạn là chuyển đổi truy vấn ngôn ngữ tự nhiên thành "
-     "bộ lọc tìm kiếm có cấu trúc. Ứng dụng có các công việc với: title, description, "
+     "bộ lọc tìm kiếm có cấu trúc dạng JSON. Ứng dụng có các công việc với: title, description, "
      "status (pending/in_progress/completed/cancelled), "
      "priority (high/medium/low), và deadline. "
-     "Người dùng sẽ nhập truy vấn bằng tiếng Việt."),
+     "Người dùng sẽ nhập truy vấn bằng tiếng Việt. "
+     "LUÔN LUÔN trả lời bằng JSON hợp lệ."),
     ("human",
      "Chuyển đổi truy vấn tìm kiếm này thành bộ lọc có cấu trúc:\n\n"
      "Truy vấn: \"{query}\"\n\n"
-     "Trả về JSON:\n"
-     '{{"keywords": ["tu1", "tu2"], "status": ["pending", "in_progress"], '
-     '"priority": ["high"], "overdue": false, "sort_by": "relevance|deadline|priority|created_at"}}\n\n'
+     "Trả về ĐÚNG định dạng JSON này (không thêm text khác):\n"
+     '{{\n'
+     '  "keywords": ["tu1", "tu2"],\n'
+     '  "status": [],\n'
+     '  "priority": [],\n'
+     '  "overdue": false,\n'
+     '  "sort_by": "relevance"\n'
+     '}}\n\n'
      "QUY TẮC:\n"
-     "- Chỉ trả về JSON hợp lệ.\n"
+     "- CHỈ trả về JSON, KHÔNG thêm giải thích.\n"
      "- Chỉ bao gồm bộ lọc được ngụ ý rõ ràng từ truy vấn.\n"
-     "- Nếu truy vấn đề cập 'khẩn cấp', 'gấp' hoặc 'quan trọng', ánh xạ priority=['high'].\n"
-     "- Nếu truy vấn đề cập 'quá hạn', 'trễ' hoặc 'muộn', đặt overdue=true.\n"
-     "- Nếu truy vấn đề cập 'xong', 'hoàn thành' hoặc 'đã làm', ánh xạ status=['completed'].\n"
-     "- Nếu truy vấn đề cập 'chưa làm', 'chờ' hoặc 'mới', ánh xạ status=['pending'].\n"
-     "- Trích xuất từ khóa tìm kiếm thực tế từ nội dung còn lại."),
+     "- 'khẩn cấp', 'gấp', 'quan trọng' → priority=[\"high\"]\n"
+     "- 'quá hạn', 'trễ', 'muộn' → overdue=true\n"
+     "- 'xong', 'hoàn thành', 'đã làm' → status=[\"completed\"]\n"
+     "- 'chưa làm', 'chờ', 'mới' → status=[\"pending\"]\n"
+     "- 'đang làm' → status=[\"in_progress\"]\n"
+     "- Trích xuất từ khóa tìm kiếm thực tế từ nội dung còn lại vào keywords.\n"
+     "- sort_by phải là một trong: relevance, deadline, priority, created_at"),
 ])
 
 

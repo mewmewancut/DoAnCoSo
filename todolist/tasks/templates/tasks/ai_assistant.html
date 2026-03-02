@@ -1023,16 +1023,64 @@ function setLoading(btn, loading) {
 
 function formatDescription(text) {
     if (!text) return '';
+    
+    // Escape HTML
     let formatted = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    formatted = formatted.replace(/^\d+\.\s+(.+)$/gm, '<li>$1</li>');
-    if (formatted.includes('<li>')) {
-        formatted = formatted.replace(/(<li>[\s\S]*?<\/li>)/g, '<ol class="mb-2">$1</ol>');
+    
+    // Remove leading spaces from each line
+    formatted = formatted.replace(/^\s+/gm, '');
+    
+    // Convert markdown bold **text** to <strong>text</strong>
+    formatted = formatted.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    
+    // Convert numbered lists (1. 2. 3.) - keep them together
+    const lines = formatted.split('\n');
+    let result = [];
+    let inNumberedList = false;
+    let numberedItems = [];
+    
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const numberedMatch = line.match(/^(\d+)\.\s+(.+)$/);
+        
+        if (numberedMatch) {
+            // Numbered list item
+            if (!inNumberedList) {
+                inNumberedList = true;
+                numberedItems = [];
+            }
+            numberedItems.push('<li>' + numberedMatch[2] + '</li>');
+        } else {
+            // Not a numbered item - flush any pending list
+            if (inNumberedList) {
+                result.push('<ol class="mb-2">' + numberedItems.join('') + '</ol>');
+                numberedItems = [];
+                inNumberedList = false;
+            }
+            if (line.trim()) {
+                result.push(line);
+            }
+        }
     }
+    
+    // Flush final list if any
+    if (inNumberedList && numberedItems.length > 0) {
+        result.push('<ol class="mb-2">' + numberedItems.join('') + '</ol>');
+    }
+    
+    formatted = result.join('\n');
+    
+    // Convert bullet points
     formatted = formatted.replace(/^[-•]\s+(.+)$/gm, '<li>$1</li>');
+    
+    // Highlight section headers
     formatted = formatted.replace(/^(Mục tiêu|Objective|Các bước|Steps|Kết quả|Expected Result|Result)[:\s]*/gim, 
         '<strong class="text-primary">$1:</strong> ');
+    
+    // Paragraph formatting
     formatted = formatted.replace(/\n\n/g, '</p><p class="mb-2">');
     formatted = formatted.replace(/\n/g, '<br>');
+    
     return '<p class="mb-2">' + formatted + '</p>';
 }
 

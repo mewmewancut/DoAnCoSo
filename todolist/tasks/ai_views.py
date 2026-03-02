@@ -444,7 +444,15 @@ def smart_search_api(request):
             }, status=400)
 
         # Use AI to interpret the query into structured filters
-        filters = smart_search(query)
+        try:
+            filters = smart_search(query)
+            logger.debug(f"Smart search filters: {filters}")
+        except Exception as ai_error:
+            logger.error(f"AI smart_search failed: {ai_error}")
+            return JsonResponse({
+                "success": False,
+                "error": f"Lỗi AI: {str(ai_error)}",
+            }, status=500)
 
         # Build Django ORM query from the filters
         from django.db.models import Q
@@ -525,7 +533,7 @@ def smart_search_api(request):
         logger.exception("smart_search_api failed")
         return JsonResponse({
             "success": False,
-            "error": str(e),
+            "error": f"Lỗi hệ thống: {str(e)}",
         }, status=500)
 
 

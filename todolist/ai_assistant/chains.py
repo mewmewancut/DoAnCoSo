@@ -62,7 +62,19 @@ def _safe_parse_json(text: str) -> dict:
     # Strip markdown code fences if present
     cleaned = re.sub(r"```(?:json)?\s*", "", text)
     cleaned = cleaned.strip().rstrip("`")
-    return json.loads(cleaned)
+    
+    # Try to extract JSON if there's extra text
+    # Look for { ... } pattern
+    json_match = re.search(r'\{.*\}', cleaned, re.DOTALL)
+    if json_match:
+        cleaned = json_match.group(0)
+    
+    try:
+        return json.loads(cleaned)
+    except json.JSONDecodeError as e:
+        # Log the problematic text for debugging
+        logger.error(f"JSON parse failed. Text: {cleaned[:500]}")
+        raise
 
 
 def _friendly_error(exc: Exception) -> str:
@@ -243,14 +255,22 @@ def smart_search(query: str) -> dict:
         chain = SMART_SEARCH_PROMPT | llm | StrOutputParser()
 
         raw: str = chain.invoke({"query": query.strip()})
+        logger.debug(f"Smart search raw LLM output: {raw}")
 
         parsed = _safe_parse_json(raw)
+        logger.debug(f"Smart search parsed JSON: {parsed}")
+        
         validated = SearchFilter(**parsed)
         return validated.model_dump()
 
-    except (json.JSONDecodeError, ValidationError):
-        raise Exception("Không thể xử lý truy vấn tìm kiếm. Vui lòng thử lại.")
+    except json.JSONDecodeError as e:
+        logger.error(f"Smart search JSON decode error: {e}, raw output: {raw if 'raw' in locals() else 'N/A'}")
+        raise Exception("Không thể phân tích kết quả tìm kiếm AI. Vui lòng thử lại.")
+    except ValidationError as e:
+        logger.error(f"Smart search validation error: {e}")
+        raise Exception("Định dạng kết quả tìm kiếm không hợp lệ. Vui lòng thử lại.")
     except Exception as exc:
+        logger.exception("Smart search failed")
         raise Exception(_friendly_error(exc))
 
 
