@@ -27,7 +27,7 @@ def get_llm():
     Raises:
         ValueError: If the provider is unknown or the key is missing.
     """
-    provider = getattr(settings, "LLM_PROVIDER", "gemini").lower()
+    provider = getattr(settings, "LLM_PROVIDER", "groq").lower()
 
     if provider == "openai":
         from langchain_openai import ChatOpenAI

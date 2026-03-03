@@ -212,7 +212,7 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
 # AI / LLM Configuration
-LLM_PROVIDER = config('LLM_PROVIDER', default='gemini')
+LLM_PROVIDER = config('LLM_PROVIDER', default='groq')
 OPENAI_API_KEY = config('OPENAI_API_KEY', default='')
 GOOGLE_API_KEY = config('GOOGLE_API_KEY', default='')
 GROQ_API_KEY = config('GROQ_API_KEY', default='')
