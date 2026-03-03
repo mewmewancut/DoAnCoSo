@@ -1,6 +1,6 @@
 {% extends 'base_private.html' %}
 {% load i18n %}
-{% block title %}This Month | TaskMaster{% endblock %}
+{% block title %}Tháng này | TaskMaster{% endblock %}
 
 {% block content %}
 
@@ -66,7 +66,7 @@
         border-radius: 6px;
         font-size: 0.8rem;
         transition: all 0.2s ease;
-        border: 1px solid #eee;
+        border: 1px solid #eeeeee;
         text-decoration: none;
         background-color: #ffffff;
         z-index: 10;
@@ -83,11 +83,11 @@
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="fw-bold text-dark mb-0"><i class="bi bi-calendar-month me-2"></i>{{ month_name }} Overview</h2>
-            <p class="text-muted fw-bold small text-uppercase mb-0">{{ month_start|date:"M d" }} - {{ month_end|date:"M d, Y" }}</p>
+            <h2 class="fw-bold text-dark mb-0">Tổng quan tháng {{ month_start|date:"m/Y" }}</h2>
+            <p class="text-muted fw-bold small text-uppercase mb-0">{{ month_start|date:"d/m" }} - {{ month_end|date:"d/m/Y" }}</p>
         </div>
         <a href="{% url 'tasks:task_create' %}" class="btn text-white px-4 fw-bold shadow-sm" style="background: var(--brand-gradient); border-radius: 10px;">
-            <i class="fas fa-plus-circle me-1"></i> NEW TASK
+            <i class="fas fa-plus-circle me-1"></i> TẠO NHIỆM VỤ
         </a>
     </div>
 
@@ -97,13 +97,13 @@
                 <div class="card-body p-4">
                     <div class="row align-items-center">
                         <div class="col-md-4 text-center border-end">
-                            <h6 class="text-muted small fw-bold text-uppercase mb-2">Monthly Progress</h6>
+                            <h6 class="text-muted small fw-bold text-uppercase mb-2">Tiến độ tháng</h6>
                             <h2 class="fw-bold mb-0 text-brand">{% if total_tasks > 0 %}{{ progress_percentage }}{% else %}0{% endif %}%</h2>
                         </div>
                         <div class="col-md-8 px-md-5">
                             <div class="d-flex justify-content-between mb-2">
-                                <span class="small fw-bold text-dark">Tasks: {{ completed_tasks }}/{{ total_tasks }}</span>
-                                <span class="small text-muted">Goal Achievement</span>
+                                <span class="small fw-bold text-dark">Nhiệm vụ: {{ completed_tasks }}/{{ total_tasks }}</span>
+                                <span class="small text-muted">Mức độ hoàn thành</span>
                             </div>
                             <div class="progress progress-brand">
                                 <div class="progress-bar progress-bar-brand" role="progressbar" 
@@ -123,9 +123,9 @@
             <div class="card week-card shadow-sm">
                 <div class="card-header week-header d-flex justify-content-between align-items-center">
                     <h6 class="mb-0 fw-bold text-dark text-uppercase">
-                        {{ week_name }} <span class="text-muted ms-2 small">({{ week_data.start }} - {{ week_data.end }})</span>
+                        Tuần {{ forloop.counter }} <span class="text-muted ms-2 small">({{ week_data.start|date:"d/m" }} - {{ week_data.end|date:"d/m" }})</span>
                     </h6>
-                    <span class="badge rounded-pill px-3" style="background: var(--brand-red);">{{ week_data.tasks|length }} tasks</span>
+                    <span class="badge rounded-pill px-3" style="background: var(--brand-red);">{{ week_data.tasks|length }} nhiệm vụ</span>
                 </div>
                 <div class="card-body">
                     {% if week_data.tasks %}
@@ -164,7 +164,7 @@
                         </div>
                     {% else %}
                         <div class="py-4 text-center">
-                            <p class="text-muted small mb-0"><i class="fas fa-calendar-day me-1"></i> No tasks scheduled for this week.</p>
+                            <p class="text-muted small mb-0"><i class="fas fa-calendar-day me-1"></i> Không có nhiệm vụ nào trong tuần này.</p>
                         </div>
                     {% endif %}
                 </div>

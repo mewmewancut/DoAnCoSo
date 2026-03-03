@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 from decouple import config, Csv
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -50,6 +51,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    # Serve static files efficiently in production
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',  # Add LocaleMiddleware for i18n
     'django.middleware.common.CommonMiddleware',
@@ -82,12 +85,14 @@ WSGI_APPLICATION = 'todolist.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-
+#
+# Uses DATABASE_URL if provided (e.g. on Render with Postgres),
+# otherwise falls back to local SQLite for development.
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    "default": dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600,
+    )
 }
 
 
@@ -143,6 +148,9 @@ STATICFILES_DIRS = [
 ]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+# WhiteNoise static files storage (hashed & compressed)
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -161,8 +169,7 @@ AUTH_USER_MODEL = "accounts.User"
 
 # Custom Authentication Backend
 AUTHENTICATION_BACKENDS = [
-    'accounts.backends.EmailOrUsernameBackend',  # Custom backend for email/username login
-    'django.contrib.auth.backends.ModelBackend',  # Fallback to default backend
+    'accounts.backends.EmailOrUsernameBackend',  
 ]
 # Logging Configuration
 LOGGING = {
@@ -218,8 +225,8 @@ GOOGLE_API_KEY = config('GOOGLE_API_KEY', default='')
 GROQ_API_KEY = config('GROQ_API_KEY', default='')
 
 
-# Media files configuration (Cloudinary sẽ xử lý)
+# Media files configuration 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-
+PASSWORD_RESET_TIMEOUT = 60 * 60

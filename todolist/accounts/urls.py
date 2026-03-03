@@ -13,24 +13,19 @@ urlpatterns = [
     path("activate/<uidb64>/<token>/", views.activate, name="activate"),
     
     # Password reset
-    path("password-reset/", views.ResetPasswordView.as_view(), name="password_reset"),
-    path(
-        "password-reset-done/",
-        views.ResetPasswordDoneView.as_view(),
-        name="password_reset_done"
-    ),
+    path("password-reset/", views.password_reset_view, name="password_reset"),
+    path("password-reset-done/", views.password_reset_done_view, name="password_reset_done"),
     path(
         "password-reset-confirm/<uidb64>/<token>/",
-        views.ResetPasswordConfirmView.as_view(),
-        name="password_reset_confirm"
+        views.password_reset_confirm_view,
+        name="password_reset_confirm",
     ),
     path(
         "password-reset-complete/",
-        views.ResetPasswordCompleteView.as_view(),
-        name="password_reset_complete"
+        views.password_reset_complete_view,
+        name="password_reset_complete",
     ),
     
-        
     # Profile
     path("profile/", views.profile_view, name="profile"),
     path("profile/edit/", views.profile_edit, name="profile_edit"),

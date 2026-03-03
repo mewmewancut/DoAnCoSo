@@ -406,8 +406,8 @@ msgstr "Nếu nút không hoạt động, hãy sao chép và dán liên kết n�
 msgid "Security note:"
 msgstr "Lưu ý bảo mật:"
 
-msgid "This password reset link will expire after 24 hours."
-msgstr "Liên kết đặt lại mật khẩu sẽ hết hạn sau 24 giờ."
+msgid "This password reset link will expire after 1 hours."
+msgstr "Liên kết đặt lại mật khẩu sẽ hết hạn sau 1 giờ."
 
 msgid "If you did not request a password reset, please ignore this email."
 msgstr "Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này."
@@ -784,17 +784,32 @@ msgstr "Thẻ"
 msgid "No tags yet. Use AI Auto-Tag to generate some!"
 msgstr "Chưa có thẻ nào. Sử dụng AI Auto để tạo ra!"
 
-msgid "Activation link is invalid or has expired."
-msgstr "Liên kết kích hoạt không hợp lệ hoặc đã hết hạn."
+msgid "Activation link has expired. Please register again."
+msgstr "Liên kết kích hoạt đã hết hạn. Vui lòng đăng ký lại."
 
 msgid "Your account is already activated!"
 msgstr "Tài khoản của bạn đã được kích hoạt!"
-
-msgid "Activation link is invalid or has expired."
-msgstr "Liên kết kích hoạt không hợp lệ hoặc đã hết hạn."
 
 msgid "Account activated successfully! Please log in."
 msgstr "Tài khoản đã được kích hoạt thành công! Vui lòng đăng nhập"
 
 msgid "An error occurred while activating your account. Please try again."
 msgstr "Đã xảy ra lỗi khi kích hoạt tài khoản. Vui lòng thử lại."
+
+msgid "Hello %(username)s,"
+msgstr "Chào %(username)s,"
+
+msgid ""
+"Thank you for registering an account at "
+"<strong style=\"color: #c3392b;\">%(app_name)s</strong> "
+"- the leading task management application!"
+msgstr ""
+"Cảm ơn bạn đã đăng ký tài khoản tại "
+"<strong style=\"color: #c3392b;\">%(app_name)s</strong> "
+"- ứng dụng quản lý công việc hàng đầu!"
+
+msgid "Registration successful! Please check your email to activate your account."
+msgstr "Đăng ký thành công! Vui lòng kiểm tra email để kích hoạt tài khoản của bạn."
+
+msgid "You requested a password reset for your %(app_name)s account."
+msgstr "Bạn đã yêu cầu đặt lại mật khẩu cho tài khoản %(app_name)s của mình."

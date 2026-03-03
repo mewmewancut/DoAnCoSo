@@ -24,7 +24,6 @@ def send_activation_email(user, request=None):
                 f"/accounts/activate/{uid}/{token}/"
             )
         else:
-            # Fallback to settings or default
             domain = getattr(settings, 'SITE_DOMAIN', 'http://127.0.0.1:8000')
             activation_link = f"{domain}/accounts/activate/{uid}/{token}/"
         

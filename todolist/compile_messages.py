@@ -1,13 +1,8 @@
-"""
-Script to compile Django .po files to .mo files without requiring gettext tools.
-This is a workaround for Windows systems that don't have GNU gettext installed.
-"""
 import os
 import subprocess
 import sys
 
 def compile_po_to_mo(po_file, mo_file):
-    """Compile a .po file to .mo file using Python's gettext module."""
     try:
         import polib
     except ImportError:

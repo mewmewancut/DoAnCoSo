@@ -12,7 +12,6 @@ class RegisterForm(UserCreationForm):
         label="Email",
         required=True,
         widget=forms.EmailInput(attrs={
-            'class': 'form-control',
             'placeholder': 'Nhập địa chỉ email',
             'autocomplete': 'email',
         }),
@@ -23,7 +22,6 @@ class RegisterForm(UserCreationForm):
         label="Username",
         required=True,
         widget=forms.TextInput(attrs={
-            'class': 'form-control',
             'placeholder': 'Nhập tên đăng nhập',
             'autocomplete': 'username',
         }),
@@ -183,3 +181,4 @@ class CustomPasswordChangeForm(PasswordChangeForm):
         }),
         help_text="Nhập lại mật khẩu để xác nhận.",
     )
+

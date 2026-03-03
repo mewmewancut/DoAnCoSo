@@ -8,17 +8,7 @@ logger = logging.getLogger(__name__)
 class UserAuthenticationService:
     @staticmethod
     def authenticate_user(request, identifier, password):
-        if not identifier or not password:
-            return {
-                'success': False,
-                'user': None,
-                'message': _("Please enter both email/username and password."),
-                'error': 'missing_credentials',
-                'inactive': False
-            }
 
-        # Authenticate user (backend returns inactive users too so we
-        # can show the correct error message)
         user = authenticate(
             request,
             username=identifier,

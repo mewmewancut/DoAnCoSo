@@ -17,10 +17,7 @@ from .forms import RegisterForm, ProfileEditForm
 User = get_user_model()
 
 
-# ===== MODEL TESTS =========================================================
-
 class UserModelTest(TestCase):
-    """Custom User model tests."""
 
     def test_create_user(self):
         user = User.objects.create_user(
@@ -176,10 +173,10 @@ class ProfileEditFormTest(TestCase):
         self.assertIn("username", form.errors)
 
 
-# ===== VIEW TESTS ==========================================================
+#VIEW TESTS
 
 class AuthViewTest(TestCase):
-    """Authentication views: register, login, logout."""
+    #Authentication views: register, login, logout.
 
     def setUp(self):
         self.client = Client()

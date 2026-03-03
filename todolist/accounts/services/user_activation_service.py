@@ -32,12 +32,13 @@ class UserActivationService:
         
         # Verify token
         if not default_token_generator.check_token(user, token):
-            logger.warning(f"Invalid activation token for user: {user.email}")
+            logger.warning(f"Expired activation token for user: {user.email}")
+            user.delete()
             return {
                 'success': False,
                 'user': user,
-                'message': _("Activation link is invalid or has expired."),
-                'error': 'invalid_token',
+                'message': _("Activation link has expired. Please register again."),
+                'error': 'expired_token',
                 'already_activated': False
             }
         

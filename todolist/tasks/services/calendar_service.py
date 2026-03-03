@@ -1,4 +1,4 @@
-﻿"""Business logic for calendar views and FullCalendar event generation."""
+"""Business logic for calendar views and FullCalendar event generation."""
 
 from __future__ import annotations
 
@@ -95,7 +95,8 @@ class CalendarService:
 
         return {
             "week_start": week_start.date(),
-            "week_end": week_end.date(),
+            # Display end date inclusive (week_end is exclusive bound)
+            "week_end": (week_end - timedelta(days=1)).date(),
             "days_tasks": days_tasks,
             "total_tasks": len(all_tasks),
             "completed_tasks": completed_count,
@@ -127,7 +128,8 @@ class CalendarService:
             ]
             weeks_tasks[f"Week {week_num}"] = {
                 "start": current_date.date(),
-                "end": min(wk_end, month_end).date(),
+                # Display end date inclusive (wk_end/month_end are exclusive bounds)
+                "end": (min(wk_end, month_end) - timedelta(days=1)).date(),
                 "tasks": wk_tasks,
             }
             current_date = wk_end
@@ -139,7 +141,8 @@ class CalendarService:
 
         return {
             "month_start": month_start.date(),
-            "month_end": month_end.date(),
+            # Display end date inclusive (month_end is exclusive bound)
+            "month_end": (month_end - timedelta(days=1)).date(),
             "weeks_tasks": weeks_tasks,
             "total_tasks": total,
             "completed_tasks": completed,
