@@ -178,7 +178,7 @@ python manage.py test tasks accounts --verbosity=2
 
 - Sơn: mewmewancut <23010313@st.phenikaa-uni.edu.vn> — Backend core & Authentication
 - Dũng: aduoke33 <23010329@st.phenikaa-uni.edu.vn> — AI Integration & Logic
-- Minh: doanquangminh14 — Frontend & UI/UX
+- Minh: doanquangminh14 <23010392@st.phenikaa-uni.edu.vn> — Frontend & UI/UX
 
 ## Commit / Branching
 
